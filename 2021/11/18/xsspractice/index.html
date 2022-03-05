@@ -316,6 +316,35 @@
 
 
 
+
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+    <!--<script src="//cdn.jsdelivr.net/npm/leancloud-storage@latest/dist/av-min.js"></script>
+    <script src='//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js'></script>-->
+    <div id="vcomments"></div>
+    <script>
+          var notify = false == true ? true : false;
+          var verify = false == true ? true : false;
+          var visitor = true == true ? true : false;
+      new Valine({
+        el: '#vcomments',
+                  notify: notify,
+                  verify: verify,
+          app_id: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+        app_key: 'wqnsWKV8eVHemIwCa9vo9vRg',
+              lang: 'en',
+              placeholder: '快来评论一下吧!',
+              avatar: '‘robohash’',
+              pageSize: '20',
+              visitor: visitor
+          });
+    </script>
+
+    
+    
+    
+
         
           <div id="footer-post-container">
   <div id="footer-post">
@@ -455,6 +484,10 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+
+
+<!-- valine Comments -->
 
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
