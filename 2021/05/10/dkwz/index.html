@@ -274,26 +274,17 @@
 
 
     <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-    <!--<script src="//cdn.jsdelivr.net/npm/leancloud-storage@latest/dist/av-min.js"></script>
-    <script src='//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js'></script>-->
-    <div id="vcomments"></div>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
     <script>
-          var notify = false == true ? true : false;
-          var verify = false == true ? true : false;
-          var visitor = true == true ? true : false;
-      new Valine({
-        el: '#vcomments',
-                  notify: notify,
-                  verify: verify,
-          app_id: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
-        app_key: 'wqnsWKV8eVHemIwCa9vo9vRg',
-              lang: 'en',
-              placeholder: '快来评论一下吧!',
-              avatar: '‘robohash’',
-              pageSize: '20',
-              visitor: visitor
-          });
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
     </script>
 
     
