@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>CVE-2022-0847 Linux提权漏洞复现</title>
+      <link href="/2022/03/08/cve-2022-0847/"/>
+      <url>/2022/03/08/cve-2022-0847/</url>
+      
+        <content type="html"><![CDATA[<p>原始文章：<a href="https://dirtypipe.cm4all.com/">https://dirtypipe.cm4all.com/</a></p><p>Expliot：<a href="https://github.com/Arinerron/CVE-2022-0847-DirtyPipe-Exploit">https://github.com/Arinerron/CVE-2022-0847-DirtyPipe-Exploit</a></p><p>复现使用docker环境</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull ubuntu:16.04 <span class="comment">## 拉取一个ubuntu的基础镜像</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --name cve-2022-0847 镜像<span class="built_in">id</span> <span class="comment">#使用基础镜像创建一个容器</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 容器<span class="built_in">id</span> /bin/bash <span class="comment">#进入容器</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install vim <span class="comment">#安装vim</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install build-essential <span class="comment">#安装一些常用环境依赖 比如gcc</span></span><br></pre></td></tr></table></figure><p>Exploit</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc exp.c -o exp <span class="comment">#编译exp</span></span><br></pre></td></tr></table></figure><p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-03-08_11-43-40.png"></p><p>漏洞细节可以自行google，它类似于脏牛提权，但更容易被利用。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 漏洞复现 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hackmyvm - Hotel WriteUp</title>
       <link href="/2022/03/04/hackmyvm-Hotel/"/>
       <url>/2022/03/04/hackmyvm-Hotel/</url>
