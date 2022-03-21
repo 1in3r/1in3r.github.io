@@ -4,6 +4,38 @@
   
     
     <entry>
+      <title></title>
+      <link href="/2022/03/18/mkedbxjb/"/>
+      <url>/2022/03/18/mkedbxjb/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>实战案例记一次文件上传绕过（一）</title>
+      <link href="/2022/03/17/fileuploadbypass/"/>
+      <url>/2022/03/17/fileuploadbypass/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>这个案例来源于某次授权渗透测试。</p></blockquote><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>这个目标是gov的资产，通过弱口令进入到系统之后找到上传点，但是存在waf，最后换行绕过。</p><h2 id="测试过程"><a href="#测试过程" class="headerlink" title="测试过程"></a>测试过程</h2><p>一个朴实无华的登录界面配上了朴实无华的登录密码 <strong>admin&#x2F;123456</strong></p><p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220321155637911.png" alt="image-20220321155637911"></p><p>进去大概是这样的,有大量人员信息。</p><p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220321155805455.png" alt="image-20220321155805455"></p><p>其中一处找到一个上传点</p><p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220321160043328.png" alt="image-20220321160043328"></p><p>抓包上传，虽然没有对文件后缀做过滤，可以直接上传aspx，但是上传webshell会遭到云waf拦截</p><p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220321160251239.png" alt="image-20220321160251239"></p><h2 id="换行-绕过waf"><a href="#换行-绕过waf" class="headerlink" title="换行+: 绕过waf"></a>换行+: 绕过waf</h2><p>上传成功并返回路径</p><p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220321160516202.png" alt="image-20220321160516202"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 实战案例 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hackmyvm - Blog WriteUp</title>
       <link href="/2022/03/07/hackmyvm-Blog/"/>
       <url>/2022/03/07/hackmyvm-Blog/</url>
