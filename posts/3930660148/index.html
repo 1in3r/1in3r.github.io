@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="这个案例来源于某次授权渗透测试。  简介这个目标是gov的资产，通过弱口令进入到系统之后找到上传点，但是存在waf，最后换行绕过。 测试过程一个朴实无华的登录界面配上了朴实无华的登录密码 admin&#x2F;123456  进去大概是这样的,有大量人员信息。  其中一处找到一个上传点  抓包上传，虽然没有对文件后缀做过滤，可以直接上传aspx，但是上传webshell会遭到云waf拦截  换行">
 <meta property="og:type" content="article">
-<meta property="og:title" content="实战案例记一次文件上传绕过（一）">
+<meta property="og:title" content="记一次绕过云waf上传文件 getshell（一）">
 <meta property="og:url" content="http://example.com/posts/3930660148/index.html">
 <meta property="og:site_name" content="Brich">
 <meta property="og:description" content="这个案例来源于某次授权渗透测试。  简介这个目标是gov的资产，通过弱口令进入到系统之后找到上传点，但是存在waf，最后换行绕过。 测试过程一个朴实无华的登录界面配上了朴实无华的登录密码 admin&#x2F;123456  进去大概是这样的,有大量人员信息。  其中一处找到一个上传点  抓包上传，虽然没有对文件后缀做过滤，可以直接上传aspx，但是上传webshell会遭到云waf拦截  换行">
@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220321160251239.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220321160516202.png">
 <meta property="article:published_time" content="2022-03-17T03:45:19.000Z">
-<meta property="article:modified_time" content="2022-03-21T08:24:53.471Z">
+<meta property="article:modified_time" content="2022-03-21T10:07:24.224Z">
 <meta property="article:author" content="lin">
 <meta property="article:tag" content="实战案例">
 <meta name="twitter:card" content="summary">
@@ -43,7 +43,7 @@
       
     
     <!-- title -->
-    <title>实战案例记一次文件上传绕过（一）</title>
+    <title>记一次绕过云waf上传文件 getshell（一）</title>
     <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
@@ -104,16 +104,16 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3930660148/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3930660148/&text=实战案例记一次文件上传绕过（一）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3930660148/&title=实战案例记一次文件上传绕过（一）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3930660148/&is_video=false&description=实战案例记一次文件上传绕过（一）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=实战案例记一次文件上传绕过（一）&body=Check out this article: http://example.com/posts/3930660148/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3930660148/&title=实战案例记一次文件上传绕过（一）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3930660148/&title=实战案例记一次文件上传绕过（一）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3930660148/&title=实战案例记一次文件上传绕过（一）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3930660148/&title=实战案例记一次文件上传绕过（一）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3930660148/&name=实战案例记一次文件上传绕过（一）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3930660148/&t=实战案例记一次文件上传绕过（一）"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3930660148/&text=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3930660148/&title=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3930660148/&is_video=false&description=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=记一次绕过云waf上传文件 getshell（一）&body=Check out this article: http://example.com/posts/3930660148/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3930660148/&title=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3930660148/&title=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3930660148/&title=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3930660148/&title=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3930660148/&name=记一次绕过云waf上传文件 getshell（一）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3930660148/&t=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -130,7 +130,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        实战案例记一次文件上传绕过（一）
+        记一次绕过云waf上传文件 getshell（一）
     </h1>
 
 
@@ -216,16 +216,16 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3930660148/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3930660148/&text=实战案例记一次文件上传绕过（一）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3930660148/&title=实战案例记一次文件上传绕过（一）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3930660148/&is_video=false&description=实战案例记一次文件上传绕过（一）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=实战案例记一次文件上传绕过（一）&body=Check out this article: http://example.com/posts/3930660148/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3930660148/&title=实战案例记一次文件上传绕过（一）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3930660148/&title=实战案例记一次文件上传绕过（一）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3930660148/&title=实战案例记一次文件上传绕过（一）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3930660148/&title=实战案例记一次文件上传绕过（一）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3930660148/&name=实战案例记一次文件上传绕过（一）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3930660148/&t=实战案例记一次文件上传绕过（一）"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3930660148/&text=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3930660148/&title=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3930660148/&is_video=false&description=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=记一次绕过云waf上传文件 getshell（一）&body=Check out this article: http://example.com/posts/3930660148/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3930660148/&title=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3930660148/&title=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3930660148/&title=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3930660148/&title=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3930660148/&name=记一次绕过云waf上传文件 getshell（一）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3930660148/&t=记一次绕过云waf上传文件 getshell（一）"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
