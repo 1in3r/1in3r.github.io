@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="简介某次授权渗透测试中遇到的一个gov资产的站，刚开始是发现了源码泄露，通过源码泄露找到了后台地址，然后通过后台弱口令登入后台，文件上传绕过杀软最终getshell。 测试过程网站源码备份文件没删除，通过网站备份源码可以分析出网站整体的一个目录结构，以及一些可以尝试突破的功能点。  发现web.config配置文件，泄露了网站根目录绝对地址以及数据库sa用户的账户密码  通过分析网站源码找到网站后">
+    <meta name="description" content="前言某次授权渗透测试中遇到的一个gov资产的站，刚开始是发现了源码泄露，通过源码泄露找到了后台地址，然后通过后台弱口令登入后台，文件上传绕过杀软最终getshell。 测试过程网站源码备份文件没删除，通过网站备份源码可以分析出网站整体的一个目录结构，以及一些可以尝试突破的功能点。  发现web.config配置文件，泄露了网站根目录绝对地址以及数据库sa用户的账户密码  通过分析网站源码找到网站后">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次源码泄露到后台文件上传绕过杀软 getshell">
 <meta property="og:url" content="http://example.com/posts/2744233938/index.html">
 <meta property="og:site_name" content="Brich">
-<meta property="og:description" content="简介某次授权渗透测试中遇到的一个gov资产的站，刚开始是发现了源码泄露，通过源码泄露找到了后台地址，然后通过后台弱口令登入后台，文件上传绕过杀软最终getshell。 测试过程网站源码备份文件没删除，通过网站备份源码可以分析出网站整体的一个目录结构，以及一些可以尝试突破的功能点。  发现web.config配置文件，泄露了网站根目录绝对地址以及数据库sa用户的账户密码  通过分析网站源码找到网站后">
+<meta property="og:description" content="前言某次授权渗透测试中遇到的一个gov资产的站，刚开始是发现了源码泄露，通过源码泄露找到了后台地址，然后通过后台弱口令登入后台，文件上传绕过杀软最终getshell。 测试过程网站源码备份文件没删除，通过网站备份源码可以分析出网站整体的一个目录结构，以及一些可以尝试突破的功能点。  发现web.config配置文件，泄露了网站根目录绝对地址以及数据库sa用户的账户密码  通过分析网站源码找到网站后">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220321164140889.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220321164711760.png">
@@ -24,7 +24,7 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220321171140914.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220321171226410.png">
 <meta property="article:published_time" content="2022-03-20T08:31:09.000Z">
-<meta property="article:modified_time" content="2022-03-21T10:07:34.710Z">
+<meta property="article:modified_time" content="2022-03-22T08:05:58.770Z">
 <meta property="article:author" content="lin">
 <meta property="article:tag" content="实战案例">
 <meta name="twitter:card" content="summary">
@@ -92,6 +92,8 @@
     <span id="actions">
       <ul>
         
+        <li><a class="icon" aria-label="Previous post" href="/posts/3974312057/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
         
         <li><a class="icon" aria-label="Next post" href="/posts/1/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
@@ -121,7 +123,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">测试过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">后台弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87%E6%9D%80%E8%BD%AFgetshell"><span class="toc-number">4.</span> <span class="toc-text">文件上传绕过杀软getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">5.</span> <span class="toc-text">后记</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">测试过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">后台弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87%E6%9D%80%E8%BD%AFgetshell"><span class="toc-number">4.</span> <span class="toc-text">文件上传绕过杀软getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">5.</span> <span class="toc-text">后记</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -165,7 +167,7 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>某次授权渗透测试中遇到的一个gov资产的站，刚开始是发现了源码泄露，通过源码泄露找到了后台地址，然后通过后台弱口令登入后台，文件上传绕过杀软最终getshell。</p>
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>某次授权渗透测试中遇到的一个gov资产的站，刚开始是发现了源码泄露，通过源码泄露找到了后台地址，然后通过后台弱口令登入后台，文件上传绕过杀软最终getshell。</p>
 <h2 id="测试过程"><a href="#测试过程" class="headerlink" title="测试过程"></a>测试过程</h2><p>网站源码备份文件没删除，通过网站备份源码可以分析出网站整体的一个目录结构，以及一些可以尝试突破的功能点。</p>
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220321164140889.png" alt="image-20220321164140889"></p>
 <p>发现web.config配置文件，泄露了网站根目录绝对地址以及数据库sa用户的账户密码</p>
@@ -183,6 +185,7 @@
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220321171013581.png" alt="image-20220321171013581"></p>
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220321171140914.png" alt="image-20220321171140914"></p>
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220321171226410.png" alt="image-20220321171226410"></p>
+<p>阿里云的机器，所以没有后续深入的必要了。</p>
 
   </div>
 </article>
@@ -217,7 +220,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">测试过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">后台弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87%E6%9D%80%E8%BD%AFgetshell"><span class="toc-number">4.</span> <span class="toc-text">文件上传绕过杀软getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">5.</span> <span class="toc-text">后记</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">测试过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E5%BC%B1%E5%8F%A3%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">后台弱口令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87%E6%9D%80%E8%BD%AFgetshell"><span class="toc-number">4.</span> <span class="toc-text">文件上传绕过杀软getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">5.</span> <span class="toc-text">后记</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">

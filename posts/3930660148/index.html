@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="这个案例来源于某次授权渗透测试。  简介这个目标是gov的资产，通过弱口令进入到系统之后找到上传点，但是存在waf，最后换行绕过。 测试过程一个朴实无华的登录界面配上了朴实无华的登录密码 admin&#x2F;123456  进去大概是这样的,有大量人员信息。  其中一处找到一个上传点  抓包上传，虽然没有对文件后缀做过滤，可以直接上传aspx，但是上传webshell会遭到云waf拦截  换行">
+    <meta name="description" content="这个案例来源于某次授权渗透测试。  前言这个目标是gov的资产，通过弱口令进入到系统之后找到上传点，但是存在waf，最后换行绕过。 测试过程一个朴实无华的登录界面配上了朴实无华的登录密码 admin&#x2F;123456  进去大概是这样的,有大量人员信息。  其中一处找到一个上传点  抓包上传，虽然没有对文件后缀做过滤，可以直接上传aspx，但是上传webshell会遭到云waf拦截  换行">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次绕过云waf上传文件 getshell（一）">
 <meta property="og:url" content="http://example.com/posts/3930660148/index.html">
 <meta property="og:site_name" content="Brich">
-<meta property="og:description" content="这个案例来源于某次授权渗透测试。  简介这个目标是gov的资产，通过弱口令进入到系统之后找到上传点，但是存在waf，最后换行绕过。 测试过程一个朴实无华的登录界面配上了朴实无华的登录密码 admin&#x2F;123456  进去大概是这样的,有大量人员信息。  其中一处找到一个上传点  抓包上传，虽然没有对文件后缀做过滤，可以直接上传aspx，但是上传webshell会遭到云waf拦截  换行">
+<meta property="og:description" content="这个案例来源于某次授权渗透测试。  前言这个目标是gov的资产，通过弱口令进入到系统之后找到上传点，但是存在waf，最后换行绕过。 测试过程一个朴实无华的登录界面配上了朴实无华的登录密码 admin&#x2F;123456  进去大概是这样的,有大量人员信息。  其中一处找到一个上传点  抓包上传，虽然没有对文件后缀做过滤，可以直接上传aspx，但是上传webshell会遭到云waf拦截  换行">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220321155637911.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220321155805455.png">
@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220321160251239.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220321160516202.png">
 <meta property="article:published_time" content="2022-03-17T03:45:19.000Z">
-<meta property="article:modified_time" content="2022-03-21T10:07:24.224Z">
+<meta property="article:modified_time" content="2022-03-22T08:05:51.693Z">
 <meta property="article:author" content="lin">
 <meta property="article:tag" content="实战案例">
 <meta name="twitter:card" content="summary">
@@ -118,7 +118,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">测试过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2%E8%A1%8C-%E7%BB%95%E8%BF%87waf"><span class="toc-number">3.</span> <span class="toc-text">换行+: 绕过waf</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">测试过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2%E8%A1%8C-%E7%BB%95%E8%BF%87waf"><span class="toc-number">3.</span> <span class="toc-text">换行+: 绕过waf</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -165,7 +165,7 @@
     <blockquote>
 <p>这个案例来源于某次授权渗透测试。</p>
 </blockquote>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>这个目标是gov的资产，通过弱口令进入到系统之后找到上传点，但是存在waf，最后换行绕过。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这个目标是gov的资产，通过弱口令进入到系统之后找到上传点，但是存在waf，最后换行绕过。</p>
 <h2 id="测试过程"><a href="#测试过程" class="headerlink" title="测试过程"></a>测试过程</h2><p>一个朴实无华的登录界面配上了朴实无华的登录密码 <strong>admin&#x2F;123456</strong></p>
 <p><img src="https://typro-1304950244.file.myqcloud.com/img/image-20220321155637911.png" alt="image-20220321155637911"></p>
 <p>进去大概是这样的,有大量人员信息。</p>
@@ -210,7 +210,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">测试过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2%E8%A1%8C-%E7%BB%95%E8%BF%87waf"><span class="toc-number">3.</span> <span class="toc-text">换行+: 绕过waf</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">测试过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2%E8%A1%8C-%E7%BB%95%E8%BF%87waf"><span class="toc-number">3.</span> <span class="toc-text">换行+: 绕过waf</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
