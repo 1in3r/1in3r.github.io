@@ -8,32 +8,13 @@
       <link href="/posts/2716525218/"/>
       <url>/posts/2716525218/</url>
       
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting/dist/Meting.min.js"></script>        <div id="aplayer-ALrtUfzB" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">            <pre class="aplayer-lrc-content"></pre>        </div>        <script>          var ap = new APlayer({            element: document.getElementById("aplayer-ALrtUfzB"),            narrow: false,            autoplay: true,            showlrc: false,            music: {              title: "这个年纪",              author: "齐一",              url: "https://typro-1304950244.file.myqcloud.com/img/1288148806.mp3",              pic: "http://p1.music.126.net/PkmlUOniYE7KWhBIH7gayg==/18427814881575887.jpg?param=130y130",              lrc: ""            }          });          window.aplayers || (window.aplayers = []);          window.aplayers.push(ap);        </script><blockquote><p>小城市的稳定让人羡慕，大城市的霓虹也让人踌躇，这个年纪的我们，渴望安稳又不甘平庸。</p></blockquote><p>夜深了，改天再写……</p>]]></content>
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting/dist/Meting.min.js"></script>        <div id="aplayer-ZltNmXaT" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">            <pre class="aplayer-lrc-content"></pre>        </div>        <script>          var ap = new APlayer({            element: document.getElementById("aplayer-ZltNmXaT"),            narrow: false,            autoplay: true,            showlrc: false,            music: {              title: "这个年纪",              author: "齐一",              url: "https://typro-1304950244.file.myqcloud.com/img/1288148806.mp3",              pic: "http://p1.music.126.net/PkmlUOniYE7KWhBIH7gayg==/18427814881575887.jpg?param=130y130",              lrc: ""            }          });          window.aplayers || (window.aplayers = []);          window.aplayers.push(ap);        </script><blockquote><p>小城市的稳定让人羡慕，大城市的霓虹也让人踌躇，这个年纪的我们，渴望安稳又不甘平庸。</p></blockquote><p>夜深了，改天再写……</p>]]></content>
       
       
       
         <tags>
             
             <tag> 杂谈 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>二战</title>
-      <link href="/posts/1628324902/"/>
-      <url>/posts/1628324902/</url>
-      
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting/dist/Meting.min.js"></script><blockquote><p>下层经济决定上层建筑。——-不知道谁说的</p></blockquote><p>为什么会有这个文章，说来很话长，还得从xx说起，有些东西确实在实际渗透测试中很难碰到，但是又很基础，所以在这里复习一下。</p><h1 id="文件上传篇"><a href="#文件上传篇" class="headerlink" title="文件上传篇"></a>文件上传篇</h1><h2 id="文件上传漏洞定义"><a href="#文件上传漏洞定义" class="headerlink" title="文件上传漏洞定义"></a>文件上传漏洞定义</h2><p>文件上传漏洞是指用户上传了一个可执行的脚本文件，并通过此脚本文件获得了执行服务器端命令的能力。这种攻击方式是最为直接和有效的，“文件上传” 本身没有问题，有问题的是文件上传后，服务器怎么处理、解释文件。如果服务器的处理逻辑做的不够安全，则会导致严重的后果。</p><h3 id="文件上传危害"><a href="#文件上传危害" class="headerlink" title="文件上传危害"></a>文件上传危害</h3><p>1.上传文件是web脚本语言，服务器的web容器解释并执行了用户上传的脚本，导致代码执行。</p><p>2.上传文件是病毒或者木马时，主要用于诱骗用户或者管理员下载执行或者直接自动运行；</p><p>3.上传文件是Flash的策略文件 crossdomain.xml，黑客用以控制Flash在该域 下的行为(其他通过类似方式控制策略文件的情况类似);</p><p>4.上传文件是病毒、木马文件，黑客用以诱骗用户或者管理员下载执行；</p><p>5.上传文件是钓鱼图片或为包含了脚本的图片，在某些版本的浏览器中会被作为脚本执行，被用于钓鱼和欺诈。 除此之外，还有一些不常见的利用方法，比如将上传文件作为一个入口，溢 出服务器的后台处理程序，如图片解析模块;或者上传一个合法的文本文件，其内容包含了PHP脚本，再通过”本地文件包含漏洞(Local File Include)”执行此脚本。</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 学习笔记 </tag>
             
         </tags>
       
