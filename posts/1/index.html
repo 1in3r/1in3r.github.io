@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="这个目标之前已经被我测过一次了，当时已经拿到了域控，然后管理员把站关掉了，今天整理笔记，突然心血来潮，又去看了一下这个站，发现它又恢复了嘻嘻嘻嘻。  前言罪犯总是喜欢回到案发现场去欣赏自己的犯罪，渗透测试也是一样，不过不是犯罪，友情测试，给他复测一下，此次测试并没有获取数据和破坏系统的行为，一切都是点到为止。  复测发现该站加了杀软，不能直接上线cs了，不过这都是小问题，管理员以为有个杀软就能不">
+    <meta name="description" content="前言这个目标之前已经打穿了，当时已经拿到了域控权限，然后管理员把站关掉了，今天整理笔记，突然心血来潮，又去看了一下这个站，发现它又恢复了…..  复测发现该站加了杀软，不能直接上线cs了，不过这都是小问题，管理员以为有个杀软就能不被日了？太年轻了，掏出三板斧就是一顿干，当我日进内网那一刻，我发现它啥都没变，还是熟悉的味道，熟悉的配方……  正文通过jboss反序列化获得一个入口权限，上次打的时候还">
 <meta property="og:type" content="article">
 <meta property="og:title" content="梅开二度之旧站新开 - 从外网RCE到内网域控">
 <meta property="og:url" content="http://example.com/posts/1/index.html">
 <meta property="og:site_name" content="Brich">
-<meta property="og:description" content="这个目标之前已经被我测过一次了，当时已经拿到了域控，然后管理员把站关掉了，今天整理笔记，突然心血来潮，又去看了一下这个站，发现它又恢复了嘻嘻嘻嘻。  前言罪犯总是喜欢回到案发现场去欣赏自己的犯罪，渗透测试也是一样，不过不是犯罪，友情测试，给他复测一下，此次测试并没有获取数据和破坏系统的行为，一切都是点到为止。  复测发现该站加了杀软，不能直接上线cs了，不过这都是小问题，管理员以为有个杀软就能不">
+<meta property="og:description" content="前言这个目标之前已经打穿了，当时已经拿到了域控权限，然后管理员把站关掉了，今天整理笔记，突然心血来潮，又去看了一下这个站，发现它又恢复了…..  复测发现该站加了杀软，不能直接上线cs了，不过这都是小问题，管理员以为有个杀软就能不被日了？太年轻了，掏出三板斧就是一顿干，当我日进内网那一刻，我发现它啥都没变，还是熟悉的味道，熟悉的配方……  正文通过jboss反序列化获得一个入口权限，上次打的时候还">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20181213%2F825c81a7bb384128be49e7e499b8e78d.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1650453712&t=f808303178f23ea1447055469344dce6">
 <meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.julinghu.com%2F2021%2F09%2F20210922001853559.jpg&refer=http%3A%2F%2Fimg.julinghu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1650454026&t=e24f47a699a7778246414180a317f0d3">
@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220404172601073.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220404193814637.png">
 <meta property="article:published_time" content="2022-03-18T15:31:01.000Z">
-<meta property="article:modified_time" content="2022-04-04T11:55:47.861Z">
+<meta property="article:modified_time" content="2022-05-07T14:51:15.375Z">
 <meta property="article:author" content="1in3r">
 <meta property="article:tag" content="内网渗透">
 <meta name="twitter:card" content="summary">
@@ -181,10 +181,7 @@
   
 
   <div class="content" itemprop="articleBody">
-    <blockquote>
-<p>这个目标之前已经被我测过一次了，当时已经拿到了域控，然后管理员把站关掉了，今天整理笔记，突然心血来潮，又去看了一下这个站，发现它又恢复了嘻嘻嘻嘻。</p>
-</blockquote>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>罪犯总是喜欢回到案发现场去欣赏自己的犯罪，渗透测试也是一样，不过不是犯罪，友情测试，给他复测一下，此次测试并没有获取数据和破坏系统的行为，一切都是点到为止。</p>
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这个目标之前已经打穿了，当时已经拿到了域控权限，然后管理员把站关掉了，今天整理笔记，突然心血来潮，又去看了一下这个站，发现它又恢复了…..</p>
 <p><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20181213%2F825c81a7bb384128be49e7e499b8e78d.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1650453712&t=f808303178f23ea1447055469344dce6"></p>
 <p>复测发现该站加了杀软，不能直接上线cs了，不过这都是小问题，管理员以为有个杀软就能不被日了？太年轻了，掏出三板斧就是一顿干，当我日进内网那一刻，我发现它啥都没变，还是熟悉的味道，熟悉的配方……</p>
 <p><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.julinghu.com%2F2021%2F09%2F20210922001853559.jpg&refer=http%3A%2F%2Fimg.julinghu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1650454026&t=e24f47a699a7778246414180a317f0d3"></p>
