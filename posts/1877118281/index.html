@@ -6,18 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="渗透本就是逆天而为。  — 不知道谁说的  前言在渗透测试过程中的一些高危测试行为会导致ip被安全设备封禁，比如扫描、sql inject等等、这个时候就需要一个代理ip池来规避这种问题，不会用不要紧，但是东西一定要有。 正文作者项目地址：qiyeboy&#x2F;IPProxyPool: IPProxyPool代理池项目，提供代理ip (github.com)">
+    <meta name="description" content="某问卷调查系统  存在s2-016,直接用工具一把嗦了就行  找到根目录上传webshell  反弹shell出来  pkexec提权  没有内网,收工。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="突破反爬虫机制之 - ip代理池搭建">
-<meta property="og:url" content="http://example.com/posts/336723263/index.html">
+<meta property="og:title" content="记一次S2-016 to root">
+<meta property="og:url" content="http://example.com/posts/1877118281/index.html">
 <meta property="og:site_name" content="Brich">
-<meta property="og:description" content="渗透本就是逆天而为。  — 不知道谁说的  前言在渗透测试过程中的一些高危测试行为会导致ip被安全设备封禁，比如扫描、sql inject等等、这个时候就需要一个代理ip池来规避这种问题，不会用不要紧，但是东西一定要有。 正文作者项目地址：qiyeboy&#x2F;IPProxyPool: IPProxyPool代理池项目，提供代理ip (github.com)">
+<meta property="og:description" content="某问卷调查系统  存在s2-016,直接用工具一把嗦了就行  找到根目录上传webshell  反弹shell出来  pkexec提权  没有内网,收工。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-04-08T06:08:25.000Z">
-<meta property="article:modified_time" content="2022-04-21T14:09:21.917Z">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220521131759930.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220521131909674.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220521132012682.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220521132047874.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220521132132734.png">
+<meta property="article:published_time" content="2022-04-01T05:14:50.000Z">
+<meta property="article:modified_time" content="2022-05-22T07:15:42.439Z">
 <meta property="article:author" content="1in3r">
-<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="内网渗透">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://typro-1304950244.file.myqcloud.com/image-20220521131759930.png">
     
     
       
@@ -37,7 +43,7 @@
       
     
     <!-- title -->
-    <title>突破反爬虫机制之 - ip代理池搭建</title>
+    <title>记一次S2-016 to root</title>
     <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
@@ -81,7 +87,7 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="Previous post" href="/posts/1/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Previous post" href="/posts/470448662/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" aria-label="Next post" href="/posts/88024327/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -97,22 +103,22 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/336723263/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/336723263/&text=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/336723263/&title=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/336723263/&is_video=false&description=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=突破反爬虫机制之 - ip代理池搭建&body=Check out this article: http://example.com/posts/336723263/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/336723263/&title=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/336723263/&title=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/336723263/&title=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/336723263/&title=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/336723263/&name=突破反爬虫机制之 - ip代理池搭建&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/336723263/&t=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/1877118281/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/1877118281/&text=记一次S2-016 to root"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/1877118281/&title=记一次S2-016 to root"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/1877118281/&is_video=false&description=记一次S2-016 to root"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=记一次S2-016 to root&body=Check out this article: http://example.com/posts/1877118281/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/1877118281/&title=记一次S2-016 to root"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/1877118281/&title=记一次S2-016 to root"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/1877118281/&title=记一次S2-016 to root"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/1877118281/&title=记一次S2-016 to root"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/1877118281/&name=记一次S2-016 to root&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/1877118281/&t=记一次S2-016 to root"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li></ol>
+      
     </div>
   </span>
 </div>
@@ -124,7 +130,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        突破反爬虫机制之 - ip代理池搭建
+        记一次S2-016 to root
     </h1>
 
 
@@ -136,7 +142,7 @@
       
     <div class="postdate">
       
-        <time datetime="2022-04-08T06:08:25.000Z" itemprop="datePublished">2022-04-08</time>
+        <time datetime="2022-04-01T05:14:50.000Z" itemprop="datePublished">2022-04-01</time>
         
       
     </div>
@@ -147,7 +153,7 @@
       
     <div class="article-tag">
         <i class="fas fa-tag"></i>
-        <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a>
+        <a class="tag-link-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a>
     </div>
 
 
@@ -156,11 +162,17 @@
   
 
   <div class="content" itemprop="articleBody">
-    <blockquote>
-<p>渗透本就是逆天而为。  — 不知道谁说的</p>
-</blockquote>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在渗透测试过程中的一些高危测试行为会导致ip被安全设备封禁，比如扫描、sql inject等等、这个时候就需要一个代理ip池来规避这种问题，不会用不要紧，但是东西一定要有。</p>
-<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>作者项目地址：<a target="_blank" rel="noopener" href="https://github.com/qiyeboy/IPProxyPool">qiyeboy&#x2F;IPProxyPool: IPProxyPool代理池项目，提供代理ip (github.com)</a></p>
+    <p>某问卷调查系统</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220521131759930.png" alt="image-20220521131759930"></p>
+<p>存在s2-016,直接用工具一把嗦了就行</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220521131909674.png" alt="image-20220521131909674"></p>
+<p>找到根目录上传webshell</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220521132012682.png" alt="image-20220521132012682"></p>
+<p>反弹shell出来</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220521132047874.png" alt="image-20220521132047874"></p>
+<p>pkexec提权</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220521132132734.png" alt="image-20220521132132734"></p>
+<p>没有内网,收工。</p>
 
   </div>
 </article>
@@ -195,22 +207,22 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li></ol>
+      
     </div>
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/336723263/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/336723263/&text=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/336723263/&title=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/336723263/&is_video=false&description=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=突破反爬虫机制之 - ip代理池搭建&body=Check out this article: http://example.com/posts/336723263/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/336723263/&title=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/336723263/&title=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/336723263/&title=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/336723263/&title=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/336723263/&name=突破反爬虫机制之 - ip代理池搭建&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/336723263/&t=突破反爬虫机制之 - ip代理池搭建"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/1877118281/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/1877118281/&text=记一次S2-016 to root"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/1877118281/&title=记一次S2-016 to root"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/1877118281/&is_video=false&description=记一次S2-016 to root"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=记一次S2-016 to root&body=Check out this article: http://example.com/posts/1877118281/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/1877118281/&title=记一次S2-016 to root"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/1877118281/&title=记一次S2-016 to root"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/1877118281/&title=记一次S2-016 to root"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/1877118281/&title=记一次S2-016 to root"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/1877118281/&name=记一次S2-016 to root&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/1877118281/&t=记一次S2-016 to root"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

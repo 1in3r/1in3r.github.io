@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x00 前言当企业发生黑客入侵、系统崩溃或其它影响业务正常运行的安全事件时，急需第一时间进行处理，使企业的网络信息系统在最短时间内恢复正常工作，进一步查找入侵来源，还原入侵事故过程，同时给出解决方案与防范措施，为企业挽回或减少经济损失。   常见的应急响应事件分类： Web 入侵：网页挂马、主页篡改、Webshell 系统入侵：病毒木马、勒索软件、远控后门 网络攻击：DDOS 攻击、DNS 劫持">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows 入侵排查">
+<meta property="og:url" content="http://example.com/posts/3004177380/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="0x00 前言当企业发生黑客入侵、系统崩溃或其它影响业务正常运行的安全事件时，急需第一时间进行处理，使企业的网络信息系统在最短时间内恢复正常工作，进一步查找入侵来源，还原入侵事故过程，同时给出解决方案与防范措施，为企业挽回或减少经济损失。   常见的应急响应事件分类： Web 入侵：网页挂马、主页篡改、Webshell 系统入侵：病毒木马、勒索软件、远控后门 网络攻击：DDOS 攻击、DNS 劫持">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-03-10T07:28:25.000Z">
+<meta property="article:modified_time" content="2022-05-22T07:40:09.316Z">
+<meta property="article:author" content="1in3r">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>Windows 入侵排查</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/3930660148/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/2943334960/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3004177380/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3004177380/&text=Windows 入侵排查"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3004177380/&title=Windows 入侵排查"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3004177380/&is_video=false&description=Windows 入侵排查"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Windows 入侵排查&body=Check out this article: http://example.com/posts/3004177380/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3004177380/&title=Windows 入侵排查"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3004177380/&title=Windows 入侵排查"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3004177380/&title=Windows 入侵排查"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3004177380/&title=Windows 入侵排查"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3004177380/&name=Windows 入侵排查&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3004177380/&t=Windows 入侵排查"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"></span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x00-%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-%E5%85%A5%E4%BE%B5%E6%8E%92%E6%9F%A5%E6%80%9D%E8%B7%AF"><span class="toc-number">1.2.</span> <span class="toc-text">0x01 入侵排查思路</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E6%A3%80%E6%9F%A5%E7%B3%BB%E7%BB%9F%E8%B4%A6%E5%8F%B7%E5%AE%89%E5%85%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.1 检查系统账号安全</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E6%A3%80%E6%9F%A5%E5%BC%82%E5%B8%B8%E7%AB%AF%E5%8F%A3%E3%80%81%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">1.2 检查异常端口、进程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-%E6%A3%80%E6%9F%A5%E5%90%AF%E5%8A%A8%E9%A1%B9%E3%80%81%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E3%80%81%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.2.3.</span> <span class="toc-text">1.3 检查启动项、计划任务、服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-%E6%A3%80%E6%9F%A5%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF"><span class="toc-number">1.2.4.</span> <span class="toc-text">1.4 检查系统相关信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9F%A5%E6%9D%80"><span class="toc-number">1.2.5.</span> <span class="toc-text">1.5 自动化查杀</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-6-%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="toc-number">1.2.6.</span> <span class="toc-text">1.6 日志分析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-%E5%B7%A5%E5%85%B7%E7%AF%87"><span class="toc-number">1.3.</span> <span class="toc-text">0x02 工具篇</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.1 病毒分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E7%97%85%E6%AF%92%E6%9F%A5%E6%9D%80"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.2 病毒查杀</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-%E7%97%85%E6%AF%92%E5%8A%A8%E6%80%81"><span class="toc-number">1.3.3.</span> <span class="toc-text">2.3 病毒动态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-%E5%9C%A8%E7%BA%BF%E7%97%85%E6%AF%92%E6%89%AB%E6%8F%8F%E7%BD%91%E7%AB%99"><span class="toc-number">1.3.4.</span> <span class="toc-text">2.4 在线病毒扫描网站</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-webshell%E6%9F%A5%E6%9D%80"><span class="toc-number">1.3.5.</span> <span class="toc-text">2.5 webshell查杀</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Windows 入侵排查
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">1in3r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-03-10T07:28:25.000Z" itemprop="datePublished">2022-03-10</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id=""><a href="#" class="headerlink" title=""></a></h2><h3 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h3><p>当企业发生黑客入侵、系统崩溃或其它影响业务正常运行的安全事件时，急需第一时间进行处理，使企业的网络信息系统在最短时间内恢复正常工作，进一步查找入侵来源，还原入侵事故过程，同时给出解决方案与防范措施，为企业挽回或减少经济损失。  </p>
+<p>常见的应急响应事件分类：</p>
+<p>Web 入侵：网页挂马、主页篡改、Webshell</p>
+<p>系统入侵：病毒木马、勒索软件、远控后门</p>
+<p>网络攻击：DDOS 攻击、DNS 劫持、ARP 欺骗</p>
+<p>针对常见的攻击事件，结合工作中应急响应事件分析和解决的方法，总结了一些 Windows 服务器入侵排查的思路。</p>
+<h3 id="0x01-入侵排查思路"><a href="#0x01-入侵排查思路" class="headerlink" title="0x01 入侵排查思路"></a>0x01 入侵排查思路</h3><h4 id="1-1-检查系统账号安全"><a href="#1-1-检查系统账号安全" class="headerlink" title="1.1 检查系统账号安全"></a>1.1 检查系统账号安全</h4><p>1、查看服务器是否有弱口令，远程管理端口是否对公网开放。</p>
+<ul>
+<li>检查方法：据实际情况咨询相关服务器管理员。</li>
+</ul>
+<p>2、查看服务器是否存在可疑账号、新增账号。</p>
+<ul>
+<li>检查方法：打开 cmd 窗口，输入 <code>lusrmgr.msc</code> 命令，查看是否有新增&#x2F;可疑的账号，如有管理员群组的（Administrators）里的新增账户，如有，请立即禁用或删除掉。</li>
+</ul>
+<p>3、查看服务器是否存在隐藏账号、克隆账号。</p>
+<ul>
+<li><p>检查方法：</p>
+<p>a、打开注册表 ，查看管理员对应键值。</p>
+<p>b、使用D盾_web查杀工具，集成了对克隆账号检测的功能。</p>
+</li>
+</ul>
+<p>4、结合日志，查看管理员登录时间、用户名是否存在异常。</p>
+<ul>
+<li><p>检查方法：</p>
+<p>a、Win+R 打开运行，输入”eventvwr.msc”，回车运行，打开“事件查看器”。</p>
+<p>b、导出 Windows 日志 – 安全，利用微软官方工具 <a target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/download/details.aspx?id=24659">Log Parser</a> 进行分析。</p>
+</li>
+</ul>
+<h4 id="1-2-检查异常端口、进程"><a href="#1-2-检查异常端口、进程" class="headerlink" title="1.2 检查异常端口、进程"></a>1.2 检查异常端口、进程</h4><p>1、检查端口连接情况，是否有远程连接、可疑连接。</p>
+<ul>
+<li><p>检查方法：</p>
+<p>a、使用<code>netstat -ano</code> 命令查看目前的网络连接，定位可疑的 ESTABLISHED </p>
+<p>b、根据 netstat 命令定位出的 PID 编号，再通过 tasklist 命令进行进程定位 <code>tasklist  | findstr &quot;PID&quot;</code></p>
+</li>
+</ul>
+<p>2、进程</p>
+<ul>
+<li><p>检查方法：</p>
+<p>a、开始 – 运行 – 输入 <code>msinfo32</code> 命令，依次点击 “软件环境 – 正在运行任务” 就可以查看到进程的详细信息，比如进程路径、进程ID、文件创建日期以及启动时间等。</p>
+<p>b、打开D盾_web查杀工具，进程查看，关注没有签名信息的进程。</p>
+<p>c、通过微软官方提供的 Process Explorer 等工具进行排查 。</p>
+<p>d、查看可疑的进程及其子进程。可以通过观察以下内容：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">没有签名验证信息的进程</span><br><span class="line">没有描述信息的进程</span><br><span class="line">进程的属主</span><br><span class="line">进程的路径是否合法</span><br><span class="line">CPU 或内存资源占用长时间过高的进程</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>3、小技巧：</p>
+<p>​    a、查看端口对应的 PID：<code>netstat -ano | findstr &quot;port&quot;</code></p>
+<p>​    b、查看进程对应的 PID：任务管理器 – 查看 – 选择列 – PID 或者 <code>tasklist  | findstr &quot;PID&quot;</code></p>
+<p>​    c、查看进程对应的程序位置：</p>
+<p>​        任务管理器 – 选择对应进程 – 右键打开文件位置</p>
+<p>​        运行输入 <code>wmic</code>，cmd 界面输入 <code>process</code></p>
+<p>​    d、<code>tasklist /svc</code>   进程 – PID – 服务</p>
+<p>​    e、查看Windows服务所对应的端口：</p>
+<p>​        %systemroot%&#x2F;system32&#x2F;drivers&#x2F;etc&#x2F;services（一般 %systemroot% 就是 C:\Windows 路径）</p>
+<h4 id="1-3-检查启动项、计划任务、服务"><a href="#1-3-检查启动项、计划任务、服务" class="headerlink" title="1.3 检查启动项、计划任务、服务"></a>1.3 检查启动项、计划任务、服务</h4><p>1、检查服务器是否有异常的启动项。</p>
+<ul>
+<li><p>检查方法：</p>
+<p>a、登录服务器，单击【开始】&gt;【所有程序】&gt;【启动】，默认情况下此目录在是一个空目录，确认是否有非业务程序在该目录下。<br>b、单击开始菜单 &gt;【运行】，输入 <code>msconfig</code>，查看是否存在命名异常的启动项目，是则取消勾选命名异常的启动项目，并到命令中显示的路径删除文件。<br>c、单击【开始】&gt;【运行】，输入 regedit，打开注册表，查看开机启动项是否正常，特别注意如下三个注册表项：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HKEY<span class="built_in">_</span>CURRENT<span class="built_in">_</span>USER<span class="keyword">\Software</span><span class="keyword">\Microsoft</span><span class="keyword">\Windows</span><span class="keyword">\CurrentVersion</span><span class="keyword">\run</span></span><br><span class="line">HKEY<span class="built_in">_</span>LOCAL<span class="built_in">_</span>MACHINE<span class="keyword">\Software</span><span class="keyword">\Microsoft</span><span class="keyword">\Windows</span><span class="keyword">\CurrentVersion</span><span class="keyword">\Run</span></span><br><span class="line">HKEY<span class="built_in">_</span>LOCAL<span class="built_in">_</span>MACHINE<span class="keyword">\Software</span><span class="keyword">\Microsoft</span><span class="keyword">\Windows</span><span class="keyword">\CurrentVersion</span><span class="keyword">\Runonce</span></span><br></pre></td></tr></table></figure>
+
+<p>检查右侧是否有启动异常的项目，如有请删除，并建议安装杀毒软件进行病毒查杀，清除残留病毒或木马。</p>
+<p>d、利用安全软件查看启动项、开机时间管理等。</p>
+<p>e、组策略，运行 <code>gpedit.msc</code></p>
+</li>
+</ul>
+<p>2、检查计划任务</p>
+<ul>
+<li><p>检查方法：</p>
+<p>a、单击【开始】&gt;【设置】&gt;【控制面板】&gt;【任务计划】，查看计划任务属性，便可以发现木马文件的路径。</p>
+<p>b、单击【开始】&gt;【运行】；输入 <code>cmd</code>，然后输入 <code>at</code>，检查计算机与网络上的其它计算机之间的会话或计划任务，如有，则确认是否为正常连接。</p>
+</li>
+</ul>
+<p>3、服务自启动</p>
+<ul>
+<li>检查方法：单击【开始】&gt;【运行】，输入 <code>services.msc</code>，注意服务状态和启动类型，检查是否有异常服务。</li>
+</ul>
+<h4 id="1-4-检查系统相关信息"><a href="#1-4-检查系统相关信息" class="headerlink" title="1.4 检查系统相关信息"></a>1.4 检查系统相关信息</h4><p>1、查看系统版本以及补丁信息</p>
+<ul>
+<li>检查方法：单击【开始】&gt;【运行】，输入 <code>systeminfo</code>，查看系统信息。</li>
+</ul>
+<p>2、查找可疑目录及文件</p>
+<ul>
+<li><p>检查方法：</p>
+<p>a、 查看用户目录，新建账号会在这个目录生成一个用户目录，查看是否有新建用户目录。</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Window 2003版本 C:<span class="keyword">\Documents</span> and Settings</span><br><span class="line">Window 2008R2及以后版本 C:<span class="keyword">\Users</span><span class="keyword">\</span></span><br></pre></td></tr></table></figure>
+
+<p>b、单击【开始】&gt;【运行】，输入 <code>%UserProfile%\Recent</code>，分析最近打开分析可疑文件。</p>
+<p>c、在服务器各个目录，可根据文件夹内文件列表时间进行排序，查找可疑文件。</p>
+<p>d、回收站、浏览器下载目录、浏览器历史记录</p>
+<p>e、修改时间在创建时间之前的为可疑文件</p>
+</li>
+</ul>
+<p>3、发现并得到 WebShell、远控木马的创建时间，如何找出同一时间范围内创建的文件？</p>
+<p>a、利用 <a target="_blank" rel="noopener" href="http://www.torchsoft.com/en/rw_information.html">Registry Workshop</a> 注册表编辑器的搜索功能，可以找到最后写入时间区间的文件。<br>b、利用计算机自带文件搜索功能，指定修改时间进行搜索。</p>
+<h4 id="1-5-自动化查杀"><a href="#1-5-自动化查杀" class="headerlink" title="1.5 自动化查杀"></a>1.5 自动化查杀</h4><ul>
+<li><p>病毒查杀</p>
+<ul>
+<li>检查方法：下载安全软件，更新最新病毒库，进行全盘扫描。</li>
+</ul>
+</li>
+<li><p>webshell查杀</p>
+<ul>
+<li>检查方法：选择具体站点路径进行webshell查杀，建议使用两款 WebShell 查杀工具同时查杀，可相互补充规则库的不足。</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-6-日志分析"><a href="#1-6-日志分析" class="headerlink" title="1.6 日志分析"></a>1.6 日志分析</h4><p>系统日志</p>
+<ul>
+<li><p>分析方法：</p>
+<p>a、前提：开启审核策略，若日后系统出现故障、安全事故则可以查看系统的日志文件，排除故障，追查入侵者的信息等。</p>
+<p>b、Win+R 打开运行，输入 “eventvwr.msc”，回车运行，打开”事件查看器”。</p>
+<p>C、导出应用程序日志、安全日志、系统日志，利用 <a target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/download/details.aspx?id=24659">Log Parser</a> 进行分析。</p>
+</li>
+</ul>
+<p>Web 访问日志</p>
+<ul>
+<li><p>分析方法：</p>
+<p>a、找到中间件的web日志，打包到本地方便进行分析。</p>
+<p>b、推荐工具：Windows 下，推荐用 EmEditor 进行日志分析，支持大文本，搜索效率还不错。Linux 下，使用 Shell 命令组合查询分析。</p>
+</li>
+</ul>
+<h3 id="0x02-工具篇"><a href="#0x02-工具篇" class="headerlink" title="0x02 工具篇"></a>0x02 工具篇</h3><h4 id="2-1-病毒分析"><a href="#2-1-病毒分析" class="headerlink" title="2.1 病毒分析"></a>2.1 病毒分析</h4><p>PCHunter：<a target="_blank" rel="noopener" href="http://www.xuetr.com/">http://www.xuetr.com</a></p>
+<p>火绒剑：<a target="_blank" rel="noopener" href="https://www.huorong.cn/">https://www.huorong.cn</a></p>
+<p>Process Explorer：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/sysinternals/downloads/process-explorer">https://docs.microsoft.com/zh-cn/sysinternals/downloads/process-explorer</a></p>
+<p>processhacker：<a target="_blank" rel="noopener" href="https://processhacker.sourceforge.io/downloads.php">https://processhacker.sourceforge.io/downloads.php</a></p>
+<p>autoruns：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns">https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns</a></p>
+<p>OTL：<a target="_blank" rel="noopener" href="https://www.bleepingcomputer.com/download/otl/">https://www.bleepingcomputer.com/download/otl/</a></p>
+<p>SysInspector：<a target="_blank" rel="noopener" href="http://download.eset.com.cn/download/detail/?product=sysinspector">http://download.eset.com.cn/download/detail/?product=sysinspector</a></p>
+<h4 id="2-2-病毒查杀"><a href="#2-2-病毒查杀" class="headerlink" title="2.2 病毒查杀"></a>2.2 病毒查杀</h4><p>卡巴斯基：<a target="_blank" rel="noopener" href="http://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe">http://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe</a>   （推荐理由：绿色版、最新病毒库）</p>
+<p>大蜘蛛：<a target="_blank" rel="noopener" href="http://free.drweb.ru/download+cureit+free%EF%BC%88%E6%8E%A8%E8%8D%90%E7%90%86%E7%94%B1%EF%BC%9A%E6%89%AB%E6%8F%8F%E5%BF%AB%E3%80%81%E4%B8%80%E6%AC%A1%E4%B8%8B%E8%BD%BD%E5%8F%AA%E8%83%BD%E7%94%A81%E5%91%A8%EF%BC%8C%E6%9B%B4%E6%96%B0%E7%97%85%E6%AF%92%E5%BA%93%EF%BC%89">http://free.drweb.ru/download+cureit+free（推荐理由：扫描快、一次下载只能用1周，更新病毒库）</a></p>
+<p>火绒安全软件：<a target="_blank" rel="noopener" href="https://www.huorong.cn/">https://www.huorong.cn</a></p>
+<p>360杀毒：<a target="_blank" rel="noopener" href="http://sd.360.cn/download_center.html">http://sd.360.cn/download_center.html</a></p>
+<h4 id="2-3-病毒动态"><a href="#2-3-病毒动态" class="headerlink" title="2.3 病毒动态"></a>2.3 病毒动态</h4><p>CVERC-国家计算机病毒应急处理中心：<a target="_blank" rel="noopener" href="http://www.cverc.org.cn/">http://www.cverc.org.cn</a></p>
+<p>微步在线威胁情报社区：<a target="_blank" rel="noopener" href="https://x.threatbook.cn/">https://x.threatbook.cn</a></p>
+<p>火绒安全论坛：<a target="_blank" rel="noopener" href="http://bbs.huorong.cn/forum-59-1.html">http://bbs.huorong.cn/forum-59-1.html</a></p>
+<p>爱毒霸社区：<a target="_blank" rel="noopener" href="http://bbs.duba.net/">http://bbs.duba.net</a></p>
+<p>腾讯电脑管家：<a target="_blank" rel="noopener" href="http://bbs.guanjia.qq.com/forum-2-1.html">http://bbs.guanjia.qq.com/forum-2-1.html</a></p>
+<h4 id="2-4-在线病毒扫描网站"><a href="#2-4-在线病毒扫描网站" class="headerlink" title="2.4 在线病毒扫描网站"></a>2.4 在线病毒扫描网站</h4><p>Virustotal：<a target="_blank" rel="noopener" href="https://www.virustotal.com/">https://www.virustotal.com</a></p>
+<p>Virscan：<a target="_blank" rel="noopener" href="http://www.virscan.org/">http://www.virscan.org</a></p>
+<p>腾讯哈勃分析系统：<a target="_blank" rel="noopener" href="https://habo.qq.com/">https://habo.qq.com</a></p>
+<p>Jotti 恶意软件扫描系统：<a target="_blank" rel="noopener" href="https://virusscan.jotti.org/">https://virusscan.jotti.org</a></p>
+<h4 id="2-5-webshell查杀"><a href="#2-5-webshell查杀" class="headerlink" title="2.5 webshell查杀"></a>2.5 webshell查杀</h4><p>D盾_Web查杀：<a target="_blank" rel="noopener" href="http://www.d99net.net/index.asp">http://www.d99net.net/index.asp</a></p>
+<p>河马 WebShell 查杀：<a target="_blank" rel="noopener" href="http://www.shellpub.com/">http://www.shellpub.com</a></p>
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"></span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x00-%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-%E5%85%A5%E4%BE%B5%E6%8E%92%E6%9F%A5%E6%80%9D%E8%B7%AF"><span class="toc-number">1.2.</span> <span class="toc-text">0x01 入侵排查思路</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E6%A3%80%E6%9F%A5%E7%B3%BB%E7%BB%9F%E8%B4%A6%E5%8F%B7%E5%AE%89%E5%85%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.1 检查系统账号安全</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E6%A3%80%E6%9F%A5%E5%BC%82%E5%B8%B8%E7%AB%AF%E5%8F%A3%E3%80%81%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">1.2 检查异常端口、进程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-%E6%A3%80%E6%9F%A5%E5%90%AF%E5%8A%A8%E9%A1%B9%E3%80%81%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E3%80%81%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.2.3.</span> <span class="toc-text">1.3 检查启动项、计划任务、服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-%E6%A3%80%E6%9F%A5%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF"><span class="toc-number">1.2.4.</span> <span class="toc-text">1.4 检查系统相关信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9F%A5%E6%9D%80"><span class="toc-number">1.2.5.</span> <span class="toc-text">1.5 自动化查杀</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-6-%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="toc-number">1.2.6.</span> <span class="toc-text">1.6 日志分析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-%E5%B7%A5%E5%85%B7%E7%AF%87"><span class="toc-number">1.3.</span> <span class="toc-text">0x02 工具篇</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.1 病毒分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E7%97%85%E6%AF%92%E6%9F%A5%E6%9D%80"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.2 病毒查杀</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-%E7%97%85%E6%AF%92%E5%8A%A8%E6%80%81"><span class="toc-number">1.3.3.</span> <span class="toc-text">2.3 病毒动态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-%E5%9C%A8%E7%BA%BF%E7%97%85%E6%AF%92%E6%89%AB%E6%8F%8F%E7%BD%91%E7%AB%99"><span class="toc-number">1.3.4.</span> <span class="toc-text">2.4 在线病毒扫描网站</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-webshell%E6%9F%A5%E6%9D%80"><span class="toc-number">1.3.5.</span> <span class="toc-text">2.5 webshell查杀</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3004177380/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3004177380/&text=Windows 入侵排查"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3004177380/&title=Windows 入侵排查"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3004177380/&is_video=false&description=Windows 入侵排查"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Windows 入侵排查&body=Check out this article: http://example.com/posts/3004177380/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3004177380/&title=Windows 入侵排查"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3004177380/&title=Windows 入侵排查"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3004177380/&title=Windows 入侵排查"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3004177380/&title=Windows 入侵排查"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3004177380/&name=Windows 入侵排查&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3004177380/&t=Windows 入侵排查"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    1in3r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
