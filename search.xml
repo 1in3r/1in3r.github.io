@@ -137,25 +137,6 @@
     
     
     <entry>
-      <title>Hackmyvm - Serve WriteUp</title>
-      <link href="/posts/88024327/"/>
-      <url>/posts/88024327/</url>
-      
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting/dist/Meting.min.js"></script><p><strong>Machines Name：</strong>Hackmyvm - Serve</p><p><strong>Difficulty：</strong>easy</p><p><img src="https://hackmyvm.eu/img/m/machine.gif"></p><p>nmap</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> Hackmyvm Machines </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Hackmyvm - Preload WriteUp</title>
       <link href="/posts/2515702210/"/>
       <url>/posts/2515702210/</url>
