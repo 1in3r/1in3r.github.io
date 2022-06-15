@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="前言这个目标之前已经打穿了，当时已经拿到了域控权限，然后管理员把站关掉了，今天整理笔记，突然心血来潮，又去看了一下这个站，发现它又恢复了…..  复测发现该站加了杀软，不能直接上线cs了，不过这都是小问题，管理员以为有个杀软就能不被日了？太年轻了，掏出三板斧就是一顿干，当我日进内网那一刻，我发现它啥都没变，还是熟悉的味道，熟悉的配方……  正文通过jboss反序列化获得一个入口权限，上次打的时候还">
 <meta property="og:type" content="article">
-<meta property="og:title" content="梅开二度之旧站新开 - 从外网RCE到内网域控">
+<meta property="og:title" content="梅开二度之旧站新开 - 实战从外网RCE到内网域控">
 <meta property="og:url" content="http://example.com/posts/1/index.html">
 <meta property="og:site_name" content="Brich">
 <meta property="og:description" content="前言这个目标之前已经打穿了，当时已经拿到了域控权限，然后管理员把站关掉了，今天整理笔记，突然心血来潮，又去看了一下这个站，发现它又恢复了…..  复测发现该站加了杀软，不能直接上线cs了，不过这都是小问题，管理员以为有个杀软就能不被日了？太年轻了，掏出三板斧就是一顿干，当我日进内网那一刻，我发现它啥都没变，还是熟悉的味道，熟悉的配方……  正文通过jboss反序列化获得一个入口权限，上次打的时候还">
@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220404172601073.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220404193814637.png">
 <meta property="article:published_time" content="2022-05-07T15:31:01.000Z">
-<meta property="article:modified_time" content="2022-05-07T15:14:57.704Z">
+<meta property="article:modified_time" content="2022-06-15T11:47:08.541Z">
 <meta property="article:author" content="1in3r">
 <meta property="article:tag" content="内网渗透">
 <meta name="twitter:card" content="summary">
@@ -62,7 +62,7 @@
       
     
     <!-- title -->
-    <title>梅开二度之旧站新开 - 从外网RCE到内网域控</title>
+    <title>梅开二度之旧站新开 - 实战从外网RCE到内网域控</title>
     <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
@@ -123,16 +123,16 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/1/&text=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/1/&is_video=false&description=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=梅开二度之旧站新开 - 从外网RCE到内网域控&body=Check out this article: http://example.com/posts/1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/1/&name=梅开二度之旧站新开 - 从外网RCE到内网域控&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/1/&t=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/1/&text=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/1/&is_video=false&description=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=梅开二度之旧站新开 - 实战从外网RCE到内网域控&body=Check out this article: http://example.com/posts/1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/1/&name=梅开二度之旧站新开 - 实战从外网RCE到内网域控&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/1/&t=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -149,7 +149,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        梅开二度之旧站新开 - 从外网RCE到内网域控
+        梅开二度之旧站新开 - 实战从外网RCE到内网域控
     </h1>
 
 
@@ -295,16 +295,16 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/1/&text=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/1/&is_video=false&description=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=梅开二度之旧站新开 - 从外网RCE到内网域控&body=Check out this article: http://example.com/posts/1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/1/&name=梅开二度之旧站新开 - 从外网RCE到内网域控&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/1/&t=梅开二度之旧站新开 - 从外网RCE到内网域控"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/1/&text=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/1/&is_video=false&description=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=梅开二度之旧站新开 - 实战从外网RCE到内网域控&body=Check out this article: http://example.com/posts/1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/1/&title=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/1/&name=梅开二度之旧站新开 - 实战从外网RCE到内网域控&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/1/&t=梅开二度之旧站新开 - 实战从外网RCE到内网域控"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
