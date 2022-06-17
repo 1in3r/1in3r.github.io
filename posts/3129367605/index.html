@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617190051436.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617190128742.png">
 <meta property="article:published_time" content="2022-06-17T09:55:06.000Z">
-<meta property="article:modified_time" content="2022-06-17T12:02:12.841Z">
+<meta property="article:modified_time" content="2022-06-17T13:50:30.245Z">
 <meta property="article:author" content="1in3r">
 <meta property="article:tag" content="溯源反制">
 <meta name="twitter:card" content="summary">
@@ -221,7 +221,8 @@
 <p>&#x2F;etc&#x2F;shadow</p>
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617190128742.png" alt="image-20220617190128742"></p>
 <h2 id="0x05-权限维持"><a href="#0x05-权限维持" class="headerlink" title="0x05 权限维持"></a>0x05 权限维持</h2><p>我留了个后门，清理了一下redis添加的key和linux计划任务还有bash历史命令，主要怕被二次反制</p>
-<h2 id="0x06-人物画像"><a href="#0x06-人物画像" class="headerlink" title="0x06 人物画像"></a>0x06 人物画像</h2><p>我个人感觉，这个人应该技术水平比较一般，行为也只是扫描，起初我看到不同端口的redis，我以为是他用docker开的，当我拿下服务器权限之后发现其并不是使用docker启动的redis服务，而且redis使用的是弱密码进行认证，这才导致了他服务器的沦陷，通过docker ps -a命令我发现他拉了nginx、mysql服务，但是关闭了，应该也是怕溯源然后被拿下，所以使用docker开的web服务。最后还是没有获取到他的个人信息，无法精准溯源到个人，不过服务器已经拿下了，也留了点东西，看他会不会上当。</p>
+<h2 id="0x06-人物画像"><a href="#0x06-人物画像" class="headerlink" title="0x06 人物画像"></a>0x06 人物画像</h2><p>我个人感觉，这个人应该技术水平比较一般，行为也只是扫描，起初我看到不同端口的redis，我以为是他用docker开的，当我拿下服务器权限之后发现其并不是使用docker启动的redis服务，而且redis使用的是弱密码进行认证，这才导致了他服务器的沦陷，redis开了这么多应该是在做漏洞复现？通过docker ps -a命令我发现他拉了nginx、mysql服务，但是关闭了，应该也是怕溯源然后被拿下，所以使用docker开的web服务。最后还是没有获取到他的个人信息，无法精准溯源到个人，不过服务器已经拿下了，也留了点东西，看他会不会上当。</p>
+<p>后来才知道我朋友是帮他那边一个女师傅溯源，知道真相的我眼泪流了出来，呜呜呜，感情我就是个工具人？？？？呜呜呜</p>
 
   </div>
 </article>
