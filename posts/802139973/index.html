@@ -10,7 +10,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="XSS 靶场通关记录">
 <meta property="og:url" content="http://example.com/posts/802139973/index.html">
-<meta property="og:site_name">
+<meta property="og:site_name" content="1in3r">
 <meta property="og:description" content="相关靶场网上一大堆，部署也非常简单，这里就不细说了 Level 1可以看到 url 中有一个 name 参数  将 name&#x3D;test 改为 name&#x3D;admin，发现网页中内容也变了，并且是直接输入输出的，没有任何过滤，由此可知，name 是用户可控的参数  因此直接打 payload 即可 1&lt;script&gt;alert(&#x2F;xss&#x2F;)&lt;&#x2F;script&gt;">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://res.cloudinary.com/lin1109/image/upload/v1637231048/Xnip2021-11-18_18-23-47_jgeigs.png">
@@ -105,6 +105,8 @@
        --><li><a href="/">首页</a></li><!--
      --><!--
        --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
      --><!--
        --><li><a href="/search/">搜索</a></li><!--
      -->
@@ -324,6 +326,8 @@
          
           <li><a href="/archives/">归档</a></li>
          
+          <li><a href="/about/">关于</a></li>
+         
           <li><a href="/search/">搜索</a></li>
         
       </ul>
@@ -376,6 +380,8 @@
        --><li><a href="/">首页</a></li><!--
      --><!--
        --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
      --><!--
        --><li><a href="/search/">搜索</a></li><!--
      -->

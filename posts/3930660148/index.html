@@ -10,7 +10,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次绕过云waf上传文件 getshell（一）">
 <meta property="og:url" content="http://example.com/posts/3930660148/index.html">
-<meta property="og:site_name">
+<meta property="og:site_name" content="1in3r">
 <meta property="og:description" content="这个案例来源于某次授权渗透测试。  前言这个目标是gov的资产，通过弱口令进入到系统之后找到上传点，但是存在waf，最后换行绕过。 测试过程一个朴实无华的登录界面配上了朴实无华的登录密码 admin&#x2F;123456  进去大概是这样的,有大量人员信息。  其中一处找到一个上传点  抓包上传，虽然没有对文件后缀做过滤，可以直接上传aspx，但是上传webshell会遭到云waf拦截  换行">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/img/image-20220321155637911.png">
@@ -70,6 +70,8 @@
        --><li><a href="/">首页</a></li><!--
      --><!--
        --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
      --><!--
        --><li><a href="/search/">搜索</a></li><!--
      -->
@@ -188,6 +190,8 @@
          
           <li><a href="/archives/">归档</a></li>
          
+          <li><a href="/about/">关于</a></li>
+         
           <li><a href="/search/">搜索</a></li>
         
       </ul>
@@ -240,6 +244,8 @@
        --><li><a href="/">首页</a></li><!--
      --><!--
        --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
      --><!--
        --><li><a href="/search/">搜索</a></li><!--
      -->

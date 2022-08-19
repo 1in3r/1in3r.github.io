@@ -10,7 +10,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次源码泄露到后台文件上传绕过杀软 getshell">
 <meta property="og:url" content="http://example.com/posts/2744233938/index.html">
-<meta property="og:site_name">
+<meta property="og:site_name" content="1in3r">
 <meta property="og:description" content="前言某次授权渗透测试中遇到的一个gov资产的站，刚开始是发现了源码泄露，通过源码泄露找到了后台地址，然后通过后台弱口令登入后台，文件上传绕过杀软最终getshell。 测试过程网站源码备份文件没删除，通过网站备份源码可以分析出网站整体的一个目录结构，以及一些可以尝试突破的功能点。  发现web.config配置文件，泄露了网站根目录绝对地址以及数据库sa用户的账户密码  通过分析网站源码找到网站后">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://typro-1304950244.file.myqcloud.com/image-20220321164140889.png">
@@ -75,6 +75,8 @@
        --><li><a href="/">首页</a></li><!--
      --><!--
        --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
      --><!--
        --><li><a href="/search/">搜索</a></li><!--
      -->
@@ -198,6 +200,8 @@
          
           <li><a href="/archives/">归档</a></li>
          
+          <li><a href="/about/">关于</a></li>
+         
           <li><a href="/search/">搜索</a></li>
         
       </ul>
@@ -250,6 +254,8 @@
        --><li><a href="/">首页</a></li><!--
      --><!--
        --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
      --><!--
        --><li><a href="/search/">搜索</a></li><!--
      -->
